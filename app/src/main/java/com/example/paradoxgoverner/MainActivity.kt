@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -18,9 +17,6 @@ class MainActivity : AppCompatActivity() {
         fun instance() = instance
     }
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,35 +25,17 @@ class MainActivity : AppCompatActivity() {
         instance = this
         val DAO : UserDAO = AppDatabase.instance.userDAO()
 
-
-        //处理CustomizeNewItem事件
-        if(OPERATION_DESCRIPTION == OPERATION_DESCRIPTION)
-        {
-            ConfirmNewItem();
-        }
-
-
-
-
         //RecycleView
-        var forecastList = findViewById<RecyclerView>(R.id.forecast)
+        val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
         forecastList.adapter = ForecastListAdapter(DAO.getAll())
 
     }
 
-    //override fun on
-
     fun CreateNewItem(view:View)
     {
-        val intent = Intent(this, CustomizeNewItem::class.java)
+        val intent = Intent(this, CreateNewItem::class.java)
         startActivity(intent)
     }
 
-    fun ConfirmNewItem()
-    {
-        val DAO : UserDAO = AppDatabase.instance.userDAO()
-        val message = intent.getStringExtra(EXTRA_MESSAGE)
-        DAO.insertAll(Record((0 until 10000000).random(), message))
-    }
 }

@@ -2,12 +2,14 @@ package com.example.paradoxgoverner
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
+//声明PrimaryKey  autoGenerate = true之后，构造Record时uid输入0，就会自动生成
 @Entity
 data class Record(
-    @PrimaryKey(autoGenerate = true) val uid: Int,
-    @ColumnInfo val Description: String?
-)
-//为什么声明了autoGenerate = true，构造函数依然需要uid:Int?
-//@PrimaryKey(autoGenerate = true) val uid: Int,
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var Description: String?
+) {
+
+}

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Paradox Governer</string>
     <string name="button_text">Add Item</string>
+    <string name="confirm_button_text">确认新建</string>
 </resources>

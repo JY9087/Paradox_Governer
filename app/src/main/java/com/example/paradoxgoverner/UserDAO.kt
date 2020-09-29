@@ -21,6 +21,7 @@ interface UserDAO {
     @Insert
     fun insertAll(vararg records: Record)
 
+
     //删除
     @Delete
     fun delete(record: Record)
