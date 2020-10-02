@@ -2,4 +2,6 @@
     <string name="app_name">Paradox Governer</string>
     <string name="button_text">Add Item</string>
     <string name="confirm_button_text">确认新建</string>
+    <string name="discription_text">输入记账的描述</string>
+    <string name="set_time_button_text">选择时间</string>
 </resources>

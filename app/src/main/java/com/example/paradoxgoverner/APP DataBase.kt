@@ -10,8 +10,7 @@ import kotlinx.coroutines.launch
 
 
 //单例设计模式   这里使用静态内部类
-//单例出问题了   没能initialize
-@Database(entities = arrayOf(Record::class), version = 1)
+@Database(entities = arrayOf(Record::class), version = 1,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDAO(): UserDAO
 

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
 
-
+        //暂时放在这里。以后再移动
         var recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
