@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlin.properties.Delegates
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
     //静态内部类：伴生对象
     //为什么这里要多一个instance()函数？
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
 
-        //暂时放在这里。以后再移动
+
         var recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
