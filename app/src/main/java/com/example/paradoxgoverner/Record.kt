@@ -36,7 +36,10 @@ data class Record(
     @ColumnInfo var time : Time,
     @ColumnInfo var member : String,
     @ColumnInfo var class_level_1 : String,
-    @ColumnInfo var class_level_2 : String
+    @ColumnInfo var class_level_2 : String,
+    @ColumnInfo var account : String,
+    @ColumnInfo var amount : Float,
+    @ColumnInfo var category : String
 )
 
 
@@ -59,3 +62,4 @@ data class Class_Level_2(
     @ColumnInfo var class_level_2: String
 )
 
+//account表待实现

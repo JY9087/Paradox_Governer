@@ -38,19 +38,30 @@ class MainActivity : AppCompatActivity(){
         forecastList.adapter = myadapter
 
 
+
         var recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
             object : ClickListener{
+                //单击事件  进入Record
+                //Record详情页采用EditText吧。默认采用和Create相同的布局
+                //进入布局后会跳回主页面？
+                //是复用layout出问题了吗？
+                //作为对比，跳转至CreateNewItem可正常跳转
+                //我真的不能理解。代码相同，函数不同，就无法跳转了。
+                //直接用CreateNewItem吧
                 override fun onClick(view: View?, position: Int)
                 {
-                    Toast.makeText(MainActivity.instance(), "Single Click on position :"+position,
-                        Toast.LENGTH_SHORT).show();
+                    //传递UID，由新Activity去进行查询
+                    //Todo : 改为传递Record
+                    val intent = Intent(MainActivity.instance, CreateNewItem::class.java).putExtra(
+                        RECORD_UID,DAO.getAll().get(position).uid)
+                    startActivity(intent)
+
                 }
                 override fun onLongClick(view: View?, position: Int)
                 {
-                    Toast.makeText(MainActivity.instance(), "Long press on position :"+position,
-                        Toast.LENGTH_LONG).show();
+
                 }
             }
         )
@@ -93,7 +104,6 @@ class MainActivity : AppCompatActivity(){
                 override fun onSingleTapUp(e: MotionEvent): Boolean {
                     return true
                 }
-
                 //长按
                 override fun onLongPress(e: MotionEvent) {
                     val child =
@@ -106,14 +116,11 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-
-
     fun CreateNewItem(view:View)
     {
         val intent = Intent(this, CreateNewItem::class.java)
         startActivity(intent)
     }
-
 
 }
 
@@ -121,6 +128,7 @@ interface ClickListener {
     fun onClick(view: View?, position: Int)
     fun onLongClick(view: View?, position: Int)
 }
+
 
 
 

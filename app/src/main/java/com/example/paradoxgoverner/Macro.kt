@@ -1,5 +1,6 @@
 package com.example.paradoxgoverner
 
+const val RECORD_UID = "RECORD_UID"
 const val OPERATION_MESSAGE = "OPERATION_MESSAGE"
 const val OPERATION_DESCRIPTION = "OPERATION_DESCRIPTION"
 const val EXTRA_MESSAGE = "EXTRA_MESSAGE"
