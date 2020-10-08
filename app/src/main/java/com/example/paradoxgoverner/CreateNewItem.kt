@@ -32,7 +32,7 @@ class CreateNewItem : AppCompatActivity() {
         var myear = mcalendar.get(Calendar.YEAR)
         var mmonth = mcalendar.get(Calendar.MONTH)
         var mday = mcalendar.get(Calendar.DAY_OF_MONTH)
-        var mhourofday = mcalendar.get(Calendar.HOUR)
+        var mhourofday = mcalendar.get(Calendar.HOUR_OF_DAY)
         var mminute = mcalendar.get(Calendar.MINUTE)
 
         //在Click之前就设置了
