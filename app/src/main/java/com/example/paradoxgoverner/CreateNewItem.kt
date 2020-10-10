@@ -1,9 +1,11 @@
 package com.example.paradoxgoverner
 
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,17 +13,21 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
-import kotlinx.android.synthetic.main.card_view.*
 import java.sql.Date
 import java.sql.Time
 import java.util.*
+import kotlin.properties.Delegates
 
 
 class CreateNewItem : AppCompatActivity() {
 
     lateinit var memberstring : String
+    var categorystring = DEFAULT_CATEGORY_LIST.get(0)
+    lateinit var subcategorystring : String
+
     var uid = 0
     var mcalendar = Calendar.getInstance()
+    val DAO : UserDAO = AppDatabase.instance.userDAO()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,15 +76,19 @@ class CreateNewItem : AppCompatActivity() {
         }
 
 
+        var memberList = DAO.getAllMember()
+        var memberStringList = mutableListOf<String>()
+        for (members in memberList) {
+            memberStringList.add(members.member)
+        }
+
 
         var memberspinner = findViewById<Spinner>(R.id.member_spinner)
-        var test_member = listOf<String>("JY","jy")
 
         val memberadapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , test_member)
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , memberStringList.toList())
         memberadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         memberspinner.setAdapter(memberadapter)
-
 
         memberspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
             override fun onItemSelected(
@@ -88,7 +98,39 @@ class CreateNewItem : AppCompatActivity() {
                 l: Long
             ) {
                 // Get the spinner selected item text
-                memberstring=   adapterView.getItemAtPosition(i) as String
+                memberstring = adapterView.getItemAtPosition(i) as String
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
+            }
+        })
+
+
+        //Category
+        var categoryList = DAO.getAllCategory()
+        var categoryStringList = mutableListOf<String>()
+        for (categorys in categoryList) {
+            categoryStringList.add(categorys.category)
+        }
+
+        var categoryspinner = findViewById<Spinner>(R.id.category_spinner)
+        var categorystring = DEFAULT_CATEGORY_LIST.get(0)
+        val categoryadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , categoryStringList.toList())
+        categoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryspinner.setAdapter(categoryadapter)
+
+        categoryspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                // Get the spinner selected item text
+                categorystring = adapterView.getItemAtPosition(i) as String
+                SubcategoryAdapt(categorystring)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -103,11 +145,10 @@ class CreateNewItem : AppCompatActivity() {
     fun CreateNewItem(view: View) {
 
         //已完成
-        var member = findViewById<Spinner>(R.id.member_spinner)
         var description = findViewById<EditText>(R.id.description).text.toString()
 
         //未完成，只有变量名。变量值用来凑数
-        var class_level_1 = findViewById<EditText>(R.id.description).text.toString()
+
         var class_level_2 = findViewById<EditText>(R.id.description).text.toString()
         var account = findViewById<EditText>(R.id.description).text.toString()
         var category = findViewById<EditText>(R.id.description).text.toString()
@@ -134,7 +175,7 @@ class CreateNewItem : AppCompatActivity() {
         //自动填充时间
         AppDatabase.instance.userDAO().insertAll(
             Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-            memberstring,class_level_1,class_level_2,account,amount,category)
+            memberstring,categorystring,class_level_2,account,amount,category)
         )
 
         val intent = Intent(this, MainActivity::class.java)
@@ -151,5 +192,52 @@ class CreateNewItem : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
+
+    fun SubcategoryAdapt(category : String) {
+        var subcategoryList = DAO.getAllSubcategory(category)
+        var subcategoryStringList = mutableListOf<String>()
+        for (subcategorys in subcategoryList) {
+            subcategoryStringList.add(subcategorys.subcategory)
+        }
+        var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
+
+        val subcategoryadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
+        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subcategoryspinner.setAdapter(subcategoryadapter)
+
+        subcategoryspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                // Get the spinner selected item text
+                subcategorystring = adapterView.getItemAtPosition(i) as String
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    fun NewMember(view : View)
+    {
+        //BUG添加空白字符串
+        var memberText = EditText(this)
+        AlertDialog.Builder(this)
+            .setTitle("请输入")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setView(memberText)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
+                if(memberText.text.toString() != "")
+                    AppDatabase.instance.userDAO().insertAllMember(Member(0,memberText.text.toString()))
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
+
 }
 
