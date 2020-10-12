@@ -4,13 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     androidx.cardview:layout_height="wrap_content"
     androidx.cardview:layout_width="match_parent"
-    androidx.cardview:id = "@+id/card_view">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    androidx.cardview:id="@+id/card_view"
+    androidx.cardview:layout_marginBottom="8dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="4dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardBackgroundColor="@color/colorCardViewBackground">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         androidx.cardview:id="@+id/linearLayout"
         androidx.cardview:layout_width="match_parent"
         androidx.cardview:layout_height="match_parent"
         androidx.cardview:orientation="horizontal">
+
 
         <TextView
             androidx.cardview:id="@+id/card_view_member"
@@ -44,6 +52,17 @@
             androidx.cardview:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/card_view_member"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_money_amount"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="16dp"
+            androidx.cardview:layout_marginLeft="16dp"
+            androidx.cardview:layout_marginTop="16dp"
+            androidx.cardview:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/card_view_discription"
+            app:layout_constraintTop_toBottomOf="@+id/card_view_time" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

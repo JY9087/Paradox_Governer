@@ -36,7 +36,10 @@ data class Record(
     @ColumnInfo var time : Time,
     @ColumnInfo var member : String,
     @ColumnInfo var class_level_1 : String,
-    @ColumnInfo var class_level_2 : String
+    @ColumnInfo var class_level_2 : String,
+    @ColumnInfo var account : String,
+    @ColumnInfo var amount : Float,
+    @ColumnInfo var category : String
 )
 
 
@@ -47,15 +50,21 @@ data class Member(
 )
 
 @Entity
-data class Class_Level_1(
+data class Category(
     @PrimaryKey(autoGenerate = true) val uid : Int,
-    @ColumnInfo var class_level_1: String
+    @ColumnInfo var category: String
 )
 
 @Entity
-data class Class_Level_2(
+data class Subcategory(
     @PrimaryKey(autoGenerate = true) val uid : Int,
-    @ColumnInfo var class_level_1: String,
-    @ColumnInfo var class_level_2: String
+    @ColumnInfo var category: String,
+    @ColumnInfo var subcategory: String
 )
 
+@Entity
+data class Hidden(
+    @PrimaryKey(autoGenerate = true) val uid : Int
+)
+
+//account表待实现

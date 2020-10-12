@@ -26,10 +26,10 @@ class ForecastListAdapter(var items: List<Record>):
         holder.view.card_view_discription.text=items.get(position).description
         holder.view.card_view_member.text=items.get(position).member
         holder.view.card_view_time.text=items.get(position).time.toString()
+        holder.view.card_view_money_amount.text=items.get(position).amount.toString()
     }
 
     override fun getItemCount():  Int=items.size
 
     class ViewHolder(var view:View):RecyclerView.ViewHolder(view)
-
 }
