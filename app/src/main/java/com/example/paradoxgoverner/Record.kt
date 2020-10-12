@@ -39,7 +39,8 @@ data class Record(
     @ColumnInfo var class_level_2 : String,
     @ColumnInfo var account : String,
     @ColumnInfo var amount : Float,
-    @ColumnInfo var category : String
+    @ColumnInfo var category : String,
+    @ColumnInfo var type: String
 )
 
 
