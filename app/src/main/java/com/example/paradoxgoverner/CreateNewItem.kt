@@ -34,30 +34,15 @@ class CreateNewItem : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customization_of_new_item)
 
-
+        //自动填充当前时间
         var myear = mcalendar.get(Calendar.YEAR)
         var mmonth = mcalendar.get(Calendar.MONTH)
         var mday = mcalendar.get(Calendar.DAY_OF_MONTH)
         var mhourofday = mcalendar.get(Calendar.HOUR_OF_DAY)
         var mminute = mcalendar.get(Calendar.MINUTE)
+        mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
 
-        //在Click之前就设置了
-        var timepickerdialog = TimePickerDialog(this,2,
-            OnTimeSetListener { timepicker, hourofday,minute->
-                mhourofday = hourofday
-                mminute = minute
-                mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-            }, mhourofday, mminute, true)
-            .show()
-
-        var datepickerdialog = DatePickerDialog(this,
-            DatePickerDialog.OnDateSetListener(){ datepicker, year,month,day->
-                myear = year
-                mmonth = month
-                mday = day
-                mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-            }, myear,mmonth,mday)
-            .show()
+        time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
 
         //查看是否有携带uid，如果有就修改uid变量的值
         uid = intent.getIntExtra(RECORD_UID,0)
@@ -175,7 +160,7 @@ class CreateNewItem : AppCompatActivity() {
         //自动填充时间
         AppDatabase.instance.userDAO().insertAll(
             Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-            memberstring,categorystring,class_level_2,account,amount,category)
+            memberstring,categorystring,class_level_2,account,amount,category,"收入")
         )
 
         val intent = Intent(this, MainActivity::class.java)
@@ -223,9 +208,7 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
-    fun NewMember(view : View)
-    {
-        //BUG添加空白字符串
+    fun NewMember(view : View) {
         var memberText = EditText(this)
         AlertDialog.Builder(this)
             .setTitle("请输入")
@@ -237,6 +220,33 @@ class CreateNewItem : AppCompatActivity() {
             })
             .setNegativeButton("取消", null)
             .show()
+    }
+
+    fun SelectTime(view : View){
+        var myear = mcalendar.get(Calendar.YEAR)
+        var mmonth = mcalendar.get(Calendar.MONTH)
+        var mday = mcalendar.get(Calendar.DAY_OF_MONTH)
+        var mhourofday = mcalendar.get(Calendar.HOUR_OF_DAY)
+        var mminute = mcalendar.get(Calendar.MINUTE)
+
+        var timepickerdialog = TimePickerDialog(this,2,
+            OnTimeSetListener { timepicker, hourofday,minute->
+                mhourofday = hourofday
+                mminute = minute
+                mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
+            }, mhourofday, mminute, true)
+            .show()
+
+        var datepickerdialog = DatePickerDialog(this,
+            DatePickerDialog.OnDateSetListener(){ datepicker, year,month,day->
+                myear = year
+                mmonth = month
+                mday = day
+                mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
+            }, myear,mmonth,mday)
+            .show()
+
+        time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
     }
 
 }

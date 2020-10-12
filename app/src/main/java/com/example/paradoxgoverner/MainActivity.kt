@@ -6,16 +6,17 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import net.steamcrafted.materialiconlib.MaterialDrawableBuilder
 import kotlin.properties.Delegates
 
 
 class MainActivity : AppCompatActivity(){
 
     //静态内部类：伴生对象
-    //为什么这里要多一个instance()函数？
     companion object {
         var instance:  MainActivity by Delegates.notNull()
         fun instance() = instance
@@ -56,18 +57,11 @@ class MainActivity : AppCompatActivity(){
         forecastList.adapter = myadapter
 
 
-
         var recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
             object : ClickListener{
                 //单击事件  进入Record
-                //Record详情页采用EditText吧。默认采用和Create相同的布局
-                //进入布局后会跳回主页面？
-                //是复用layout出问题了吗？
-                //作为对比，跳转至CreateNewItem可正常跳转
-                //我真的不能理解。代码相同，函数不同，就无法跳转了。
-                //直接用CreateNewItem吧
                 override fun onClick(view: View?, position: Int)
                 {
                     //传递UID，由新Activity去进行查询
@@ -85,8 +79,48 @@ class MainActivity : AppCompatActivity(){
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
-    }
 
+
+
+
+        // The method returns a MaterialDrawable, but as it is private to the builder you'll have to store it as a regular Drawable ;)
+        var GraphButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
+            .setIcon(MaterialDrawableBuilder.IconValue.CHART_PIE) // provide an icon
+            .setColor(R.color.colorPrimary) // set the icon color
+            .setToActionbarSize() // set the icon size
+            .build() // Finally call build
+
+        var GraphButton = findViewById<Button>(R.id.graph_button)
+        GraphButton.setCompoundDrawables(GraphButtonDrawable,null,null,null)
+
+        var StatisticsButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
+            .setIcon(MaterialDrawableBuilder.IconValue.POLL_BOX) // provide an icon
+            .setColor(R.color.colorPrimary) // set the icon color
+            .setToActionbarSize() // set the icon size
+            .build() // Finally call build
+
+        var StatisticsButton = findViewById<Button>(R.id.statistics_button)
+        StatisticsButton.setCompoundDrawables(StatisticsButtonDrawable,null,null,null)
+
+        var AccountInfoButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
+            .setIcon(MaterialDrawableBuilder.IconValue.ACCOUNT) // provide an icon
+            .setColor(R.color.colorPrimary) // set the icon color
+            .setToActionbarSize() // set the icon size
+            .build() // Finally call build
+
+        var AccountInfoButton = findViewById<Button>(R.id.account_info_button)
+        AccountInfoButton.setCompoundDrawables(AccountInfoButtonDrawable,null,null,null)
+
+        var NewRecordButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
+            .setIcon(MaterialDrawableBuilder.IconValue.BOOKMARK_PLUS_OUTLINE) // provide an icon
+            .setColor(R.color.colorPrimary) // set the icon color
+            .setToActionbarSize() // set the icon size
+            .build() // Finally call build
+
+        var NewRecordButton = findViewById<Button>(R.id.new_record_button)
+        NewRecordButton.setCompoundDrawables(NewRecordButtonDrawable,null,null,null)
+    }
+    //End Of OnCreate
 
     //从虚拟类OnItemTouchListener实例化而来
     class RecyclerTouchListener(
@@ -133,6 +167,7 @@ class MainActivity : AppCompatActivity(){
             })
         }
     }
+
 
     fun CreateNewItem(view:View)
     {
