@@ -2,6 +2,7 @@ package com.example.paradoxgoverner
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -28,14 +29,40 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
         //Room
+        //record数据库
         instance = this
         val DAO : UserDAO = AppDatabase.instance.userDAO()
+        //用户名和密码数据库，及用于判断是进入注册界面还是登录界面还是直接进入主界面的变量
+        val dataBase:userNameAndPwdDB = userNameAndPwdDB.getDatabase(this)
+        val UserAndPasswordDAO:userNameAndPwdDAO = dataBase.UserNameAndPwdDAO()
+        val userList:List<userNameAndPwd> = UserAndPasswordDAO.findall()
+        var isAlreadyRegister:Boolean = if (userList.size==0) false else true
 
+        val settings: SharedPreferences = getSharedPreferences("info", 0)
+        val editor = settings.edit()
+        var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
         //RecycleView
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
         val myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
+        //已经注册过，进入登录界面
+        if(isAlreadyRegister) {
+            //已经登录了，进入主界面
+            if(!isAlreadyLogin){
+                val intent = Intent()
+                intent.setClass(this, login::class.java)
+                startActivity(intent)
+            }
+        }else{//尚未注册，进入注册界面
+            val intent = Intent()
+            intent.setClass(this, register::class.java)
+            startActivity(intent)
+        }
+        isAlreadyLogin = false
+        editor.putBoolean("isAlreadyLogin",isAlreadyLogin)
+        editor.commit()
+        //上述注册和登录完成
 
 
         var recyclertouchlistener = RecyclerTouchListener(
