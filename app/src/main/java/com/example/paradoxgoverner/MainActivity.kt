@@ -2,17 +2,17 @@ package com.example.paradoxgoverner
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import android.widget.Button
+import android.provider.DocumentsContract
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import net.steamcrafted.materialiconlib.MaterialDrawableBuilder
 import kotlin.properties.Delegates
 
+
+const val CREATE_FILE = 1
 
 class MainActivity : AppCompatActivity(){
 
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity(){
         fun instance() = instance
     }
 
+    var income = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +49,20 @@ class MainActivity : AppCompatActivity(){
                     DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST.get(index),item))
                 }
             }
+
+            for (init_merchant in DEFAULT_MERCHANT_LIST){
+                DAO.insertAllMerchant(Merchant(0,init_merchant))
+            }
+
+            for (init_item in DEFAULT_ITEM_LIST){
+                DAO.insertAllItem(Item(0,init_item))
+            }
         }
 
         //RecycleView
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
-        val myadapter = ForecastListAdapter(DAO.getAll())
+        var myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
 
 
@@ -66,7 +75,7 @@ class MainActivity : AppCompatActivity(){
                 {
                     //传递UID，由新Activity去进行查询
                     //Todo : 改为传递Record
-                    val intent = Intent(MainActivity.instance, CreateNewItem::class.java).putExtra(
+                    val intent = Intent(instance, CreateNewItem::class.java).putExtra(
                         RECORD_UID,DAO.getAll().get(position).uid)
                     startActivity(intent)
 
@@ -79,48 +88,30 @@ class MainActivity : AppCompatActivity(){
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
-
-
-
-
-        // The method returns a MaterialDrawable, but as it is private to the builder you'll have to store it as a regular Drawable ;)
-        var GraphButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
-            .setIcon(MaterialDrawableBuilder.IconValue.CHART_PIE) // provide an icon
-            .setColor(R.color.colorPrimary) // set the icon color
-            .setToActionbarSize() // set the icon size
-            .build() // Finally call build
-
-        var GraphButton = findViewById<Button>(R.id.graph_button)
-        GraphButton.setCompoundDrawables(GraphButtonDrawable,null,null,null)
-
-        var StatisticsButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
-            .setIcon(MaterialDrawableBuilder.IconValue.POLL_BOX) // provide an icon
-            .setColor(R.color.colorPrimary) // set the icon color
-            .setToActionbarSize() // set the icon size
-            .build() // Finally call build
-
-        var StatisticsButton = findViewById<Button>(R.id.statistics_button)
-        StatisticsButton.setCompoundDrawables(StatisticsButtonDrawable,null,null,null)
-
-        var AccountInfoButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
-            .setIcon(MaterialDrawableBuilder.IconValue.ACCOUNT) // provide an icon
-            .setColor(R.color.colorPrimary) // set the icon color
-            .setToActionbarSize() // set the icon size
-            .build() // Finally call build
-
-        var AccountInfoButton = findViewById<Button>(R.id.account_info_button)
-        AccountInfoButton.setCompoundDrawables(AccountInfoButtonDrawable,null,null,null)
-
-        var NewRecordButtonDrawable = MaterialDrawableBuilder.with(this) // provide a context
-            .setIcon(MaterialDrawableBuilder.IconValue.BOOKMARK_PLUS_OUTLINE) // provide an icon
-            .setColor(R.color.colorPrimary) // set the icon color
-            .setToActionbarSize() // set the icon size
-            .build() // Finally call build
-
-        var NewRecordButton = findViewById<Button>(R.id.new_record_button)
-        NewRecordButton.setCompoundDrawables(NewRecordButtonDrawable,null,null,null)
     }
     //End Of OnCreate
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.top_type_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val forecastList = findViewById<RecyclerView>(R.id.forecast)
+        val DAO = AppDatabase.instance.userDAO()
+        var r = "收入"
+        when (item.itemId) {
+            R.id.navigation_all -> true
+            R.id.navigation_income -> r = "收入"
+            R.id.navigation_outlay -> r = "支出"
+            R.id.navigation_loan-> r = "借贷"
+            R.id.navigation_transfer-> r = "转账"
+            else -> super.onOptionsItemSelected(item)
+        }
+        forecastList.adapter = ForecastListAdapter(DAO.findByType(r))
+        return true
+    }
 
     //从虚拟类OnItemTouchListener实例化而来
     class RecyclerTouchListener(
@@ -175,7 +166,34 @@ class MainActivity : AppCompatActivity(){
         startActivity(intent)
     }
 
+    fun ShowIncome(view: View)
+    {
+        val forecastList = findViewById<RecyclerView>(R.id.forecast)
+        forecastList.adapter=ForecastListAdapter(AppDatabase.instance.userDAO().findByType("收入"))
+    }
+
+    // Request code for creating a PDF document.
+
+
+    private fun createFile(pickerInitialUri: Uri) {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_TITLE, "invoice.pdf")
+
+            // Optionally, specify a URI for the directory that should be opened in
+            // the system file picker before your app creates the document.
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
+        }
+        startActivityForResult(intent, CREATE_FILE)
+    }
+
+
+
+
 }
+
+
 
 interface ClickListener {
     fun onClick(view: View?, position: Int)

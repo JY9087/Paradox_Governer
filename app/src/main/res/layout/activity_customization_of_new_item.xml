@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="16dp"
         android:text="@string/amount_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -146,29 +146,6 @@
         app:layout_constraintTop_toTopOf="@+id/subcategory_spinner"
         app:layout_constraintVertical_bias="0.583" />
 
-    <TextView
-        android:id="@+id/time_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/subcategory_spinner"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="@+id/subcategory_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/subcategory_spinner" />
-
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:onClick="SelectTime"
-        android:text="@string/time_select_button_text"
-        app:layout_constraintEnd_toEndOf="@+id/time_text"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="@+id/time_text"
-        app:layout_constraintTop_toBottomOf="@+id/time_text" />
-
     <Spinner
         android:id="@+id/category_spinner"
         android:layout_width="0dp"
@@ -202,6 +179,132 @@
         android:text="@string/cancel_button_text_new"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/type_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        app:layout_constraintEnd_toStartOf="@+id/sub_type_spinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/subcategory_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/subcategory_spinner" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/type_text"
+        app:layout_constraintBottom_toBottomOf="@+id/type_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/textView7"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toTopOf="@+id/type_spinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Spinner
+        android:id="@+id/sub_type_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/type_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/button8"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button8"
+        app:layout_constraintTop_toTopOf="@+id/type_spinner"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:onClick="SelectTime"
+        android:text="@string/time_select_button_text"
+        app:layout_constraintEnd_toEndOf="@+id/time_text"
+        app:layout_constraintStart_toStartOf="@+id/time_text"
+        app:layout_constraintTop_toBottomOf="@+id/time_text" />
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/subcategory_spinner"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="@+id/subcategory_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/subcategory_spinner" />
+
+    <Button
+        android:id="@+id/cancel_change_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:onClick="CancelChange"
+        android:text="@string/cancel_change_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirm_button"
+        app:layout_constraintStart_toEndOf="@+id/cancel_button" />
+
+    <Spinner
+        android:id="@+id/merchant_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toStartOf="@+id/button8"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/subcategory_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/subcategory_spinner" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/merchant_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/button8"
+        app:layout_constraintStart_toEndOf="@+id/subcategory_spinner"
+        app:layout_constraintTop_toTopOf="@+id/merchant_spinner" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/merchant_text"
+        app:layout_constraintBottom_toBottomOf="@+id/merchant_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/textView7"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toTopOf="@+id/merchant_spinner" />
+
+    <Spinner
+        android:id="@+id/item_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/merchant_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/merchant_spinner" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/item_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/merchant_spinner"
+        app:layout_constraintTop_toTopOf="@+id/item_spinner" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/item_text"
+        app:layout_constraintBottom_toBottomOf="@+id/item_spinner"
+        app:layout_constraintEnd_toEndOf="@+id/textView6"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toTopOf="@+id/item_spinner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

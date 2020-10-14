@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_all"
+        android:title="@string/nav_all_text" />
+
+    <item
+        android:id="@+id/navigation_income"
+        android:title="@string/nav_income_text" />
+
+    <item
+        android:id="@+id/navigation_outlay"
+        android:title="@string/nav_outlay_text" />
+
+    <item
+        android:id="@+id/navigation_loan"
+        android:title="@string/nav_loan_text" />
+
+    <item
+        android:id="@+id/navigation_transfer"
+        android:title="@string/nav_transfer_text" />
+
+</menu>
