@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import java.sql.Date
 import java.sql.Time
 import java.util.*
-import kotlin.properties.Delegates
 
 
 class CreateNewItem : AppCompatActivity() {
@@ -24,6 +23,11 @@ class CreateNewItem : AppCompatActivity() {
     lateinit var memberstring : String
     var categorystring = DEFAULT_CATEGORY_LIST.get(0)
     lateinit var subcategorystring : String
+    lateinit var typestring : String
+    lateinit var subtypestring : String
+    var income = true
+    lateinit var merchantstring : String
+    lateinit var itemstring : String
 
     var uid = 0
     var mcalendar = Calendar.getInstance()
@@ -49,7 +53,7 @@ class CreateNewItem : AppCompatActivity() {
 
         //新建
         if(uid == 0) {
-
+            cancel_change_button.visibility = View.INVISIBLE
         }
 
         //修改
@@ -57,7 +61,7 @@ class CreateNewItem : AppCompatActivity() {
             confirm_button.text =getString(R.string.confirm_button_text_old)
             cancel_button.text =getString(R.string.cancel_button_text_old)
             money_amount?.setHint(AppDatabase.instance.userDAO().findByUid(uid).amount.toString())
-
+            cancel_change_button.visibility = View.VISIBLE
         }
 
 
@@ -124,8 +128,97 @@ class CreateNewItem : AppCompatActivity() {
         })
 
 
-    }
 
+        var typespinner = findViewById<Spinner>(R.id.type_spinner)
+        val typeadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , DEFAULT_TYPE_LIST)
+        typeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typespinner.setAdapter(typeadapter)
+
+        typespinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                // Get the spinner selected item text
+                typestring = adapterView.getItemAtPosition(i) as String
+                SubtypeAdapt(typestring)
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
+            }
+        })
+
+
+
+
+
+        var merchantList = DAO.getAllMerchant()
+        var merchantStringList = mutableListOf<String>()
+        for (merchants in merchantList) {
+            merchantStringList.add(merchants.merchant)
+        }
+
+        var merchantspinner = findViewById<Spinner>(R.id.merchant_spinner)
+
+        val merchantadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , merchantStringList.toList())
+        merchantadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        merchantspinner.setAdapter(merchantadapter)
+
+        merchantspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                // Get the spinner selected item text
+                merchantstring = adapterView.getItemAtPosition(i) as String
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
+            }
+        })
+
+
+
+        var itemList = DAO.getAllItem()
+        var itemStringList = mutableListOf<String>()
+        for (items in itemList) {
+            itemStringList.add(items.item)
+        }
+
+        var itemspinner = findViewById<Spinner>(R.id.item_spinner)
+
+        val itemadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemStringList.toList())
+        itemadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        itemspinner.setAdapter(itemadapter)
+
+        itemspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                // Get the spinner selected item text
+                itemstring = adapterView.getItemAtPosition(i) as String
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
+            }
+        })
+
+
+    }
+    //End of OnCreate
 
     fun CreateNewItem(view: View) {
 
@@ -136,7 +229,7 @@ class CreateNewItem : AppCompatActivity() {
 
         var class_level_2 = findViewById<EditText>(R.id.description).text.toString()
         var account = findViewById<EditText>(R.id.description).text.toString()
-        var category = findViewById<EditText>(R.id.description).text.toString()
+
 
         //这一点也不优雅
         //一定要改掉它
@@ -156,11 +249,9 @@ class CreateNewItem : AppCompatActivity() {
             amount = AppDatabase.instance.userDAO().findByUid(uid).amount
         }
 
-
-        //自动填充时间
         AppDatabase.instance.userDAO().insertAll(
             Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-            memberstring,categorystring,class_level_2,account,amount,category,"收入")
+            memberstring,categorystring,subcategorystring,account,amount,typestring,income,"merchant","item")
         )
 
         val intent = Intent(this, MainActivity::class.java)
@@ -174,6 +265,12 @@ class CreateNewItem : AppCompatActivity() {
                 AppDatabase.instance.userDAO().findByUid(uid)
             )
         }
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun CancelChange(view: View)
+    {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
@@ -208,6 +305,43 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
+
+    fun SubtypeAdapt(type : String) {
+        var subtypeStringList = listOf<String>()
+        when(type){
+            "收入"->subtypeStringList = listOf<String>("收入")
+            "支出"->subtypeStringList = listOf<String>("支出")
+            "借贷"->subtypeStringList = listOf<String>("收入","支出")
+            "转账"->subtypeStringList = listOf<String>("收入","支出")
+        }
+        var subtypespinner = findViewById<Spinner>(R.id.sub_type_spinner)
+
+        val subtypeadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subtypeStringList)
+        subtypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subtypespinner.setAdapter(subtypeadapter)
+
+        subtypespinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                // Get the spinner selected item text
+                subtypestring = adapterView.getItemAtPosition(i) as String
+                if(subtypestring == "收入")
+                    income = true
+                else if(subtypestring == "支出")
+                    income = false
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
     fun NewMember(view : View) {
         var memberText = EditText(this)
         AlertDialog.Builder(this)
@@ -234,6 +368,7 @@ class CreateNewItem : AppCompatActivity() {
                 mhourofday = hourofday
                 mminute = minute
                 mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
+                time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
             }, mhourofday, mminute, true)
             .show()
 
@@ -243,6 +378,7 @@ class CreateNewItem : AppCompatActivity() {
                 mmonth = month
                 mday = day
                 mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
+                time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
             }, myear,mmonth,mday)
             .show()
 

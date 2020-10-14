@@ -16,6 +16,12 @@ interface UserDAO {
     @Query("SELECT * FROM Member")
     fun getAllMember(): List<Member>
 
+    @Query("SELECT * FROM Merchant")
+    fun getAllMerchant(): List<Merchant>
+
+    @Query("SELECT * FROM Item")
+    fun getAllItem(): List<Item>
+
     @Query("SELECT * FROM Category")
     fun getAllCategory(): List<Category>
 
@@ -28,6 +34,9 @@ interface UserDAO {
     //查找uid
     @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
     fun findByUid(uid : Int): Record
+
+    @Query("SELECT * FROM Record WHERE type LIKE :type ")
+    fun findByType(type : String): List<Record>
 
     //插入
     //有趣的vararg
@@ -42,6 +51,12 @@ interface UserDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllSubcategory(vararg subcategorys: Subcategory)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllMerchant(vararg merchants: Merchant)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllItem(vararg items: Item)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun initialize(vararg hide: Hidden)

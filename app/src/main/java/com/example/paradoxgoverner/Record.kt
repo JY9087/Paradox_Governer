@@ -27,6 +27,7 @@ class TimeConverter{
 }
 
 //声明PrimaryKey  autoGenerate = true之后，构造Record时uid输入0，就会自动生成
+//分为收入或支出
 @Entity
 @TypeConverters(DateConverter::class , TimeConverter::class)
 data class Record(
@@ -35,12 +36,14 @@ data class Record(
     @ColumnInfo var date: Date,
     @ColumnInfo var time : Time,
     @ColumnInfo var member : String,
-    @ColumnInfo var class_level_1 : String,
-    @ColumnInfo var class_level_2 : String,
+    @ColumnInfo var category : String,
+    @ColumnInfo var subcategory : String,
     @ColumnInfo var account : String,
     @ColumnInfo var amount : Float,
-    @ColumnInfo var category : String,
-    @ColumnInfo var type: String
+    @ColumnInfo var type : String,
+    @ColumnInfo var income: Boolean,
+    @ColumnInfo var merchant : String,
+    @ColumnInfo var item : String
 )
 
 
@@ -66,6 +69,18 @@ data class Subcategory(
 @Entity
 data class Hidden(
     @PrimaryKey(autoGenerate = true) val uid : Int
+)
+
+@Entity
+data class Merchant(
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var merchant: String
+)
+
+@Entity
+data class Item(
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var item: String
 )
 
 //account表待实现

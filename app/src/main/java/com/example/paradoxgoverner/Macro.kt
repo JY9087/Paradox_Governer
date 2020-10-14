@@ -12,3 +12,5 @@ val DEFAULT_SUBCATEGORY_LIST = listOf(
     listOf("打车","地铁","公交车"),
     listOf("衣服","化妆品","电子产品")
 )
+val DEFAULT_MERCHANT_LIST = listOf<String>("COCO","Steam","京东")
+val DEFAULT_ITEM_LIST = listOf<String>("奶茶")
