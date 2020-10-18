@@ -21,6 +21,9 @@ class login : AppCompatActivity() {
         val editor = settings.edit()
         var autoLogin:Boolean = settings.getBoolean("autoLogin", false)
         var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
+        usePattern.setOnClickListener{
+            onClick2()
+        }
         checkBox1.setOnCheckedChangeListener{ checkBox1, isCheck->if(isCheck){
             setAutoLogin = true}else {
             setAutoLogin = false
@@ -40,7 +43,7 @@ class login : AppCompatActivity() {
         }
 
     }
-    public fun onClick(userNameEdit: EditText, passwordEdit: EditText) {
+    fun onClick(userNameEdit: EditText, passwordEdit: EditText) {
         val userName: String = userNameEdit.text.toString()
         val password: String = passwordEdit.text.toString()
         doLogin(userName, password)
@@ -61,6 +64,7 @@ class login : AppCompatActivity() {
                 val intent = Intent()
                 intent.setClass(this, MainActivity::class.java)
                 startActivity(intent)
+                finish()
             }else{
                 Toast.makeText(this, "密码错误", Toast.LENGTH_SHORT).show()
             }
@@ -68,5 +72,10 @@ class login : AppCompatActivity() {
         else{
             Toast.makeText(this, "账号不存在", Toast.LENGTH_SHORT).show()
         }
+    }
+    fun onClick2(){
+        val intent = Intent()
+        intent.setClass(this,PatternPassword::class.java)
+        startActivity(intent)
     }
 }

@@ -17,7 +17,6 @@ class register : AppCompatActivity() {
         val passwordEdit = findViewById<EditText>(R.id.password)
         val password2Edit = findViewById<EditText>(R.id.password2)
 
-
         mRigisterBtn.setOnClickListener {
             onClick(userNameEdit,passwordEdit,password2Edit)
         }
@@ -32,11 +31,11 @@ class register : AppCompatActivity() {
         if(password==password2 && !UserAndPasswordDAO.searchNameAndPwd(userName)){
             var temp:userNameAndPwd = userNameAndPwd(1,userName,password)
             UserAndPasswordDAO.insertNameAndPwd(temp)
-            Toast.makeText(this,"注册成功", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"注册成功,请设置手势密码", Toast.LENGTH_SHORT).show()
             val intent = Intent()
-            intent.setClass(this,MainActivity::class.java)
+            intent.setClass(this,PatternPassword::class.java)
             startActivity(intent)
-
+            finish()
         }else if(password!=password2){
             Toast.makeText(this,"密码错误", Toast.LENGTH_SHORT).show()
         }else{
