@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 
 //单例设计模式   这里使用静态内部类
-@Database(entities = arrayOf(Record::class,Member::class,Category::class,Subcategory::class,Hidden::class,Merchant::class,Item::class)
+@Database(entities = arrayOf(Record::class,Member::class,Category::class,Subcategory::class,Hidden::class,Merchant::class,Item::class,userNameAndPwd::class)
     , version = 1,exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDAO(): UserDAO
