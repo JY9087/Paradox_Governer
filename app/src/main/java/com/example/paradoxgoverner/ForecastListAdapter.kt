@@ -27,6 +27,12 @@ class ForecastListAdapter(var items: List<Record>):
         holder.view.card_view_member.text=items.get(position).member
         holder.view.card_view_time.text=items.get(position).time.toString()
         holder.view.card_view_money_amount.text=items.get(position).amount.toString()
+        holder.view.card_view_date.text = items.get(position).date.toString()
+        holder.view.card_view_item.text=items.get(position).item
+        holder.view.card_view_merchant.text=items.get(position).merchant
+        holder.view.card_view_category.text=items.get(position).category
+        holder.view.card_view_subcategory.text=items.get(position).subcategory
+        holder.view.card_view_type.text=items.get(position).type
     }
 
     override fun getItemCount():  Int=items.size
