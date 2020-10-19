@@ -76,11 +76,8 @@ class MainActivity : AppCompatActivity() {
                         RECORD_UID, DAO.getAll().get(position).uid
                     )
                     startActivity(intent)
-
                 }
-
                 override fun onLongClick(view: View?, position: Int) {
-
                 }
             }
         )
@@ -178,15 +175,7 @@ class MainActivity : AppCompatActivity() {
 
 }
 
-
-
 interface ClickListener {
     fun onClick(view: View?, position: Int)
     fun onLongClick(view: View?, position: Int)
 }
-
-
-
-
-
-

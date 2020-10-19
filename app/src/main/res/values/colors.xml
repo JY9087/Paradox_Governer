@@ -4,7 +4,10 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorCardViewBackground">#FF9800</color>
-
+    <color name="colorCardView收入">#9C27B0</color>
+    <color name="colorCardView支出">#FF9800</color>
+    <color name="colorCardView借贷">#03A9F4</color>
+    <color name="colorCardView转账">#4CAF50</color>
 </resources>
 
 <!-- color由三原色 红绿蓝 组成。#之后每两位十六进制对应一种颜色 -->

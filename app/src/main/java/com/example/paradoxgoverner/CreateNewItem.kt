@@ -110,8 +110,6 @@ class CreateNewItem : AppCompatActivity() {
 
         //account使用什么值？
 
-
-
         //这一点也不优雅
         //一定要改掉它
         //三种情况：新建时未赋值  修改时未赋值   已赋值
@@ -161,8 +159,6 @@ class CreateNewItem : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
-
-
 
 
 
