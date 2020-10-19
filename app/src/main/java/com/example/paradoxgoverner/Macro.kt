@@ -14,3 +14,10 @@ val DEFAULT_SUBCATEGORY_LIST = listOf(
 )
 val DEFAULT_MERCHANT_LIST = listOf<String>("COCO","Steam","京东")
 val DEFAULT_ITEM_LIST = listOf<String>("奶茶")
+
+const val MEMBER_INDEX = 0
+const val CATEGORY_INDEX = 1
+const val SUBCATEGORY_INDEX = 2
+const val TYPE_INDEX = 3
+const val MERCHANT_INDEX = 4
+const val ITEM_INDEX = 5

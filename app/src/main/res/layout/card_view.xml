@@ -16,9 +16,41 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         androidx.cardview:id="@+id/linearLayout"
         androidx.cardview:layout_width="match_parent"
-        androidx.cardview:layout_height="match_parent"
+        androidx.cardview:layout_height="124dp"
         androidx.cardview:orientation="horizontal">
 
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_merchant"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginEnd="8dp"
+            androidx.cardview:layout_marginRight="8dp"
+            androidx.cardview:text="@string/cardview_description_merchant"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_type"
+            app:layout_constraintEnd_toStartOf="@+id/card_view_merchant"
+            app:layout_constraintTop_toTopOf="@+id/card_view_type" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_item"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_description_item"
+            app:layout_constraintTop_toTopOf="@+id/card_view_description_item"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            tools:layout_editor_absoluteX="335dp" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_subcategory"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginLeft="8dp"
+            androidx.cardview:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_description_subcategory"
+            app:layout_constraintStart_toEndOf="@+id/card_view_description_subcategory"
+            app:layout_constraintTop_toTopOf="@+id/card_view_description_subcategory" />
 
         <TextView
             androidx.cardview:id="@+id/card_view_member"
@@ -27,19 +59,20 @@
             androidx.cardview:layout_marginStart="8dp"
             androidx.cardview:layout_marginLeft="8dp"
             androidx.cardview:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_view_description_member"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             androidx.cardview:id="@+id/card_view_discription"
-            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_width="0dp"
             androidx.cardview:layout_height="wrap_content"
             androidx.cardview:layout_marginStart="8dp"
             androidx.cardview:layout_marginLeft="8dp"
-            androidx.cardview:layout_marginTop="16dp"
             androidx.cardview:text="TextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/card_view_member"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_view_description"
+            app:layout_constraintTop_toTopOf="@+id/card_view_description"
             tools:layout_conversion_absoluteHeight="19dp"
             tools:layout_conversion_absoluteWidth="137dp" />
 
@@ -47,23 +80,146 @@
             androidx.cardview:id="@+id/card_view_time"
             androidx.cardview:layout_width="wrap_content"
             androidx.cardview:layout_height="wrap_content"
-            androidx.cardview:layout_marginStart="16dp"
-            androidx.cardview:layout_marginLeft="16dp"
+            androidx.cardview:layout_marginEnd="8dp"
+            androidx.cardview:layout_marginRight="8dp"
             androidx.cardview:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/card_view_member"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             androidx.cardview:id="@+id/card_view_money_amount"
             androidx.cardview:layout_width="wrap_content"
             androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginEnd="12dp"
+            androidx.cardview:layout_marginRight="12dp"
+            androidx.cardview:text="TextView"
+            app:layout_constraintEnd_toStartOf="@+id/textView12"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_amount"
+            androidx.cardview:layout_width="28dp"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginEnd="8dp"
+            androidx.cardview:layout_marginRight="8dp"
+            androidx.cardview:text="@string/cardview_description_amount"
+            app:layout_constraintEnd_toStartOf="@+id/card_view_money_amount"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_member"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginLeft="8dp"
+            androidx.cardview:text="@string/cardview_description_member"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_date"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:text="TextView"
+            app:layout_constraintEnd_toStartOf="@+id/card_view_time"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            androidx.cardview:id="@+id/textView12"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginEnd="8dp"
+            androidx.cardview:layout_marginRight="8dp"
+            androidx.cardview:text="@string/cardview_description_datetime"
+            app:layout_constraintEnd_toStartOf="@+id/card_view_date"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginTop="16dp"
+            androidx.cardview:text="@string/cardview_description_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_view_member" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_category"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginTop="16dp"
+            androidx.cardview:text="@string/cardview_description_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_view_discription" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_category"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginLeft="8dp"
+            androidx.cardview:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_description_category"
+            app:layout_constraintStart_toEndOf="@+id/card_view_description_category"
+            app:layout_constraintTop_toTopOf="@+id/card_view_description_category" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_subcategory"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
             androidx.cardview:layout_marginStart="16dp"
             androidx.cardview:layout_marginLeft="16dp"
+            androidx.cardview:text="@string/cardview_description_subcategory"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_category"
+            app:layout_constraintStart_toEndOf="@+id/card_view_category"
+            app:layout_constraintTop_toTopOf="@+id/card_view_category" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_item"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginEnd="8dp"
+            androidx.cardview:layout_marginRight="8dp"
+            androidx.cardview:text="@string/cardview_description_item"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_subcategory"
+            app:layout_constraintEnd_toStartOf="@+id/card_view_item"
+            app:layout_constraintTop_toTopOf="@+id/card_view_subcategory" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_description_type"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginLeft="8dp"
             androidx.cardview:layout_marginTop="16dp"
+            androidx.cardview:text="@string/cardview_description_type"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_view_description_category" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_type"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginLeft="8dp"
             androidx.cardview:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/card_view_discription"
-            app:layout_constraintTop_toBottomOf="@+id/card_view_time" />
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_description_type"
+            app:layout_constraintStart_toEndOf="@+id/card_view_description_type"
+            app:layout_constraintTop_toTopOf="@+id/card_view_description_type" />
+
+        <TextView
+            androidx.cardview:id="@+id/card_view_merchant"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginEnd="8dp"
+            androidx.cardview:layout_marginRight="8dp"
+            androidx.cardview:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_description_merchant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/card_view_description_merchant" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>
