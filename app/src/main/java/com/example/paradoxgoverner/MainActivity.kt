@@ -2,6 +2,7 @@ package com.example.paradoxgoverner
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -64,6 +65,34 @@ class MainActivity : AppCompatActivity(){
         forecastList.layoutManager = LinearLayoutManager(this)
         var myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
+
+
+        //用户名和密码数据库，及用于判断是进入注册界面还是登录界面还是直接进入主界面的变量
+        val userList:List<userNameAndPwd> = DAO.findall()
+        var isAlreadyRegister:Boolean = if (userList.size==0) false else true
+
+        val settings: SharedPreferences = getSharedPreferences("info", 0)
+        val editor = settings.edit()
+        var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
+        //已经注册过，进入登录界面
+        if(isAlreadyRegister) {
+            //已经登录了，进入主界面
+            if(!isAlreadyLogin){
+                val intent = Intent()
+                intent.setClass(this, Login::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }else{//尚未注册，进入注册界面
+            val intent = Intent()
+            intent.setClass(this, Register::class.java)
+            startActivity(intent)
+            finish()
+        }
+        isAlreadyLogin = false
+        editor.putBoolean("isAlreadyLogin",isAlreadyLogin)
+        editor.commit()
+        //上述注册和登录完成
 
 
         var recyclertouchlistener = RecyclerTouchListener(
