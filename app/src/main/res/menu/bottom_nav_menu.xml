@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_pie_chart_24px"
         android:title="@string/title_notifications" />
 
+    <item
+        android:id="@+id/navigation_personal"
+        android:icon="@drawable/ic_account_box_24px"
+        android:title="@string/title_personal" />
+
 </menu>

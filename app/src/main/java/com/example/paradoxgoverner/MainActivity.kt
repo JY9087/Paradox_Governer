@@ -2,13 +2,12 @@ package com.example.paradoxgoverner
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlin.properties.Delegates
 
 
@@ -83,6 +82,28 @@ class MainActivity : AppCompatActivity() {
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
+
+
+
+        var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {}
+                R.id.navigation_dashboard-> {
+                    val intent = Intent(instance, DashboardActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.navigation_notifications -> {
+                    val intent = Intent(instance, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.navigation_personal -> {
+                    val intent = Intent(instance, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        })
     }
     //End Of OnCreate
 
@@ -170,7 +191,9 @@ class MainActivity : AppCompatActivity() {
         forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findByType("收入"))
     }
 
-    // Request code for creating a PDF document.
+
+
+
 
 
 }
