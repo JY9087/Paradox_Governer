@@ -47,7 +47,7 @@
 
     <string name="title_home">主页面</string>
     <string name="title_dashboard">统计</string>
-    <string name="title_notifications">图表</string>
+    <string name="title_graph">图表</string>
     <string name="title_personal">个人中心</string>
 
     <!--CardView-->
@@ -61,5 +61,8 @@
     <string name="cardview_description_description">描述</string>
     <string name="cardview_description_datetime">时间</string>
 
+    <string name="personal_manage_customize">管理自定义选项</string>
+    <string name="personal_manage_customize_new">新增</string>
+    <string name="personal_manage_customize_change">修改/删除</string>
 
 </resources>

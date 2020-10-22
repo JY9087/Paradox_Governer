@@ -6,16 +6,16 @@ import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlin.properties.Delegates
 
-class DashboardActivity : AppCompatActivity() {
+class GraphActivity : AppCompatActivity() {
 
     companion object {
-        var instance: DashboardActivity by Delegates.notNull()
+        var instance: GraphActivity by Delegates.notNull()
         fun instance() = instance
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        setContentView(R.layout.activity_graph)
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -27,14 +27,14 @@ class DashboardActivity : AppCompatActivity() {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                 }
-                R.id.navigation_dashboard-> {}
-                R.id.navigation_graph -> {
-                    val intent = Intent(this, GraphActivity::class.java)
+                R.id.navigation_dashboard-> {
+                    val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                 }
+                R.id.navigation_graph -> {}
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
                     startActivity(intent)
@@ -45,6 +45,6 @@ class DashboardActivity : AppCompatActivity() {
             }
             true
         })
-        bottomNavigatior.selectedItemId = R.id.navigation_dashboard
+        bottomNavigatior.selectedItemId = R.id.navigation_graph
     }
 }

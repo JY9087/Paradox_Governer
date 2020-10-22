@@ -9,7 +9,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
@@ -45,22 +44,22 @@ class CreateNewItem : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customization_of_new_item)
         val DAO = AppDatabase.instance.userDAO()
+        //查看是否有携带uid，如果有就修改uid变量的值
+        uid = intent.getIntExtra(RECORD_UID,0)
         if(uid != 0){
             rec = AppDatabase.instance.userDAO().findByUid(uid)
         }
 
         //自动填充当前时间
-        var myear = mcalendar.get(Calendar.YEAR)
-        var mmonth = mcalendar.get(Calendar.MONTH)
-        var mday = mcalendar.get(Calendar.DAY_OF_MONTH)
-        var mhourofday = mcalendar.get(Calendar.HOUR_OF_DAY)
-        var mminute = mcalendar.get(Calendar.MINUTE)
-        mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-
-        time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
-
-        //查看是否有携带uid，如果有就修改uid变量的值
-        uid = intent.getIntExtra(RECORD_UID,0)
+        if(uid == 0){
+            mcalendar.timeInMillis = System.currentTimeMillis()
+            time_text.text = "时间：" + Date(System.currentTimeMillis()).toString() + " " + Time(System.currentTimeMillis()).toString()
+        }
+        else{
+            mcalendar.timeInMillis = rec.time.time
+            time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
+            //time_text.text = rec.date.toString() + " " + rec.time.toString()
+        }
 
 
         //Member
@@ -80,13 +79,13 @@ class CreateNewItem : AppCompatActivity() {
 
         var subcategoryList = DAO.getAllSubcategory(categorystring)
         if(uid != 0){
-            rec = AppDatabase.instance.userDAO().findByUid(uid)
             subcategoryList = DAO.getAllSubcategory(rec.category)
         }
         for (subcategorys in subcategoryList) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
 
+        //Type
         InitTypeSpinner(DEFAULT_TYPE_LIST,R.id.type_spinner, TYPE_INDEX)
 
         //Merchant
@@ -126,11 +125,15 @@ class CreateNewItem : AppCompatActivity() {
 
             item_spinner?.setSelection(itemStringList.indexOf(rec.item))
 
+            type_spinner?.setSelection(DEFAULT_TYPE_LIST.indexOf(rec.type))
+
             stringArray[MEMBER_INDEX]=rec.member
             stringArray[CATEGORY_INDEX]=rec.category
             stringArray[SUBCATEGORY_INDEX]=rec.subcategory
             stringArray[MERCHANT_INDEX]=rec.merchant
             stringArray[ITEM_INDEX]=rec.item
+            stringArray[TYPE_INDEX]=rec.type
+            income = rec.income
 
             cancel_change_button.visibility = View.VISIBLE
         }
@@ -294,7 +297,7 @@ class CreateNewItem : AppCompatActivity() {
                 mhourofday = hourofday
                 mminute = minute
                 mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-                time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
+                time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
             }, mhourofday, mminute, true)
             .show()
 
@@ -304,11 +307,11 @@ class CreateNewItem : AppCompatActivity() {
                 mmonth = month
                 mday = day
                 mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-                time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
+                time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
             }, myear,mmonth,mday)
             .show()
 
-        time_text.text = "时间： "+myear.toString()+"年"+mmonth.toString()+"月"+mday.toString()+"日 "+mhourofday.toString()+"时"+mminute.toString()+"分"
+        time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
     }
 
     fun InitSpinner(itemlist : List<String> , ID : Int , Index : Int) {
@@ -335,12 +338,7 @@ class CreateNewItem : AppCompatActivity() {
             }
         })
 
-        selectedSpinner.setOnLongClickListener(OnLongClickListener {
-            //测试函数
 
-            false
-        }
-        )
     }
 
 
@@ -420,7 +418,7 @@ class CreateNewItem : AppCompatActivity() {
             ) {
                 // Get the spinner selected item text
                 stringArray[Index] = adapterView.getItemAtPosition(i) as String
-                SubtypeAdapt(stringArray[Index])
+                SubtypeSpinnerAdapt(stringArray[Index])
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -429,13 +427,28 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
-    fun SubtypeAdapt(type : String) {
+    fun SubtypeSpinnerAdapt(type : String) {
         var subtypeStringList = listOf<String>()
         when(type){
             "收入"->subtypeStringList = listOf<String>("收入")
             "支出"->subtypeStringList = listOf<String>("支出")
-            "借贷"->subtypeStringList = listOf<String>("收入","支出")
-            "转账"->subtypeStringList = listOf<String>("收入","支出")
+            //使用离谱的方法，终于解决Subtype了
+            "借贷"->{
+                if(uid != 0 && rec.income == false && rec.type != "支出"){
+                    subtypeStringList = listOf<String>("支出","收入")
+                }
+                else{
+                    subtypeStringList = listOf<String>("收入","支出")
+                }
+            }
+            "转账"->{
+                if(uid != 0 && rec.income == false && rec.type != "支出"){
+                    subtypeStringList = listOf<String>("支出","收入")
+                }
+                else{
+                    subtypeStringList = listOf<String>("收入","支出")
+                }
+            }
         }
         var subtypespinner = findViewById<Spinner>(R.id.sub_type_spinner)
 

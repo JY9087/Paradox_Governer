@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DashboardActivity">
+    tools:context=".GraphActivity">
 
-    <!--背景颜色用colorPrimary-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
@@ -21,12 +20,12 @@
         app:menu="@menu/bottom_nav_menu" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/textView11"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:text="@string/title_dashboard"
+        android:text="@string/title_graph"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

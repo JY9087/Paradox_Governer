@@ -1,17 +1,22 @@
 package com.example.paradoxgoverner
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Dao
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlin.properties.Delegates
 
+//全局变量。请小心使用
+var versionFlag = false
 
-const val CREATE_FILE = 1
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +31,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //判断版本
+        val version = Integer.valueOf(Build.VERSION.SDK)
+        if (version >= 5) {
+            versionFlag = true
+        }
 
         //Room
         instance = this
@@ -62,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         var myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
 
-
+        //实现长按
         var recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
@@ -70,13 +81,13 @@ class MainActivity : AppCompatActivity() {
                 //单击事件  进入Record
                 override fun onClick(view: View?, position: Int) {
                     //传递UID，由新Activity去进行查询
-                    //Todo : 改为传递Record
                     val intent = Intent(instance, CreateNewItem::class.java).putExtra(
                         RECORD_UID, DAO.getAll().get(position).uid
                     )
                     startActivity(intent)
                 }
                 override fun onLongClick(view: View?, position: Int) {
+                    wantToDelete(DAO.getAll().get(position).uid)
                 }
             }
         )
@@ -90,20 +101,30 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> {}
                 R.id.navigation_dashboard-> {
-                    val intent = Intent(instance, DashboardActivity::class.java)
+                    val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
+                    if (versionFlag) {
+                        overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
+                    }
                 }
-                R.id.navigation_notifications -> {
-                    val intent = Intent(instance, MainActivity::class.java)
+                R.id.navigation_graph -> {
+                    val intent = Intent(this, GraphActivity::class.java)
                     startActivity(intent)
+                    if (versionFlag) {
+                        overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
+                    }
                 }
                 R.id.navigation_personal -> {
-                    val intent = Intent(instance, MainActivity::class.java)
+                    val intent = Intent(this, PersonalActivity::class.java)
                     startActivity(intent)
+                    if (versionFlag) {
+                        overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
+                    }
                 }
             }
             true
         })
+        bottomNavigatior.selectedItemId = R.id.navigation_home
     }
     //End Of OnCreate
 
@@ -191,10 +212,18 @@ class MainActivity : AppCompatActivity() {
         forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findByType("收入"))
     }
 
-
-
-
-
+    fun wantToDelete(uid: Int){
+        val DAO = AppDatabase.instance.userDAO()
+        AlertDialog.Builder(this)
+            .setTitle("确认删除？")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
+                DAO.delete( DAO.findByUid(uid) )
+                findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAll())
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
 
 }
 

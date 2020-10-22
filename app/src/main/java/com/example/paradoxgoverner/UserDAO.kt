@@ -11,6 +11,11 @@ interface UserDAO {
             "LIMIT 1")
     fun findByName(description: String): Record
 
+    //根据Category查找Subcategory
+    @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
+    fun findSubcategoryByCategory(category : String): List<Subcategory>
+
+
     @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
     fun findByUid(uid : Int): Record
 
@@ -31,6 +36,23 @@ interface UserDAO {
 
     @Query("SELECT * FROM Item WHERE item LIKE :item ")
     fun findItemByString(item : String): List<Item>
+
+
+    //根据UID进行查找
+    @Query("SELECT * FROM Member WHERE uid LIKE :member ")
+    fun findMemberByUid(member : Int): List<Member>
+
+    @Query("SELECT * FROM Category WHERE uid LIKE :category ")
+    fun findCategoryByUid(category : Int): List<Category>
+
+    @Query("SELECT * FROM Subcategory WHERE uid LIKE :subcategory")
+    fun findSubcategoryByUid(subcategory : Int): List<Subcategory>
+
+    @Query("SELECT * FROM Merchant WHERE uid LIKE :merchant ")
+    fun findMerchantByUid(merchant : Int): List<Merchant>
+
+    @Query("SELECT * FROM Item WHERE uid LIKE :item ")
+    fun findItemByUid(item : Int): List<Item>
 
 
     //全选
@@ -82,6 +104,23 @@ interface UserDAO {
 
 
     //删除
+    //好像重名函数可以自动重载？
+    //也许我会修改这部分代码
     @Delete
     fun delete(record: Record)
+
+    @Delete
+    fun deleteMember(member : Member)
+
+    @Delete
+    fun deleteCategory(categpry : Category)
+
+    @Delete
+    fun deleteSubcategory(subcategory: Subcategory)
+
+    @Delete
+    fun deleteMerchant(merchant: Merchant)
+
+    @Delete
+    fun deleteItem(item : Item)
 }

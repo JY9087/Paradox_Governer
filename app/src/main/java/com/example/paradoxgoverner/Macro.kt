@@ -21,3 +21,5 @@ const val SUBCATEGORY_INDEX = 2
 const val TYPE_INDEX = 3
 const val MERCHANT_INDEX = 4
 const val ITEM_INDEX = 5
+
+val CUSTOMIZED_LIST = listOf("成员","一级分类","商家","项目")
