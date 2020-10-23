@@ -24,6 +24,8 @@ class PersonalActivity : AppCompatActivity() {
     var subcategory_uid = 0
     var categoryString = DEFAULT_CATEGORY_LIST[0]
 
+    var lastModified = mutableListOf<String>("","","","","","","","")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal)
@@ -166,8 +168,8 @@ class PersonalActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
         })
-
-
+        if(lastModified[type] != "")
+            personal_custom_spinner2?.setSelection(stringList.indexOf(lastModified[type]))
     }
 
     fun SubcategorySpinnerAdapt() {
@@ -218,16 +220,17 @@ class PersonalActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(itemText)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
-                if(itemText.text.toString() != ""){
-                    when(type){
-                        MEMBER_INDEX->DAO.insertAllMember(Member(0,itemText.text.toString()))
-                        CATEGORY_INDEX->DAO.insertAllCategory(Category(0,itemText.text.toString()))
-                        MERCHANT_INDEX->DAO.insertAllMerchant(Merchant(0,itemText.text.toString()))
-                        ITEM_INDEX->DAO.insertAllItem(Item(0,itemText.text.toString()))
+                if(itemText.text.toString() != "") {
+                    val txt = itemText.text.toString()
+                    when (type) {
+                        MEMBER_INDEX -> DAO.insertAllMember(Member(0, txt))
+                        CATEGORY_INDEX -> DAO.insertAllCategory(Category(0, txt))
+                        MERCHANT_INDEX -> DAO.insertAllMerchant(Merchant(0, txt))
+                        ITEM_INDEX -> DAO.insertAllItem(Item(0, txt))
                     }
+                    lastModified[type] = txt
                     InitSpinner()
                     personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
-
                 }
             })
             .setNegativeButton("取消", null)
@@ -286,29 +289,47 @@ class PersonalActivity : AppCompatActivity() {
             .setView(itemText)
             .setPositiveButton("修改", DialogInterface.OnClickListener{ dialogInterface, i ->
                 if(itemText.text.toString() != ""){
+                    val txt = itemText.text.toString()
                     when(type){
-                        MEMBER_INDEX->DAO.insertAllMember(Member(uid,itemText.text.toString()))
-                        CATEGORY_INDEX->DAO.insertAllCategory(Category(uid,itemText.text.toString()))
-                        MERCHANT_INDEX->DAO.insertAllMerchant(Merchant(uid,itemText.text.toString()))
-                        ITEM_INDEX->DAO.insertAllItem(Item(uid,itemText.text.toString()))
+                        MEMBER_INDEX->DAO.insertAllMember(Member(uid,txt))
+                        CATEGORY_INDEX->DAO.insertAllCategory(Category(uid,txt))
+                        MERCHANT_INDEX->DAO.insertAllMerchant(Merchant(uid,txt))
+                        ITEM_INDEX->DAO.insertAllItem(Item(uid,txt))
                     }
+                    lastModified[type] = txt
                     InitSpinner()
                     personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
+
                 }
             })
             .setNegativeButton("删除", DialogInterface.OnClickListener{ dialogInterface, i ->
-                    when(type) {
-                        MEMBER_INDEX -> DAO.deleteMember(DAO.findMemberByUid(uid)[0])
-                        CATEGORY_INDEX -> { DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
-                            for (sc in DAO.findSubcategoryByCategory(categoryString)){
-                                DAO.deleteSubcategory(sc)
-                            }
-                        }
-                        MERCHANT_INDEX -> DAO.deleteMerchant(DAO.findMerchantByUid(uid)[0])
-                        ITEM_INDEX -> DAO.deleteItem(DAO.findItemByUid(uid)[0])
+                var txt = ""
+                when(type) {
+                    MEMBER_INDEX -> {
+                        txt = DAO.findMemberByUid(uid)[0].member
+                        DAO.deleteMember(DAO.findMemberByUid(uid)[0])
                     }
-                    InitSpinner()
-                    personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
+                    CATEGORY_INDEX -> {
+                        txt = DAO.findCategoryByUid(uid)[0].category
+                        DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
+                        for (sc in DAO.findSubcategoryByCategory(categoryString)){
+                            DAO.deleteSubcategory(sc)
+                        }
+                    }
+                    MERCHANT_INDEX ->{
+                        txt = DAO.findMerchantByUid(uid)[0].merchant
+                        DAO.deleteMerchant(DAO.findMerchantByUid(uid)[0])
+                    }
+                    ITEM_INDEX -> {
+                        txt = DAO.findItemByUid(uid)[0].item
+                        DAO.deleteItem(DAO.findItemByUid(uid)[0])
+                    }
+                }
+                if(lastModified[type] == txt)
+                    lastModified[type] = ""
+                InitSpinner()
+                personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
+
             })
             .show()
     }
