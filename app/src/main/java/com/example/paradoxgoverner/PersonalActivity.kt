@@ -63,6 +63,7 @@ class PersonalActivity : AppCompatActivity() {
         InitSpinner()
     }
 
+    
     fun InitSpinner() {
         var selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -77,23 +78,21 @@ class PersonalActivity : AppCompatActivity() {
                 i: Int,
                 l: Long
             ) {
+                personal_custom_spinner3.visibility = View.INVISIBLE
+                personal_custom_button3.visibility = View.INVISIBLE
+                personal_custom_button4.visibility = View.INVISIBLE
+                stringList.clear()
                 //kotlin list下标从0开始
                 when(adapterView.getItemAtPosition(i) as String){
                     CUSTOMIZED_LIST[0] -> {
                         type = MEMBER_INDEX
-                        stringList.clear()
                         for (members in DAO.getAllMember()) {
                             stringList.add(members.member)
                         }
                         InitSecondSpinner(stringList)
-                        personal_custom_spinner3.visibility = View.INVISIBLE
-                        personal_custom_button3.visibility = View.INVISIBLE
-                        personal_custom_button4.visibility = View.INVISIBLE
                     }
-
                     CUSTOMIZED_LIST[1] -> {
                         type = CATEGORY_INDEX
-                        stringList.clear()
                         for (categorys in DAO.getAllCategory()) {
                             stringList.add(categorys.category)
                         }
@@ -102,29 +101,20 @@ class PersonalActivity : AppCompatActivity() {
                         personal_custom_button3.visibility = View.VISIBLE
                         personal_custom_button4.visibility = View.VISIBLE
                     }
-
                     CUSTOMIZED_LIST[2] -> {
                         type = MERCHANT_INDEX
-                        stringList.clear()
                         for (merchants in DAO.getAllMerchant()) {
                             stringList.add(merchants.merchant)
                         }
                         InitSecondSpinner(stringList)
-                        personal_custom_spinner3.visibility = View.INVISIBLE
-                        personal_custom_button3.visibility = View.INVISIBLE
-                        personal_custom_button4.visibility = View.INVISIBLE
                     }
 
                     CUSTOMIZED_LIST[3] -> {
                         type = ITEM_INDEX
-                        stringList.clear()
                         for (items in DAO.getAllItem()) {
                             stringList.add(items.item)
                         }
                         InitSecondSpinner(stringList)
-                        personal_custom_spinner3.visibility = View.INVISIBLE
-                        personal_custom_button3.visibility = View.INVISIBLE
-                        personal_custom_button4.visibility = View.INVISIBLE
                     }
 
                 }
@@ -137,6 +127,7 @@ class PersonalActivity : AppCompatActivity() {
         })
     }
 
+    
     fun InitSecondSpinner(itemlist : List<String>) {
         var selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner2)
 
@@ -172,6 +163,7 @@ class PersonalActivity : AppCompatActivity() {
             personal_custom_spinner2?.setSelection(stringList.indexOf(lastModified[type]))
     }
 
+    
     fun SubcategorySpinnerAdapt() {
         val DAO = AppDatabase.instance.userDAO()
         var subcategoryList = DAO.getAllSubcategory(categoryString)
@@ -205,12 +197,11 @@ class PersonalActivity : AppCompatActivity() {
     fun NewCustomizedItem(view : View) {
         var title = "请输入"
         var typeLabel =""
-        //这东西有潜在风险。不该这样用String
         when(type){
-            MEMBER_INDEX->typeLabel = "成员"
-            CATEGORY_INDEX->typeLabel = "一级分类"
-            MERCHANT_INDEX->typeLabel = "商家"
-            ITEM_INDEX->typeLabel = "项目"
+            MEMBER_INDEX->typeLabel = CUSTOMIZED_LIST[0]
+            CATEGORY_INDEX->typeLabel = CUSTOMIZED_LIST[1]
+            MERCHANT_INDEX->typeLabel = CUSTOMIZED_LIST[2]
+            ITEM_INDEX->typeLabel = CUSTOMIZED_LIST[3]
         }
         title += typeLabel
         val DAO = AppDatabase.instance.userDAO()
@@ -260,16 +251,15 @@ class PersonalActivity : AppCompatActivity() {
             .show()
     }
 
-
+    
     fun ChangeCustomizedItem(view : View) {
         var title = "请输入"
         var typeLabel =""
-        //这东西有潜在风险。不该这样用String
         when(type){
-            MEMBER_INDEX->typeLabel = "成员"
-            CATEGORY_INDEX->typeLabel = "一级分类"
-            MERCHANT_INDEX->typeLabel = "商家"
-            ITEM_INDEX->typeLabel = "项目"
+            MEMBER_INDEX->typeLabel = CUSTOMIZED_LIST[0]
+            CATEGORY_INDEX->typeLabel = CUSTOMIZED_LIST[1]
+            MERCHANT_INDEX->typeLabel = CUSTOMIZED_LIST[2]
+            ITEM_INDEX->typeLabel = CUSTOMIZED_LIST[3]
         }
         title += typeLabel
         val DAO = AppDatabase.instance.userDAO()
@@ -312,6 +302,7 @@ class PersonalActivity : AppCompatActivity() {
                     CATEGORY_INDEX -> {
                         txt = DAO.findCategoryByUid(uid)[0].category
                         DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
+                        //删除一级分类也删除对应二级分类
                         for (sc in DAO.findSubcategoryByCategory(categoryString)){
                             DAO.deleteSubcategory(sc)
                         }
@@ -334,6 +325,7 @@ class PersonalActivity : AppCompatActivity() {
             .show()
     }
 
+    
     fun ChangeCustomizedSubcategory(view : View) {
         var title = "请输入二级分类"
         val DAO = AppDatabase.instance.userDAO()

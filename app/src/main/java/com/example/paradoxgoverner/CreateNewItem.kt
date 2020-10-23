@@ -40,10 +40,13 @@ class CreateNewItem : AppCompatActivity() {
     var merchantStringList = mutableListOf<String>()
     var itemStringList = mutableListOf<String>()
 
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customization_of_new_item)
+
         val DAO = AppDatabase.instance.userDAO()
+
         //查看是否有携带uid，如果有就修改uid变量的值
         uid = intent.getIntExtra(RECORD_UID,0)
         if(uid != 0){
@@ -52,29 +55,24 @@ class CreateNewItem : AppCompatActivity() {
 
         //自动填充当前时间
         if(uid == 0){
-            mcalendar.timeInMillis = System.currentTimeMillis()
-            time_text.text = "时间：" + Date(System.currentTimeMillis()).toString() + " " + Time(System.currentTimeMillis()).toString()
-        }
+            mcalendar.timeInMillis = System.currentTimeMillis() }
         else{
-            mcalendar.timeInMillis = rec.time.time
-            time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
-            //time_text.text = rec.date.toString() + " " + rec.time.toString()
-        }
+            mcalendar.timeInMillis = rec.time.time }
+        //Todo : 使用PlaceHolder
+        time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
 
 
         //Member
-        var memberList = DAO.getAllMember()
-        for (members in memberList) {
+        for (members in DAO.getAllMember()) {
             memberStringList.add(members.member)
         }
         InitSpinner(memberStringList.toList(),R.id.member_spinner, MEMBER_INDEX)
 
         //Category & Subcategory
-        var categoryList = DAO.getAllCategory()
-        for (categorys in categoryList) {
+        for (categorys in DAO.getAllCategory()) {
             categoryStringList.add(categorys.category)
         }
-        InitCategotySpinner(categoryStringList.toList(),R.id.category_spinner, CATEGORY_INDEX)
+        InitCategotySpinner(categoryStringList.toList())
 
 
         var subcategoryList = DAO.getAllSubcategory(categorystring)
@@ -86,23 +84,20 @@ class CreateNewItem : AppCompatActivity() {
         }
 
         //Type
-        InitTypeSpinner(DEFAULT_TYPE_LIST,R.id.type_spinner, TYPE_INDEX)
+        InitTypeSpinner(DEFAULT_TYPE_LIST)
 
         //Merchant
-        var merchantList = DAO.getAllMerchant()
-        for (merchants in merchantList) {
+        for (merchants in DAO.getAllMerchant()) {
             merchantStringList.add(merchants.merchant)
         }
         InitSpinner(merchantStringList.toList(),R.id.merchant_spinner, MERCHANT_INDEX)
 
         //Item
-        var itemList = DAO.getAllItem()
-        for (items in itemList) {
+        for (items in DAO.getAllItem()) {
             itemStringList.add(items.item)
         }
         InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
-        //也许要在Init之后修改？
         //新建
         if(uid == 0) {
             cancel_change_button.visibility = View.INVISIBLE
@@ -140,16 +135,16 @@ class CreateNewItem : AppCompatActivity() {
     }
     //End of OnCreate
 
+
+
+    
     fun CreateNewRecord(view: View) {
 
-        //已完成
         var description = findViewById<EditText>(R.id.description).text.toString()
 
-        //account使用什么值？
+        //Todo : 使用真实的Account
 
 
-        //这一点也不优雅
-        //一定要改掉它
         //三种情况：新建时未赋值  修改时未赋值   已赋值
 
         var amount : Float
@@ -175,6 +170,7 @@ class CreateNewItem : AppCompatActivity() {
         startActivity(intent)
     }
 
+    
     fun DeleteRecord(view : View){
         if(uid != 0)
         {
@@ -186,12 +182,14 @@ class CreateNewItem : AppCompatActivity() {
         startActivity(intent)
     }
 
+    
     fun CancelChange(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 
     //新建  似乎只能写5个函数
+    
     fun NewMember(view : View) {
         var memberText = EditText(this)
         AlertDialog.Builder(this)
@@ -285,6 +283,8 @@ class CreateNewItem : AppCompatActivity() {
     //End Of Customization
 
 
+    //选择时间
+    
     fun SelectTime(view : View){
         var myear = mcalendar.get(Calendar.YEAR)
         var mmonth = mcalendar.get(Calendar.MONTH)
@@ -314,6 +314,9 @@ class CreateNewItem : AppCompatActivity() {
         time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
     }
 
+
+    //初始化通用Spinner(Member,Merchant,Item)
+    
     fun InitSpinner(itemlist : List<String> , ID : Int , Index : Int) {
         var selectedSpinner = findViewById<Spinner>(ID)
 
@@ -329,21 +332,20 @@ class CreateNewItem : AppCompatActivity() {
                 i: Int,
                 l: Long
             ) {
-                // Get the spinner selected item text
+                //用于新建/修改Record
                 stringArray[Index] = adapterView.getItemAtPosition(i) as String
             }
-
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
-                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
         })
 
 
     }
 
-
-    fun InitCategotySpinner(itemlist : List<String> , ID : Int , Index : Int) {
-        var selectedSpinner = findViewById<Spinner>(ID)
+    //初始化一级目录Spinner，同时调用二级目录Spinner初始化
+    
+    fun InitCategotySpinner(itemlist : List<String>) {
+        var selectedSpinner = findViewById<Spinner>(R.id.category_spinner)
 
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
@@ -358,9 +360,9 @@ class CreateNewItem : AppCompatActivity() {
                 l: Long
             ) {
                 // Get the spinner selected item text
-                stringArray[Index] = adapterView.getItemAtPosition(i) as String
+                stringArray[CATEGORY_INDEX] = adapterView.getItemAtPosition(i) as String
                 categorystring = adapterView.getItemAtPosition(i) as String
-                SubcategorySpinnerAdapt(stringArray[Index] ,R.id.subcategory_spinner , SUBCATEGORY_INDEX)
+                SubcategorySpinnerAdapt(stringArray[CATEGORY_INDEX])
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -369,14 +371,16 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
-    fun SubcategorySpinnerAdapt(category : String, ID: Int, Index: Int) {
+    //Adapt二级分类
+    
+    fun SubcategorySpinnerAdapt(category : String) {
         val DAO = AppDatabase.instance.userDAO()
         var subcategoryList = DAO.getAllSubcategory(category)
         var subcategoryStringList = mutableListOf<String>()
         for (subcategorys in subcategoryList) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
-        var subcategoryspinner = findViewById<Spinner>(ID)
+        var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
 
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
@@ -391,7 +395,7 @@ class CreateNewItem : AppCompatActivity() {
                 l: Long
             ) {
                 // Get the spinner selected item text
-                stringArray[Index] = adapterView.getItemAtPosition(i) as String
+                stringArray[SUBCATEGORY_INDEX] = adapterView.getItemAtPosition(i) as String
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -400,9 +404,10 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
-
-    fun InitTypeSpinner(itemlist : List<String> , ID : Int , Index : Int) {
-        var selectedSpinner = findViewById<Spinner>(ID)
+    //初始化类型Spinner
+    
+    fun InitTypeSpinner(itemlist : List<String>) {
+        var selectedSpinner = findViewById<Spinner>(R.id.type_spinner)
 
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
@@ -417,8 +422,8 @@ class CreateNewItem : AppCompatActivity() {
                 l: Long
             ) {
                 // Get the spinner selected item text
-                stringArray[Index] = adapterView.getItemAtPosition(i) as String
-                SubtypeSpinnerAdapt(stringArray[Index])
+                stringArray[TYPE_INDEX] = adapterView.getItemAtPosition(i) as String
+                SubtypeSpinnerAdapt(stringArray[TYPE_INDEX])
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
@@ -427,6 +432,9 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
+
+    //初始化二级分类
+    
     fun SubtypeSpinnerAdapt(type : String) {
         var subtypeStringList = listOf<String>()
         when(type){
@@ -478,11 +486,11 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
+    //成员Spinner Adapt
+    
     fun MemberAdapt() {
-        val DAO = AppDatabase.instance.userDAO()
-        var memberList = DAO.getAllMember()
         memberStringList = mutableListOf<String>()
-        for (members in memberList) {
+        for (members in AppDatabase.instance.userDAO().getAllMember()) {
             memberStringList.add(members.member)
         }
         var memberspinner = findViewById<Spinner>(R.id.member_spinner)
@@ -493,10 +501,8 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun CategoryAdapt() {
-        val DAO = AppDatabase.instance.userDAO()
-        var categoryList = DAO.getAllCategory()
         categoryStringList = mutableListOf<String>()
-        for (categorys in categoryList) {
+        for (categorys in AppDatabase.instance.userDAO().getAllCategory()) {
             categoryStringList.add(categorys.category)
         }
         var categoryspinner = findViewById<Spinner>(R.id.category_spinner)
@@ -508,10 +514,8 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun SubcategoryAdapt(category: String) {
-        val DAO = AppDatabase.instance.userDAO()
-        var subcategoryList = DAO.getAllSubcategory(category)
         subcategoryStringList = mutableListOf<String>()
-        for (subcategorys in subcategoryList) {
+        for (subcategorys in AppDatabase.instance.userDAO().getAllSubcategory(category)) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
         var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
@@ -523,10 +527,8 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun MerchantAdapt() {
-        val DAO = AppDatabase.instance.userDAO()
-        var merchantList = DAO.getAllMerchant()
         merchantStringList = mutableListOf<String>()
-        for (merchants in merchantList) {
+        for (merchants in AppDatabase.instance.userDAO().getAllMerchant()) {
             merchantStringList.add(merchants.merchant)
         }
         var merchantspinner = findViewById<Spinner>(R.id.merchant_spinner)
@@ -538,10 +540,8 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun ItemAdapt() {
-        val DAO = AppDatabase.instance.userDAO()
-        var itemList = DAO.getAllItem()
         itemStringList = mutableListOf<String>()
-        for (items in itemList) {
+        for (items in AppDatabase.instance.userDAO().getAllItem()) {
             itemStringList.add(items.item)
         }
         var itemspinner = findViewById<Spinner>(R.id.item_spinner)
@@ -549,7 +549,6 @@ class CreateNewItem : AppCompatActivity() {
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemStringList.toList())
         itemadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         itemspinner.setAdapter(itemadapter)
-
     }
 
 }

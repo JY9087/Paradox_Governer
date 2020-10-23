@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         var myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
 
-        //实现长按
         var recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
