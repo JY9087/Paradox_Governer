@@ -6,21 +6,40 @@ import androidx.room.*
 interface UserDAO {
 
 
-    //查找
+    //查找Record
     @Query("SELECT * FROM Record WHERE Description LIKE :description " +
             "LIMIT 1")
     fun findByName(description: String): Record
-
-    //根据Category查找Subcategory
-    @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
-    fun findSubcategoryByCategory(category : String): List<Subcategory>
-
 
     @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
     fun findByUid(uid : Int): Record
 
     @Query("SELECT * FROM Record WHERE type LIKE :type ")
     fun findByType(type : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE member LIKE :member ")
+    fun findByMember(member : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE category LIKE :category ")
+    fun findByCategory(category : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory")
+    fun findBySubcategory(subcategory : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE merchant LIKE :merchant ")
+    fun findByMerchant(merchant: String) : List<Record>
+
+    @Query("SELECT * FROM Record WHERE item LIKE :item ")
+    fun findByItem(item: String) : List<Record>
+
+
+    //其他查找
+
+    //根据Category查找Subcategory
+    @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
+    fun findSubcategoryByCategory(category : String): List<Subcategory>
+
+
 
     @Query("SELECT * FROM Member WHERE member LIKE :member ")
     fun findMemberByString(member : String): List<Member>
