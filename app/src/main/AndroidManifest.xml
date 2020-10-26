@@ -16,6 +16,9 @@
         <activity android:name=".PersonalActivity"></activity>
         <activity android:name=".GraphActivity" />
         <activity android:name=".DashboardActivity" />
+        <activity android:name=".Login" />
+        <activity android:name=".PatternPassword" />
+        <activity android:name=".Register" />
         <activity
             android:name=".BottomActivity"
             android:label="@string/title_activity_bottom" />
