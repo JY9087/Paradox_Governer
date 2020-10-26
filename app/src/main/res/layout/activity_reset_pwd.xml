@@ -11,30 +11,20 @@
         android:inputType="textPassword"
         android:hint="请输入密码"
         />
-    <Button
-        android:id="@+id/mLoginBtn"
+    <EditText
+        android:id="@+id/password2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="登录"
+        android:inputType="textPassword"
+        android:hint="请确认密码"
+        />
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确定"
         android:layout_marginTop="30dp"
         />
 
-    <Button
-        android:id="@+id/usePattern"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="使用手势密码" />
-
-    <Button
-        android:id="@+id/useFinger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="使用指纹密码" />
-
-    <CheckBox
-        android:id="@+id/checkBox1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="自动登录（仅限于文本密码）" />
 
 </LinearLayout>
