@@ -12,8 +12,13 @@
         android:title="@string/title_dashboard" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_graph"
         android:icon="@drawable/ic_pie_chart_24px"
-        android:title="@string/title_notifications" />
+        android:title="@string/title_graph" />
+
+    <item
+        android:id="@+id/navigation_personal"
+        android:icon="@drawable/ic_account_box_24px"
+        android:title="@string/title_personal" />
 
 </menu>
