@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(){
     companion object {
         var instance:  MainActivity by Delegates.notNull()
         fun instance() = instance
+        var isAlreadyLogin = false
     }
 
     var income = true
@@ -68,19 +69,21 @@ class MainActivity : AppCompatActivity(){
 
 
         //用户名和密码数据库，及用于判断是进入注册界面还是登录界面还是直接进入主界面的变量
-        val userList:List<userNameAndPwd> = DAO.findall()
-        var isAlreadyRegister:Boolean = if (userList.size==0) false else true
+
+
 
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
-        var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
+        var isAlreadyRegister:Boolean = settings.getBoolean("isAlreadyRegister",false)
+        //var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
         //已经注册过，进入登录界面
         if(isAlreadyRegister) {
             //已经登录了，进入主界面
-            if(!isAlreadyLogin){
+            if(!isAlreadyLogin){//未登录，进入登录界面
                 val intent = Intent()
                 intent.setClass(this, Login::class.java)
                 startActivity(intent)
+                isAlreadyLogin = true
                 finish()
             }
         }else{//尚未注册，进入注册界面
@@ -89,9 +92,7 @@ class MainActivity : AppCompatActivity(){
             startActivity(intent)
             finish()
         }
-        isAlreadyLogin = false
-        editor.putBoolean("isAlreadyLogin",isAlreadyLogin)
-        editor.commit()
+
         //上述注册和登录完成
 
 

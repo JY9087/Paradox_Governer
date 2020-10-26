@@ -36,6 +36,9 @@ class PatternPassword : AppCompatActivity() {
                     editor.putString("password9",password9)
                     editor.commit()
                     Toast.makeText(this@PatternPassword, "密码设置成功,为："+hitIndexList.toString(), Toast.LENGTH_SHORT).show()
+                    val intent = Intent()
+                    intent.setClass(this@PatternPassword, MainActivity::class.java)
+                    startActivity(intent)
                     finish()
                 }else{
                     if(save_password9 == hitIndexList.toString()){

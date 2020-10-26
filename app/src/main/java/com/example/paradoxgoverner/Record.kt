@@ -83,12 +83,3 @@ data class Item(
     @ColumnInfo var item: String
 )
 
-@Entity
-data class userNameAndPwd (
-    @PrimaryKey
-    val id:Int,
-    var userName: String,
-    var password: String
-)
-
-//account表待实现
