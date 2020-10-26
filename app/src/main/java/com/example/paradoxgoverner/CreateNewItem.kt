@@ -39,7 +39,7 @@ class CreateNewItem : AppCompatActivity() {
     var subcategoryStringList = mutableListOf<String>()
     var merchantStringList = mutableListOf<String>()
     var itemStringList = mutableListOf<String>()
-
+    var accountStringList = mutableListOf<String>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +50,7 @@ class CreateNewItem : AppCompatActivity() {
         //查看是否有携带uid，如果有就修改uid变量的值
         uid = intent.getIntExtra(RECORD_UID,0)
         if(uid != 0){
-            rec = AppDatabase.instance.userDAO().findByUid(uid)
+            rec = AppDatabase.instance.userDAO().findRecordByUid(uid)
         }
 
         //自动填充当前时间
@@ -98,6 +98,14 @@ class CreateNewItem : AppCompatActivity() {
         }
         InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
+        //Account
+        for (accounts in DAO.getAllAccount()) {
+            if(accounts.account != ALL_ACCOUNT){
+                accountStringList.add(accounts.account)
+            }
+        }
+        InitSpinner(accountStringList.toList(),R.id.account_spinner, ACCOUNT_INDEX)
+
         //新建
         if(uid == 0) {
             cancel_change_button.visibility = View.INVISIBLE
@@ -142,7 +150,6 @@ class CreateNewItem : AppCompatActivity() {
 
         var description = findViewById<EditText>(R.id.description).text.toString()
 
-        //Todo : 使用真实的Account
 
 
         //三种情况：新建时未赋值  修改时未赋值   已赋值
@@ -158,12 +165,13 @@ class CreateNewItem : AppCompatActivity() {
         }
         //修改时未赋值
         else if(uid != 0) {
-            amount = AppDatabase.instance.userDAO().findByUid(uid).amount
+            amount = AppDatabase.instance.userDAO().findRecordByUid(uid).amount
         }
 
         AppDatabase.instance.userDAO().insertAll(
             Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],account,amount,stringArray[TYPE_INDEX],income,
+                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                stringArray[ACCOUNT_INDEX],amount,stringArray[TYPE_INDEX],income,
                 stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
         )
         val intent = Intent(this, MainActivity::class.java)
@@ -175,7 +183,7 @@ class CreateNewItem : AppCompatActivity() {
         if(uid != 0)
         {
             AppDatabase.instance.userDAO().delete(
-                AppDatabase.instance.userDAO().findByUid(uid)
+                AppDatabase.instance.userDAO().findRecordByUid(uid)
             )
         }
         val intent = Intent(this, MainActivity::class.java)
@@ -275,6 +283,23 @@ class CreateNewItem : AppCompatActivity() {
                     AppDatabase.instance.userDAO().insertAllItem(Item(0,itemText.text.toString()))
                     ItemAdapt()
                     item_spinner?.setSelection(itemStringList.indexOf(itemText.text.toString()))
+                }
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
+
+    fun NewAccount(view : View) {
+        var itemText = EditText(this)
+        android.app.AlertDialog.Builder(this)
+            .setTitle("请输入账户")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setView(itemText)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
+                if(itemText.text.toString() != ""){
+                    AppDatabase.instance.userDAO().insertAllAccount(Account(0,itemText.text.toString()))
+                    AccountAdapt()
+                    item_spinner?.setSelection(accountStringList.indexOf(itemText.text.toString()))
                 }
             })
             .setNegativeButton("取消", null)
@@ -489,7 +514,7 @@ class CreateNewItem : AppCompatActivity() {
     //成员Spinner Adapt
     
     fun MemberAdapt() {
-        memberStringList = mutableListOf<String>()
+        memberStringList.clear()
         for (members in AppDatabase.instance.userDAO().getAllMember()) {
             memberStringList.add(members.member)
         }
@@ -501,7 +526,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun CategoryAdapt() {
-        categoryStringList = mutableListOf<String>()
+        categoryStringList.clear()
         for (categorys in AppDatabase.instance.userDAO().getAllCategory()) {
             categoryStringList.add(categorys.category)
         }
@@ -514,7 +539,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun SubcategoryAdapt(category: String) {
-        subcategoryStringList = mutableListOf<String>()
+        subcategoryStringList.clear()
         for (subcategorys in AppDatabase.instance.userDAO().getAllSubcategory(category)) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
@@ -527,7 +552,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun MerchantAdapt() {
-        merchantStringList = mutableListOf<String>()
+        merchantStringList.clear()
         for (merchants in AppDatabase.instance.userDAO().getAllMerchant()) {
             merchantStringList.add(merchants.merchant)
         }
@@ -540,13 +565,25 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun ItemAdapt() {
-        itemStringList = mutableListOf<String>()
+        itemStringList.clear()
         for (items in AppDatabase.instance.userDAO().getAllItem()) {
             itemStringList.add(items.item)
         }
         var itemspinner = findViewById<Spinner>(R.id.item_spinner)
         val itemadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemStringList.toList())
+        itemadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        itemspinner.setAdapter(itemadapter)
+    }
+
+    fun AccountAdapt() {
+        accountStringList.clear()
+        for (accounts in AppDatabase.instance.userDAO().getAllAccount()) {
+            accountStringList.add(accounts.account)
+        }
+        var itemspinner = findViewById<Spinner>(R.id.account_spinner)
+        val itemadapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
         itemadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         itemspinner.setAdapter(itemadapter)
     }

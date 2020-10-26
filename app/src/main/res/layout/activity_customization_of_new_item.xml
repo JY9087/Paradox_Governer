@@ -230,7 +230,7 @@
         android:id="@+id/time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="240dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/subcategory_spinner"
         app:layout_constraintHorizontal_bias="0.483"
@@ -293,7 +293,7 @@
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="NewCustomizedItem"
+        android:onClick="NewItem"
         android:text="@string/new_item_button_text"
         app:layout_constraintBottom_toBottomOf="@+id/item_spinner"
         app:layout_constraintEnd_toEndOf="@+id/button2"
@@ -309,6 +309,36 @@
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="@+id/item_spinner" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/textView5"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <Spinner
+        android:id="@+id/account_spinner"
+        android:layout_width="0dp"
+        android:layout_height="23dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView10"
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintStart_toStartOf="@+id/type_spinner"
+        app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="NewAccount"
+        android:text="@string/new_item_button_text"
+        app:layout_constraintBottom_toBottomOf="@+id/account_spinner"
+        app:layout_constraintStart_toEndOf="@+id/account_spinner"
+        app:layout_constraintTop_toTopOf="@+id/account_spinner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

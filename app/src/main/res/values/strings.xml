@@ -65,4 +65,8 @@
     <string name="personal_manage_customize_new">新增</string>
     <string name="personal_manage_customize_change">修改/删除</string>
 
+    <string name="new_account_button_text">新建账户</string>
+    <string name="select_account_text">选择账户</string>
+    <string name="select_account_spinner_text">账户</string>
+
 </resources>

@@ -84,6 +84,12 @@ data class Item(
 )
 
 @Entity
+data class Account(
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var account: String
+)
+
+@Entity
 data class userNameAndPwd (
     @PrimaryKey
     val id:Int,
