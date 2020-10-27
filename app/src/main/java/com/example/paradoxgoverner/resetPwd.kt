@@ -31,7 +31,7 @@ class resetPwd : AppCompatActivity() {
             editor.commit()
             Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show()
             val intent = Intent()
-            intent.setClass(this, userCenter::class.java)
+            intent.setClass(this, PersonalActivity::class.java)
             startActivity(intent)
             finish()
         }else{

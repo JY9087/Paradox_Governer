@@ -9,28 +9,31 @@ interface UserDAO {
     //查找Record
     @Query("SELECT * FROM Record WHERE Description LIKE :description " +
             "LIMIT 1")
-    fun findByName(description: String): Record
+    fun findRecordByDescription(description: String): Record
 
     @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
-    fun findByUid(uid : Int): Record
+    fun findRecordByUid(uid : Int): Record
 
     @Query("SELECT * FROM Record WHERE type LIKE :type ")
-    fun findByType(type : String): List<Record>
+    fun findRecordByType(type : String): List<Record>
 
     @Query("SELECT * FROM Record WHERE member LIKE :member ")
-    fun findByMember(member : String): List<Record>
+    fun findRecordByMember(member : String): List<Record>
 
     @Query("SELECT * FROM Record WHERE category LIKE :category ")
-    fun findByCategory(category : String): List<Record>
+    fun findRecordByCategory(category : String): List<Record>
 
     @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory")
-    fun findBySubcategory(subcategory : String): List<Record>
+    fun findRecordBySubcategory(subcategory : String): List<Record>
 
     @Query("SELECT * FROM Record WHERE merchant LIKE :merchant ")
-    fun findByMerchant(merchant: String) : List<Record>
+    fun findRecordByMerchant(merchant: String) : List<Record>
 
     @Query("SELECT * FROM Record WHERE item LIKE :item ")
-    fun findByItem(item: String) : List<Record>
+    fun findRecordByItem(item: String) : List<Record>
+
+    @Query("SELECT * FROM Record WHERE account LIKE :account ")
+    fun findRecordByAccount(account: String) : List<Record>
 
 
     //其他查找
@@ -56,6 +59,9 @@ interface UserDAO {
     @Query("SELECT * FROM Item WHERE item LIKE :item ")
     fun findItemByString(item : String): List<Item>
 
+    @Query("SELECT * FROM Account WHERE account LIKE :account ")
+    fun findAccountByString(account : String): List<Account>
+
 
     //根据UID进行查找
     @Query("SELECT * FROM Member WHERE uid LIKE :member ")
@@ -73,10 +79,15 @@ interface UserDAO {
     @Query("SELECT * FROM Item WHERE uid LIKE :item ")
     fun findItemByUid(item : Int): List<Item>
 
+    @Query("SELECT * FROM Account WHERE uid LIKE :account ")
+    fun findAccountByUid(account : Int): List<Account>
+
+
+
 
     //全选
     @Query("SELECT * FROM Record")
-    fun getAll(): List<Record>
+    fun getAllRecord(): List<Record>
 
     @Query("SELECT * FROM Member")
     fun getAllMember(): List<Member>
@@ -92,6 +103,9 @@ interface UserDAO {
 
     @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
     fun getAllSubcategory(category : String): List<Subcategory>
+
+    @Query("SELECT * FROM Account")
+    fun getAllAccount(): List<Account>
 
     @Query("SELECT * FROM Hidden")
     fun isInitialized(): List<Hidden>
@@ -119,6 +133,9 @@ interface UserDAO {
     fun insertAllItem(vararg items: Item)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllAccount(vararg accounts : Account)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun initialize(vararg hide: Hidden)
 
 
@@ -144,14 +161,17 @@ interface UserDAO {
 
     @Delete
     fun deleteItem(item : Item)
-  
-    //UserNameAndPwd
+
+    @Delete
+    fun deleteAccount(account : Account)
+
+    //User Name And Password
     @Insert
     fun insertNameAndPwd(NameAndPwd:userNameAndPwd)
     @Query("Select * From userNameAndPwd WHERE :element = userName")
     fun searchNameAndPwd(element:String):Boolean
     @Query("Select * From userNameAndPwd")
-    fun findall():List<userNameAndPwd>
+    fun findAllUserNameAndPwd():List<userNameAndPwd>
     @Query("Select password From userNameAndPwd WHERE :element = userName")
     fun searchPwdByName(element: String):String
     

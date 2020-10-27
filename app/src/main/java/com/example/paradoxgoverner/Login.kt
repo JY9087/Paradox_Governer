@@ -56,19 +56,19 @@ class Login : AppCompatActivity() {
         var autoLogin:Boolean = settings.getBoolean("autoLogin", false)
         var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
         var save_password = settings.getString("save_password","")
-            if(password == save_password){
-                editor.putBoolean("autoLogin", setAutoLogin)
-                isAlreadyLogin = true
-                editor.putBoolean("isAlreadyLogin", isAlreadyLogin)
-                editor.commit()
-                Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
-                val intent = Intent()
-                intent.setClass(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }else{
-                Toast.makeText(this, "密码错误", Toast.LENGTH_SHORT).show()
-            }
+        if(password == save_password){
+            editor.putBoolean("autoLogin", setAutoLogin)
+            isAlreadyLogin = true
+            editor.putBoolean("isAlreadyLogin", isAlreadyLogin)
+            editor.commit()
+            Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
+            val intent = Intent()
+            intent.setClass(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }else{
+            Toast.makeText(this, "密码错误", Toast.LENGTH_SHORT).show()
+        }
 
 
     }
