@@ -17,7 +17,13 @@ class PatternPassword : AppCompatActivity() {
         val editor = settings.edit()
         var save_password9:String ?= settings.getString("password9", null)
         var isSetPassword:Boolean = settings.getBoolean("isSetPassword",false)
-        var password9:String ?=null
+        var password9_0:String ?=null
+        var password9_1:String ?=null
+        var password9_2:String ?=null
+        //0：输入之前的密码
+        //1：输入新密码
+        //2：重复新密码
+        var step = settings.getInt("PatternStep",1)
         pattern_lock_view.setOnPatternChangedListener(object : OnPatternChangeListener {
             override fun onStart(view: PatternLockerView) {
                 //根据需要添加业务逻辑
@@ -30,16 +36,38 @@ class PatternPassword : AppCompatActivity() {
             override fun onComplete(view: PatternLockerView, hitIndexList: List<Int>) {
                 //根据需要添加业务逻辑
                 if(!isSetPassword){
-                    isSetPassword = true
-                    password9 = hitIndexList.toString()
-                    editor.putBoolean("isSetPassword",isSetPassword)
-                    editor.putString("password9",password9)
-                    editor.commit()
-                    Toast.makeText(this@PatternPassword, "密码设置成功,为："+hitIndexList.toString(), Toast.LENGTH_SHORT).show()
-                    val intent = Intent()
-                    intent.setClass(this@PatternPassword, PersonalActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    if(step==0){
+                        password9_0 = hitIndexList.toString()
+                        if(password9_0 == save_password9){
+                            Toast.makeText(this@PatternPassword, "请输入新密码", Toast.LENGTH_SHORT).show()
+                            step = 1
+                        }else{
+                            Toast.makeText(this@PatternPassword, "密码错误", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    else if(step==1){
+                        password9_1 = hitIndexList.toString()
+                        step = 2
+                        Toast.makeText(this@PatternPassword, "请重复密码", Toast.LENGTH_SHORT).show()
+                    }
+                    else if(step==2){
+                        password9_2 = hitIndexList.toString()
+                        if(password9_1 == password9_2){
+                            isSetPassword = true
+                            editor.putBoolean("isSetPassword",isSetPassword)
+                            editor.putInt("PatternStep",1)
+                            editor.putString("password9",password9_2)
+                            editor.commit()
+                            Toast.makeText(this@PatternPassword, "密码设置成功,为："+hitIndexList.toString(), Toast.LENGTH_SHORT).show()
+                            val intent = Intent()
+                            intent.setClass(this@PatternPassword, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }else {
+                            Toast.makeText(this@PatternPassword, "第二次密码错误，请重复第二次密码", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
                 }else{
                     if(save_password9 == hitIndexList.toString()){
                         Toast.makeText(this@PatternPassword, "密码正确", Toast.LENGTH_SHORT).show()

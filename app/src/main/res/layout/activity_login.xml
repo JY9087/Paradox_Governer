@@ -35,6 +35,6 @@
         android:id="@+id/checkBox1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="自动登录（仅限于文本密码）" />
+        android:text="记住密码（仅限于文本密码）" />
 
 </LinearLayout>
