@@ -4,17 +4,20 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
-import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Dao
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
+
+//全局变量。请小心使用
+var versionFlag = false
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,9 +27,7 @@ class MainActivity : AppCompatActivity() {
         fun instance() = instance
     }
 
-    var accountName = ALL_ACCOUNT
     var income = true
-    var accountStringList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                     DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST.get(index), item))
                 }
             }
+
             for (init_merchant in DEFAULT_MERCHANT_LIST) {
                 DAO.insertAllMerchant(Merchant(0, init_merchant))
             }
@@ -64,34 +66,12 @@ class MainActivity : AppCompatActivity() {
             for (init_item in DEFAULT_ITEM_LIST) {
                 DAO.insertAllItem(Item(0, init_item))
             }
-
-            for (init_account in DEFAULT_ACCOUNT_LIST) {
-                DAO.insertAllAccount(Account(0, init_account))
-            }
         }
-
-        var AccountNameText = findViewById<TextView>(R.id.AccountNameText)
-        if(accountName == ALL_ACCOUNT){
-            AccountNameText.text = "全部账户"
-        }
-        else{
-            AccountNameText.text = "当前账户：" + accountName
-        }
-
-        var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
-
-        //todo : 使用真正余额
-        AccountInfo.text = "余额："
-
-        InitAccountSpinner()
-
-
-
 
         //RecycleView
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ForecastListAdapter(DAO.getAllRecord())
+        var myadapter = ForecastListAdapter(DAO.getAll())
         forecastList.adapter = myadapter
 
         var recyclertouchlistener = RecyclerTouchListener(
@@ -102,49 +82,17 @@ class MainActivity : AppCompatActivity() {
                 override fun onClick(view: View?, position: Int) {
                     //传递UID，由新Activity去进行查询
                     val intent = Intent(instance, CreateNewItem::class.java).putExtra(
-                        RECORD_UID, DAO.getAllRecord().get(position).uid
+                        RECORD_UID, DAO.getAll().get(position).uid
                     )
                     startActivity(intent)
                 }
                 override fun onLongClick(view: View?, position: Int) {
-                    wantToDelete(DAO.getAllRecord().get(position).uid)
+                    wantToDelete(DAO.getAll().get(position).uid)
                 }
             }
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
-
-
-
-        //用户名和密码数据库，及用于判断是进入注册界面还是登录界面还是直接进入主界面的变量
-        //使用OnCreate的局部变量？有待商榷。看看是否需要修改
-        val userList:List<userNameAndPwd> = DAO.findAllUserNameAndPwd()
-        var isAlreadyRegister:Boolean = if (userList.size==0) false else true
-
-        val settings: SharedPreferences = getSharedPreferences("info", 0)
-        val editor = settings.edit()
-        var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
-        //已经注册过，进入登录界面
-
-        //尚未登录
-        if(isAlreadyRegister) {
-            //已经登录了，进入主界面
-            if(!isAlreadyLogin){
-                val intent = Intent()
-                intent.setClass(this, Login::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }else{//尚未注册，进入注册界面
-            val intent = Intent()
-            intent.setClass(this, Register::class.java)
-            startActivity(intent)
-            finish()
-        }
-        isAlreadyLogin = false
-        editor.putBoolean("isAlreadyLogin",isAlreadyLogin)
-        editor.commit()
-        //上述注册和登录完成
 
 
 
@@ -178,7 +126,12 @@ class MainActivity : AppCompatActivity() {
         })
         bottomNavigatior.selectedItemId = R.id.navigation_home
 
-
+        button.setOnClickListener {
+            val intent = Intent()
+            intent.setClass(this, StatisticActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
     //End Of OnCreate
 
@@ -200,7 +153,7 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_transfer -> r = "转账"
             else -> super.onOptionsItemSelected(item)
         }
-        forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
+        forecastList.adapter = ForecastListAdapter(DAO.findByType(r))
         return true
     }
 
@@ -263,7 +216,7 @@ class MainActivity : AppCompatActivity() {
 
     fun ShowIncome(view: View) {
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
-        forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findRecordByType("收入"))
+        forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findByType("收入"))
     }
 
     fun wantToDelete(uid: Int){
@@ -272,70 +225,8 @@ class MainActivity : AppCompatActivity() {
             .setTitle("确认删除？")
             .setIcon(android.R.drawable.ic_dialog_info)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
-                DAO.delete( DAO.findRecordByUid(uid) )
-                findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
-            })
-            .setNegativeButton("取消", null)
-            .show()
-    }
-
-
-
-    fun InitAccountSpinner() {
-        val DAO = AppDatabase.instance.userDAO()
-        accountStringList.clear()
-        accountStringList.add(ALL_ACCOUNT)
-        for (accounts in DAO.getAllAccount()) {
-            if(accounts.account != VOID_ITEM){
-                accountStringList.add(accounts.account)
-            }
-        }
-
-
-        var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
-
-        selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                adapterView: AdapterView<*>,
-                view: View,
-                i: Int,
-                l: Long
-            ) {
-                accountName = adapterView.getItemAtPosition(i) as String
-                val forecastList = findViewById<RecyclerView>(R.id.forecast)
-                if(accountName == ALL_ACCOUNT) {
-                    var myadapter = ForecastListAdapter(DAO.getAllRecord())
-                    forecastList.adapter = myadapter
-                }
-                else{
-                    var myadapter = ForecastListAdapter(DAO.findRecordByAccount(accountName))
-                    forecastList.adapter = myadapter
-                }
-
-            }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>?) {
-                Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
-            }
-        })
-    }
-
-    fun NewAccount(view : View) {
-        var itemText = EditText(this)
-        android.app.AlertDialog.Builder(this)
-            .setTitle("请输入账户")
-            .setIcon(android.R.drawable.ic_dialog_info)
-            .setView(itemText)
-            .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
-                if(itemText.text.toString() != ""){
-                    AppDatabase.instance.userDAO().insertAllAccount(Account(0,itemText.text.toString()))
-                    InitAccountSpinner()
-                    item_spinner?.setSelection(accountStringList.indexOf(itemText.text.toString()))
-                }
+                DAO.delete( DAO.findByUid(uid) )
+                findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAll())
             })
             .setNegativeButton("取消", null)
             .show()

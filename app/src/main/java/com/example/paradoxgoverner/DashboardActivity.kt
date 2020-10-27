@@ -3,7 +3,13 @@ package com.example.paradoxgoverner
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.statistics.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -28,7 +34,8 @@ class DashboardActivity : AppCompatActivity() {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                 }
-                R.id.navigation_dashboard-> {}
+                R.id.navigation_dashboard -> {
+                }
                 R.id.navigation_graph -> {
                     val intent = Intent(this, GraphActivity::class.java)
                     startActivity(intent)
@@ -47,7 +54,11 @@ class DashboardActivity : AppCompatActivity() {
             true
         })
         bottomNavigatior.selectedItemId = R.id.navigation_dashboard
+    }
+}
 
+
+        /*//------------------------------------------------------------------------------
         val memberStringList = mutableListOf<String>()
         val categoryStringList = mutableListOf<String>()
         val subcategoryStringList = mutableListOf<String>()
@@ -62,6 +73,7 @@ class DashboardActivity : AppCompatActivity() {
                 subcategoryStringList.add(subcategory.subcategory)
             }
         }
+        /*
         //查找所需要的数据包，返回值是一个List<Record>
         fun selectData(
             needAccount: String,
@@ -74,7 +86,7 @@ class DashboardActivity : AppCompatActivity() {
         ): List<Record> {
             val start:java.sql.Date = java.sql.Date(startDate.time)
             val end:java.sql.Date = java.sql.Date(endDate.time)
-            return AppDatabase.instance.userDAO().getSubCategoryBill(needAccount,start,end,needMember,needCategory,needSubcategory,income)
+            return AppDatabase.instance.userDAO().getSubCategoryBill(needAccount,start.time,end.time+86400000,needMember,needCategory,needSubcategory,income)
         }
 
         //给出一个List<Record>，求其金额之和
@@ -105,14 +117,12 @@ class DashboardActivity : AppCompatActivity() {
 
         //每日支出的数据包
         fun getDayPay(needAccount: String,needDate: Date):List<Record>{
-            val need:java.sql.Date = java.sql.Date(needDate.time)
-            return AppDatabase.instance.userDAO().getDateWaterBill(needAccount,need,false)
+            return selectData(needAccount = needAccount,startDate = needDate,endDate = needDate,income = false)
         }
 
         //每日收入的数据包
         fun getDayIncome(needAccount: String,needDate: Date):List<Record>{
-            val need:java.sql.Date = java.sql.Date(needDate.time)
-            return AppDatabase.instance.userDAO().getDateWaterBill(needAccount,need,true)
+            return selectData(needAccount = needAccount,startDate = needDate,endDate = needDate,income = true)
         }
 
         //每日收支
@@ -163,8 +173,73 @@ class DashboardActivity : AppCompatActivity() {
         }
 
 
-    }
+        //---------------------------------------------------------------------------------------------------------------*/
 
 
 
-}
+
+        val textView = findViewById<TextView>(R.id.UserNametextView)
+        textView.text = "***"//<-----------------这里传入当前账户名
+        val searchCategory: MutableList<String> = mutableListOf()
+        val searchSubCategory: MutableList<String> = mutableListOf()
+        val searchMember:MutableList<String> = mutableListOf()
+        val StatisticArray = arrayOf<String>("","","")
+        fun InitStatisticSpinner(itemlist : List<String> , ID : Int , Index : Int) {
+            var selectedSpinner = findViewById<Spinner>(ID)
+
+            var selectedSpinnerAdapter: ArrayAdapter<*> =
+                ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
+            selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            selectedSpinner.setAdapter(selectedSpinnerAdapter)
+
+            selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+                //这个函数在单击时被调用
+                override fun onItemSelected(
+                    adapterView: AdapterView<*>,
+                    view: View,
+                    i: Int,
+                    l: Long
+                ) {
+                    //这里是onclick功能的具体实现
+                    //用于新建/修改Record
+                    StatisticArray[Index] = adapterView.getItemAtPosition(i) as String
+                }
+                override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                }
+            })
+        }
+        InitStatisticSpinner(categoryStringList.toList(),R.id.spinnerCategory,CATEGORY_S_index)
+        InitStatisticSpinner(subcategoryStringList.toList(),R.id.spinnerSubCategory,SUBCATEGORY_S_index)
+        InitStatisticSpinner(memberStringList.toList(),R.id.spinnerMember,MEMBER_S_index)
+
+        //添加按钮
+        button_s_add.setOnClickListener{
+            //有重复！！取用的时候需要去重
+            searchCategory.add(StatisticArray[CATEGORY_S_index])
+            searchSubCategory.add(StatisticArray[SUBCATEGORY_S_index])
+            searchMember.add(StatisticArray[MEMBER_S_index])
+        }
+
+        //去除重复
+        fun removeDuplicate(list: MutableList<*>):MutableList<*>{
+            for (i in 0 until list.size) {
+                for (j in 0 until list.size) {
+                    if(i!=j&& list[i] == list[j]) {
+                    list.remove(list[j]);
+                    }
+                }
+            }
+            return list
+        }
+        /*
+        //下一步按钮
+        s1_next.setOnClickListener {
+            val intent = Intent()
+            intent.setClass(this, "下一个页面"::class.java)
+            startActivity(intent)
+            finish()
+        }*/
+
+    }*/
+
+

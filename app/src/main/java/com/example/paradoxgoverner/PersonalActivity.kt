@@ -24,7 +24,7 @@ class PersonalActivity : AppCompatActivity() {
     var subcategory_uid = 0
     var categoryString = DEFAULT_CATEGORY_LIST[0]
 
-    var lastModified = mutableListOf<String>("","","","","","","","","","")
+    var lastModified = mutableListOf<String>("","","","","","","","")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,9 +85,9 @@ class PersonalActivity : AppCompatActivity() {
                 //kotlin list下标从0开始
                 when(adapterView.getItemAtPosition(i) as String){
                     CUSTOMIZED_LIST[0] -> {
-                        type = ACCOUNT_INDEX
-                        for (accounts in DAO.getAllAccount()) {
-                            stringList.add(accounts.account)
+                        type = MEMBER_INDEX
+                        for (members in DAO.getAllMember()) {
+                            stringList.add(members.member)
                         }
                         InitSecondSpinner(stringList)
                     }
@@ -113,13 +113,6 @@ class PersonalActivity : AppCompatActivity() {
                         type = ITEM_INDEX
                         for (items in DAO.getAllItem()) {
                             stringList.add(items.item)
-                        }
-                        InitSecondSpinner(stringList)
-                    }
-                    CUSTOMIZED_LIST[4] -> {
-                        type = MEMBER_INDEX
-                        for (members in DAO.getAllMember()) {
-                            stringList.add(members.member)
                         }
                         InitSecondSpinner(stringList)
                     }
@@ -159,7 +152,6 @@ class PersonalActivity : AppCompatActivity() {
                     }
                     MERCHANT_INDEX -> {uid = DAO.findMerchantByString(adapterView.getItemAtPosition(i).toString())[0].uid }
                     ITEM_INDEX -> {uid = DAO.findItemByString(adapterView.getItemAtPosition(i).toString())[0].uid }
-                    ACCOUNT_INDEX -> {uid = DAO.findAccountByString(adapterView.getItemAtPosition(i).toString())[0].uid }
                 }
             }
 
@@ -223,14 +215,9 @@ class PersonalActivity : AppCompatActivity() {
                     val txt = itemText.text.toString()
                     when (type) {
                         MEMBER_INDEX -> DAO.insertAllMember(Member(0, txt))
-                        //新增一级分类时，二级分类新增"无"
-                        CATEGORY_INDEX -> {
-                            DAO.insertAllCategory(Category(0, txt))
-                            DAO.insertAllSubcategory(Subcategory(0,txt,"无"))
-                        }
+                        CATEGORY_INDEX -> DAO.insertAllCategory(Category(0, txt))
                         MERCHANT_INDEX -> DAO.insertAllMerchant(Merchant(0, txt))
                         ITEM_INDEX -> DAO.insertAllItem(Item(0, txt))
-                        ACCOUNT_INDEX ->  DAO.insertAllAccount(Account(0, txt))
                     }
                     lastModified[type] = txt
                     InitSpinner()
@@ -250,8 +237,7 @@ class PersonalActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(itemText)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
-                //不能新建空Subcategory ; 不能在"无"Category下新建Subcategory
-                if(itemText.text.toString() != "" && categoryString != "无"){
+                if(itemText.text.toString() != ""){
                     DAO.insertAllSubcategory(Subcategory(0,categoryString,itemText.text.toString()))
                     SubcategorySpinnerAdapt()
                     var subcategoryStringList = mutableListOf<String>()
@@ -270,15 +256,13 @@ class PersonalActivity : AppCompatActivity() {
         var title = "请输入"
         var typeLabel =""
         when(type){
-            MEMBER_INDEX->typeLabel = CUSTOMIZED_LIST[4]
+            MEMBER_INDEX->typeLabel = CUSTOMIZED_LIST[0]
             CATEGORY_INDEX->typeLabel = CUSTOMIZED_LIST[1]
             MERCHANT_INDEX->typeLabel = CUSTOMIZED_LIST[2]
             ITEM_INDEX->typeLabel = CUSTOMIZED_LIST[3]
-            ACCOUNT_INDEX->typeLabel = CUSTOMIZED_LIST[0]
         }
         title += typeLabel
         val DAO = AppDatabase.instance.userDAO()
-        var tmp_record : Record
         var itemText = EditText(this)
         var itemStr = ""
         when(type){
@@ -286,9 +270,7 @@ class PersonalActivity : AppCompatActivity() {
             CATEGORY_INDEX->itemStr = DAO.findCategoryByUid(uid)[0].category
             MERCHANT_INDEX->itemStr = DAO.findMerchantByUid(uid)[0].merchant
             ITEM_INDEX->itemStr = DAO.findItemByUid(uid)[0].item
-            ACCOUNT_INDEX->itemStr = DAO.findAccountByUid(uid)[0].account
         }
-        val origin_txt = itemStr
         itemText.setText(itemStr)
 
         AlertDialog.Builder(this)
@@ -296,126 +278,49 @@ class PersonalActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(itemText)
             .setPositiveButton("修改", DialogInterface.OnClickListener{ dialogInterface, i ->
-                //不能修改"无"
-                if(origin_txt != VOID_ITEM)
-                {
-                    if(itemText.text.toString() != ""){
-                        val txt = itemText.text.toString()
-                        when(type){
-                            MEMBER_INDEX->{
-                                for(records in DAO.findRecordByMember(origin_txt)){
-                                    tmp_record = records
-                                    tmp_record.member = txt
-                                    //修改了member，其他不变
-                                    DAO.insertAll(tmp_record)
-                                }
-                                DAO.insertAllMember(Member(uid,txt))
-                            }
-                            CATEGORY_INDEX->{
-                                for(records in DAO.findRecordByCategory(origin_txt)){
-                                    tmp_record = records
-                                    tmp_record.category = txt
-                                    DAO.insertAll(tmp_record)
-                                }
-                                DAO.insertAllCategory(Category(uid,txt))
-                            }
-                            MERCHANT_INDEX->{
-                                for(records in DAO.findRecordByMerchant(origin_txt)){
-                                    tmp_record = records
-                                    tmp_record.merchant = txt
-                                    DAO.insertAll(tmp_record)
-                                }
-                                DAO.insertAllMerchant(Merchant(uid,txt))
-                            }
-                            ITEM_INDEX->{
-                                for(records in DAO.findRecordByItem(origin_txt)){
-                                    tmp_record = records
-                                    tmp_record.item = txt
-                                    DAO.insertAll(tmp_record)
-                                }
-                                DAO.insertAllItem(Item(uid,txt))
-                            }
-                            ACCOUNT_INDEX->{
-                                for(records in DAO.findRecordByAccount(origin_txt)){
-                                    tmp_record = records
-                                    tmp_record.account = txt
-                                    DAO.insertAll(tmp_record)
-                                }
-                                DAO.insertAllAccount(Account(uid,txt))
-                            }
-                        }
-                        lastModified[type] = txt
-                        InitSpinner()
-                        personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
-
+                if(itemText.text.toString() != ""){
+                    val txt = itemText.text.toString()
+                    when(type){
+                        MEMBER_INDEX->DAO.insertAllMember(Member(uid,txt))
+                        CATEGORY_INDEX->DAO.insertAllCategory(Category(uid,txt))
+                        MERCHANT_INDEX->DAO.insertAllMerchant(Merchant(uid,txt))
+                        ITEM_INDEX->DAO.insertAllItem(Item(uid,txt))
                     }
-                }
-
-            })
-            .setNegativeButton("删除", DialogInterface.OnClickListener{ dialogInterface, i ->
-                //不能删除"无"
-                if(origin_txt != VOID_ITEM)
-                {
-                    var txt = ""
-                    when(type) {
-                        MEMBER_INDEX -> {
-                            for(records in DAO.findRecordByMember(origin_txt)){
-                                tmp_record = records
-                                tmp_record.member = "无"
-                                //修改了member，其他不变
-                                DAO.insertAll(tmp_record)
-                            }
-                            txt = DAO.findMemberByUid(uid)[0].member
-                            DAO.deleteMember(DAO.findMemberByUid(uid)[0])
-                        }
-
-                        //删除一级分类的同时也删除二级分类
-                        CATEGORY_INDEX -> {
-                            for(records in DAO.findRecordByCategory(origin_txt)){
-                                tmp_record = records
-                                tmp_record.category = "无"
-                                tmp_record.subcategory = "无"
-                                DAO.insertAll(tmp_record)
-                            }
-                            txt = DAO.findCategoryByUid(uid)[0].category
-                            DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
-                            //删除一级分类也删除对应二级分类
-                            for (sc in DAO.findSubcategoryByCategory(categoryString)){
-                                DAO.deleteSubcategory(sc)
-                            }
-                        }
-                        MERCHANT_INDEX ->{
-                            for(records in DAO.findRecordByMerchant(origin_txt)){
-                                tmp_record = records
-                                tmp_record.merchant = "无"
-                                DAO.insertAll(tmp_record)
-                            }
-                            txt = DAO.findMerchantByUid(uid)[0].merchant
-                            DAO.deleteMerchant(DAO.findMerchantByUid(uid)[0])
-                        }
-                        ITEM_INDEX -> {
-                            for(records in DAO.findRecordByItem(origin_txt)){
-                                tmp_record = records
-                                tmp_record.item = "无"
-                                DAO.insertAll(tmp_record)
-                            }
-                            txt = DAO.findItemByUid(uid)[0].item
-                            DAO.deleteItem(DAO.findItemByUid(uid)[0])
-                        }
-                        //删除账户时删除所有记账
-                        ACCOUNT_INDEX -> {
-                            for(records in DAO.findRecordByAccount(origin_txt)){
-                                DAO.delete(records)
-                            }
-                            txt = DAO.findAccountByUid(uid)[0].account
-                            DAO.deleteAccount(DAO.findAccountByUid(uid)[0])
-                        }
-                    }
-                    if(lastModified[type] == txt)
-                        lastModified[type] = ""
+                    lastModified[type] = txt
                     InitSpinner()
                     personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
+
                 }
+            })
+            .setNegativeButton("删除", DialogInterface.OnClickListener{ dialogInterface, i ->
+                var txt = ""
+                when(type) {
+                    MEMBER_INDEX -> {
+                        txt = DAO.findMemberByUid(uid)[0].member
+                        DAO.deleteMember(DAO.findMemberByUid(uid)[0])
+                    }
+                    CATEGORY_INDEX -> {
+                        txt = DAO.findCategoryByUid(uid)[0].category
+                        DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
+                        //删除一级分类也删除对应二级分类
+                        for (sc in DAO.findSubcategoryByCategory(categoryString)){
+                            DAO.deleteSubcategory(sc)
+                        }
+                    }
+                    MERCHANT_INDEX ->{
+                        txt = DAO.findMerchantByUid(uid)[0].merchant
+                        DAO.deleteMerchant(DAO.findMerchantByUid(uid)[0])
+                    }
+                    ITEM_INDEX -> {
+                        txt = DAO.findItemByUid(uid)[0].item
+                        DAO.deleteItem(DAO.findItemByUid(uid)[0])
+                    }
+                }
+                if(lastModified[type] == txt)
+                    lastModified[type] = ""
+                InitSpinner()
+                personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
+
             })
             .show()
     }
