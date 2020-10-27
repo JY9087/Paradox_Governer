@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.paradoxgoverner">
 
+
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission
@@ -15,8 +16,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".userCenter"></activity>
         <activity android:name=".resetPwd" />
+        <activity android:name=".PersonalActivity"></activity>
+        <activity android:name=".GraphActivity" />
+        <activity android:name=".DashboardActivity" />
         <activity android:name=".Login" />
         <activity android:name=".PatternPassword" />
         <activity android:name=".Register" />

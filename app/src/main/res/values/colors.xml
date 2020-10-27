@@ -3,8 +3,16 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorPureWhite">#FFFFFF</color>
+    <color name="colorBottomNavigationText">#FFFFFF</color>
+    <color name="colorBottomNavigationIcon">#FFFFFF</color>
     <color name="colorCardViewBackground">#FF9800</color>
 
+
+    <color name="colorCardView收入">#29B6F6</color>
+    <color name="colorCardView支出">#EA80FC</color>
+    <color name="colorCardView借贷">#536DFE</color>
+    <color name="colorCardView转账">#00E5FF</color>
 </resources>
 
 <!-- color由三原色 红绿蓝 组成。#之后每两位十六进制对应一种颜色 -->

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PersonalActivity">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@color/colorBottomNavigationText"
+        app:itemTextColor="@color/colorBottomNavigationText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+    <ScrollView
+        android:layout_width="409dp"
+        android:layout_height="673dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/personal_manage_customize"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/personal_custom_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+            <Spinner
+                android:id="@+id/personal_custom_spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/personal_custom_spinner" />
+
+            <Button
+                android:id="@+id/personal_custom_button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="ChangeCustomizedItem"
+                android:text="@string/personal_manage_customize_change"
+                app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner2"
+                app:layout_constraintStart_toEndOf="@+id/personal_custom_button1"
+                app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner2" />
+
+            <Spinner
+                android:id="@+id/personal_custom_spinner3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/personal_custom_spinner2" />
+
+            <Button
+                android:id="@+id/personal_custom_button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="ChangeCustomizedSubcategory"
+                android:text="@string/personal_manage_customize_change"
+                app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner3"
+                app:layout_constraintStart_toEndOf="@+id/personal_custom_button3"
+                app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner3"
+                app:layout_constraintVertical_bias="0.458" />
+
+            <Button
+                android:id="@+id/personal_custom_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="NewCustomizedItem"
+                android:text="@string/personal_manage_customize_new"
+                app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner2"
+                app:layout_constraintStart_toEndOf="@+id/personal_custom_spinner2"
+                app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner2" />
+
+            <Button
+                android:id="@+id/personal_custom_button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="NewCustomizedSubcategory"
+                android:text="@string/personal_manage_customize_new"
+                app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner3"
+                app:layout_constraintStart_toEndOf="@+id/personal_custom_spinner3"
+                app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
