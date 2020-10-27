@@ -21,7 +21,12 @@ class Register : AppCompatActivity() {
     fun onClick(passwordEdit:EditText,password2Edit: EditText) {
         val password: String = passwordEdit.text.toString()
         val password2: String = password2Edit.text.toString()
-        doRegister(password, password2)
+        if(isPwdLegal(password) && isPwdLegal(password2)){
+            doRegister(password, password2)
+        }else{
+            Toast.makeText(this,"密码长度需大于4", Toast.LENGTH_SHORT).show()
+        }
+
     }
     fun doRegister(password:String,password2:String){
         if(password==password2){
@@ -39,5 +44,9 @@ class Register : AppCompatActivity() {
         }else if(password!=password2){
             Toast.makeText(this,"密码错误", Toast.LENGTH_SHORT).show()
         }
+    }
+    //密码长度大于4
+    fun isPwdLegal(pwd:String):Boolean{
+        return pwd.length > 4
     }
 }
