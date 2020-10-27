@@ -60,6 +60,7 @@
     <string name="cardview_description_type">记账类型</string>
     <string name="cardview_description_description">描述</string>
     <string name="cardview_description_datetime">时间</string>
+    <string name="cardview_description_account">账户</string>
 
     <string name="personal_manage_customize">管理自定义选项</string>
     <string name="personal_manage_customize_new">新增</string>

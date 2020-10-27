@@ -141,7 +141,7 @@ class PersonalActivity : AppCompatActivity() {
 
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
         val DAO = AppDatabase.instance.userDAO()
         selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -184,7 +184,7 @@ class PersonalActivity : AppCompatActivity() {
 
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
-        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         subcategoryspinner.setAdapter(subcategoryadapter)
 
         subcategoryspinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -456,7 +456,7 @@ class PersonalActivity : AppCompatActivity() {
         editor.putBoolean("isSetPassword",isSetPassword)
         editor.commit()
         val intent = Intent()
-        intent.setClass(this, PatternPassword::class.java)
+        intent.setClass(this, PatternPassword::class.java).putExtra(EXTRA_MESSAGE, RESET_PATTERN)
         startActivity(intent)
         finish()
     }

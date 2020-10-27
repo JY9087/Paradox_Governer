@@ -113,9 +113,9 @@ class MainActivity : AppCompatActivity() {
         var isAlreadyRegister:Boolean = settings.getBoolean("isAlreadyRegister",false)
         //已经注册过，进入登录界面
 
-        //尚未登录
+        //尚未注册
         if(isAlreadyRegister) {
-            //已经登录了，进入主界面
+            //尚未登录：前往登录
             if(!isAlreadyLogin){
                 val intent = Intent()
                 intent.setClass(this, Login::class.java)
@@ -285,7 +285,7 @@ class MainActivity : AppCompatActivity() {
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
 
         selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
