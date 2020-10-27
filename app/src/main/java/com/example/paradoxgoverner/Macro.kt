@@ -31,3 +31,4 @@ const val ACCOUNT_INDEX = 6
 
 val CUSTOMIZED_LIST = listOf("账户","一级分类","商家","项目","成员")
 
+const val RESET_PATTERN = "reset pattern"

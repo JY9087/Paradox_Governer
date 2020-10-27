@@ -37,7 +37,15 @@ class PatternPassword : AppCompatActivity() {
                     editor.commit()
                     Toast.makeText(this@PatternPassword, "密码设置成功,为："+hitIndexList.toString(), Toast.LENGTH_SHORT).show()
                     val intent = Intent()
-                    intent.setClass(this@PatternPassword, PersonalActivity::class.java)
+                    //所以这个是SetPwd?
+                    //在修改密码后跳转至Personal，在登录后跳转至Main
+                    //本该用isAlreadyLogin，但是它不起作用，所以使用EXTRA_MESSAGE
+                    if(MainActivity.isAlreadyLogin){
+                        intent.setClass(this@PatternPassword, PersonalActivity::class.java)
+                    }
+                    else{
+                        intent.setClass(this@PatternPassword, MainActivity::class.java)
+                    }
                     startActivity(intent)
                     finish()
                 }else{

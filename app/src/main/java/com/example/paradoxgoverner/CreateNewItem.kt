@@ -224,6 +224,8 @@ class CreateNewItem : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
                 if(categoryText.text.toString() != ""){
                     AppDatabase.instance.userDAO().insertAllCategory(Category(0,categoryText.text.toString()))
+                    AppDatabase.instance.userDAO().insertAllSubcategory(Subcategory(0,categoryText.text.toString(),
+                        VOID_ITEM))
                     CategoryAdapt()
                     category_spinner?.setSelection(categoryStringList.indexOf(categoryText.text.toString()))
                 }
@@ -347,7 +349,7 @@ class CreateNewItem : AppCompatActivity() {
 
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
 
         selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
@@ -374,7 +376,7 @@ class CreateNewItem : AppCompatActivity() {
 
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
 
         selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
@@ -409,7 +411,7 @@ class CreateNewItem : AppCompatActivity() {
 
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
-        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         subcategoryspinner.setAdapter(subcategoryadapter)
 
         subcategoryspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
@@ -487,7 +489,7 @@ class CreateNewItem : AppCompatActivity() {
 
         val subtypeadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subtypeStringList)
-        subtypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subtypeadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         subtypespinner.setAdapter(subtypeadapter)
 
         subtypespinner.setOnItemSelectedListener(object : OnItemSelectedListener {
@@ -521,7 +523,7 @@ class CreateNewItem : AppCompatActivity() {
         var memberspinner = findViewById<Spinner>(R.id.member_spinner)
         val memberadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , memberStringList.toList())
-        memberadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        memberadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         memberspinner.setAdapter(memberadapter)
     }
 
@@ -533,7 +535,7 @@ class CreateNewItem : AppCompatActivity() {
         var categoryspinner = findViewById<Spinner>(R.id.category_spinner)
         val categoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , categoryStringList.toList())
-        categoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         categoryspinner.setAdapter(categoryadapter)
 
     }
@@ -546,7 +548,7 @@ class CreateNewItem : AppCompatActivity() {
         var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
-        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         subcategoryspinner.setAdapter(subcategoryadapter)
 
     }
@@ -559,7 +561,7 @@ class CreateNewItem : AppCompatActivity() {
         var merchantspinner = findViewById<Spinner>(R.id.merchant_spinner)
         val merchantadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , merchantStringList.toList())
-        merchantadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        merchantadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         merchantspinner.setAdapter(merchantadapter)
 
     }
@@ -572,7 +574,7 @@ class CreateNewItem : AppCompatActivity() {
         var itemspinner = findViewById<Spinner>(R.id.item_spinner)
         val itemadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemStringList.toList())
-        itemadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        itemadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         itemspinner.setAdapter(itemadapter)
     }
 
@@ -584,7 +586,7 @@ class CreateNewItem : AppCompatActivity() {
         var itemspinner = findViewById<Spinner>(R.id.account_spinner)
         val itemadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
-        itemadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        itemadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         itemspinner.setAdapter(itemadapter)
     }
 
