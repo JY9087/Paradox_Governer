@@ -67,6 +67,7 @@ class PatternPassword : AppCompatActivity() {
                             Toast.makeText(this@PatternPassword, "第二次密码错误，请重复第二次密码", Toast.LENGTH_SHORT).show()
                         }
                     }
+
                 }else{
                     if(save_password9 == hitIndexList.toString()){
                         Toast.makeText(this@PatternPassword, "密码正确", Toast.LENGTH_SHORT).show()

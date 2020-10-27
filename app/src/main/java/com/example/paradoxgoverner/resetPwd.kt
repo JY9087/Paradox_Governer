@@ -63,9 +63,30 @@ class resetPwd : AppCompatActivity() {
             }
         }
     }
+
     //密码长度大于4
     fun isPwdLegal(pwd:String):Boolean{
         return pwd.length > 4
+
+    fun onClick(passwordEdit:EditText,password2Edit: EditText) {
+        val password: String = passwordEdit.text.toString()
+        val password2: String = password2Edit.text.toString()
+        doReset(password, password2)
+    }
+    fun doReset(password:String,password2:String){
+        val settings: SharedPreferences = getSharedPreferences("info", 0)
+        val editor = settings.edit()
+        if(password==password2){
+            editor.putString("save_password",password)
+            editor.commit()
+            Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show()
+            val intent = Intent()
+            intent.setClass(this, PersonalActivity::class.java)
+            startActivity(intent)
+            finish()
+        }else{
+            Toast.makeText(this, "修改失败", Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
