@@ -22,6 +22,7 @@ class userCenter : AppCompatActivity() {
         val editor = settings.edit()
         var isSetPassword:Boolean = false
         editor.putBoolean("isSetPassword",isSetPassword)
+        editor.putInt("PatternStep",0)
         editor.commit()
         val intent = Intent()
         intent.setClass(this, PatternPassword::class.java)
