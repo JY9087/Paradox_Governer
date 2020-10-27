@@ -74,4 +74,7 @@
     <string name="personal_pwd_management_text">密码管理</string>
     <string name="personal_pwd_reset_text_button">重置密码</string>
     <string name="personal_pwd_reset_pattern_button">重置手势密码</string>
+    <string name="nav_cat">分类支出表</string>
+    <string name="nav_bill" />
+    <string name="nav_biil">流水</string>
 </resources>
