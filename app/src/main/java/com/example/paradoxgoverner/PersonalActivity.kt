@@ -3,6 +3,7 @@ package com.example.paradoxgoverner
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -446,6 +447,25 @@ class PersonalActivity : AppCompatActivity() {
                     SubcategorySpinnerAdapt()
             })
             .show()
+    }
+
+    fun ResetPatternPassword(view : View){
+        val settings: SharedPreferences = getSharedPreferences("info", 0)
+        val editor = settings.edit()
+        var isSetPassword:Boolean = false
+        editor.putBoolean("isSetPassword",isSetPassword)
+        editor.commit()
+        val intent = Intent()
+        intent.setClass(this, PatternPassword::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun ResetTextPassword(view : View){
+        val intent = Intent()
+        intent.setClass(this, resetPwd::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

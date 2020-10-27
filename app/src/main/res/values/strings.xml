@@ -69,4 +69,8 @@
     <string name="select_account_text">选择账户</string>
     <string name="select_account_spinner_text">账户</string>
 
+
+    <string name="personal_pwd_management_text">密码管理</string>
+    <string name="personal_pwd_reset_text_button">重置密码</string>
+    <string name="personal_pwd_reset_pattern_button">重置手势密码</string>
 </resources>

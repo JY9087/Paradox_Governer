@@ -146,6 +146,7 @@ interface UserDAO {
     fun delete(record: Record)
 
 
+
     @Delete
     fun deleteMember(member : Member)
 

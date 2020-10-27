@@ -299,7 +299,7 @@ class CreateNewItem : AppCompatActivity() {
                 if(itemText.text.toString() != ""){
                     AppDatabase.instance.userDAO().insertAllAccount(Account(0,itemText.text.toString()))
                     AccountAdapt()
-                    item_spinner?.setSelection(accountStringList.indexOf(itemText.text.toString()))
+                    account_spinner?.setSelection(accountStringList.indexOf(itemText.text.toString()))
                 }
             })
             .setNegativeButton("取消", null)

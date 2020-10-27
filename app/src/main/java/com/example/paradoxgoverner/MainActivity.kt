@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         var instance: MainActivity by Delegates.notNull()
         fun instance() = instance
+        var isAlreadyLogin = false
     }
 
     var accountName = ALL_ACCOUNT
@@ -70,18 +71,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        var AccountNameText = findViewById<TextView>(R.id.AccountNameText)
-        if(accountName == ALL_ACCOUNT){
-            AccountNameText.text = "全部账户"
-        }
-        else{
-            AccountNameText.text = "当前账户：" + accountName
-        }
 
-        var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
-
-        //todo : 使用真正余额
-        AccountInfo.text = "余额："
 
         InitAccountSpinner()
 
@@ -118,12 +108,9 @@ class MainActivity : AppCompatActivity() {
 
         //用户名和密码数据库，及用于判断是进入注册界面还是登录界面还是直接进入主界面的变量
         //使用OnCreate的局部变量？有待商榷。看看是否需要修改
-        val userList:List<userNameAndPwd> = DAO.findAllUserNameAndPwd()
-        var isAlreadyRegister:Boolean = if (userList.size==0) false else true
-
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
-        var isAlreadyLogin:Boolean = settings.getBoolean("isAlreadyLogin", false)
+        var isAlreadyRegister:Boolean = settings.getBoolean("isAlreadyRegister",false)
         //已经注册过，进入登录界面
 
         //尚未登录
@@ -133,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent()
                 intent.setClass(this, Login::class.java)
                 startActivity(intent)
+                isAlreadyLogin = true
                 finish()
             }
         }else{//尚未注册，进入注册界面
@@ -141,9 +129,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        isAlreadyLogin = false
-        editor.putBoolean("isAlreadyLogin",isAlreadyLogin)
-        editor.commit()
         //上述注册和登录完成
 
 
@@ -290,7 +275,12 @@ class MainActivity : AppCompatActivity() {
                 accountStringList.add(accounts.account)
             }
         }
+        var AccountNameText = findViewById<TextView>(R.id.AccountNameText)
+        AccountNameText.text = "全部账户"
 
+        var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
+        //todo : 使用真正余额
+        AccountInfo.text = "余额："
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -310,10 +300,12 @@ class MainActivity : AppCompatActivity() {
                 if(accountName == ALL_ACCOUNT) {
                     var myadapter = ForecastListAdapter(DAO.getAllRecord())
                     forecastList.adapter = myadapter
+                    AccountNameText.text = "全部账户"
                 }
                 else{
                     var myadapter = ForecastListAdapter(DAO.findRecordByAccount(accountName))
                     forecastList.adapter = myadapter
+                    AccountNameText.text = "当前账户：" + accountName
                 }
 
             }

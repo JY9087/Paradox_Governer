@@ -20,16 +20,42 @@
         app:menu="@menu/bottom_nav_menu" />
 
     <ScrollView
-        android:layout_width="409dp"
-        android:layout_height="673dp"
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/personal_rstpwd_text_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="ResetTextPassword"
+                android:text="@string/personal_pwd_reset_text_button"
+                app:layout_constraintBottom_toBottomOf="@+id/textView17"
+                app:layout_constraintStart_toEndOf="@+id/textView17"
+                app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="48dp"
+                android:text="@string/personal_pwd_management_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/personal_custom_spinner3" />
 
             <TextView
                 android:id="@+id/textView13"
@@ -120,6 +146,19 @@
                 app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner3"
                 app:layout_constraintStart_toEndOf="@+id/personal_custom_spinner3"
                 app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner3" />
+
+            <Button
+                android:id="@+id/personal_rstpwd_pattern_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:onClick="ResetPatternPassword"
+                android:text="@string/personal_pwd_reset_pattern_button"
+                app:layout_constraintBottom_toBottomOf="@+id/personal_rstpwd_text_button"
+                app:layout_constraintStart_toEndOf="@+id/personal_rstpwd_text_button"
+                app:layout_constraintTop_toTopOf="@+id/personal_rstpwd_text_button" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
