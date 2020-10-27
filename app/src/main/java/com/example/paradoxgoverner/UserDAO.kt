@@ -2,6 +2,8 @@ package com.example.paradoxgoverner
 
 import androidx.room.*
 import java.sql.Date
+import java.sql.Time
+import android.app.DatePickerDialog
 
 @Dao
 interface UserDAO {
@@ -79,7 +81,6 @@ interface UserDAO {
     fun isInitialized(): List<Hidden>
 
 
-
     //插入
     //有趣的vararg
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -139,11 +140,11 @@ interface UserDAO {
     fun getWaterBillIncome(SelectAccount : String,SelectIncome:Boolean):List<Record>
 
     //给出日期就可以得到包括要求账户的每日流水数据包
-    @Query("SELECT * FROM Record WHERE account = (:SelectAccount) And date = (:SelectDate) AND income=(:SelectIncome) ORDER BY time DESC")
-    fun getDateWaterBill(SelectAccount : String,SelectDate : Date, SelectIncome:Boolean): List<Record>
+    //@Query("SELECT * FROM Record WHERE account = (:SelectAccount) AND date BETWEEN(:StartDate)AND (:EndDate) AND income=(:SelectIncome) ORDER BY time DESC")
+    //fun getDateWaterBill(SelectAccount : String, SelectDate : Long, SelectIncome:Boolean): List<Record>
 
     //分类统计成员一级二级选项的数据包
-    @Query("SELECT * FROM Record WHERE account = (:SelectAccount) And date >=(:StartDate) and date<=(:EndDate) and member in (:SelectMember)AND category in(:SelectCategory)And subcategory IN (:SelectSubCategory) AND income=(:SelectIncome)")
-    fun getSubCategoryBill(SelectAccount : String, StartDate :Date,EndDate :Date, SelectMember : List<String>,SelectCategory:List<String> ,SelectSubCategory : List<String>, SelectIncome:Boolean): List<Record>
+    @Query("SELECT * FROM Record WHERE account = (:SelectAccount) And date BETWEEN(:StartDate)AND (:EndDate) and member in (:SelectMember)AND category in(:SelectCategory)And subcategory IN (:SelectSubCategory) and item in (:SelectItem) and merchant in(:SelectMerchant)AND income=(:SelectIncome)and type in(:SelectType)")
+    fun getSubCategoryBill(SelectAccount : String, StartDate :Long,EndDate :Long, SelectMember : List<String>,SelectCategory:List<String> ,SelectSubCategory : List<String>, SelectIncome:Boolean,SelectItem:List<String>,SelectMerchant:List<String>,SelectType:List<String>): List<Record>
 
 }
