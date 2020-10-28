@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                         RECORD_UID, DAO.getAllRecord().get(position).uid
                     )
                     startActivity(intent)
+                    finish()
                 }
                 override fun onLongClick(view: View?, position: Int) {
                     wantToDelete(DAO.getAllRecord().get(position).uid)
@@ -143,6 +144,7 @@ class MainActivity : AppCompatActivity() {
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_graph -> {
                     val intent = Intent(this, GraphActivity::class.java)
@@ -150,6 +152,7 @@ class MainActivity : AppCompatActivity() {
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
@@ -157,6 +160,7 @@ class MainActivity : AppCompatActivity() {
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
             }
             true
@@ -250,6 +254,7 @@ class MainActivity : AppCompatActivity() {
     fun CreateNewItem(view: View) {
         val intent = Intent(this, CreateNewItem::class.java)
         startActivity(intent)
+        finish()
     }
 
     fun ShowIncome(view: View) {

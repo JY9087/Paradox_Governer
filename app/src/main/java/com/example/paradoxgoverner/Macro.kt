@@ -5,7 +5,7 @@ const val OPERATION_MESSAGE = "OPERATION_MESSAGE"
 const val OPERATION_DESCRIPTION = "OPERATION_DESCRIPTION"
 const val EXTRA_MESSAGE = "EXTRA_MESSAGE"
 
-const val VOID_ITEM = "无"
+const val VOID_ITEM = "其他"
 
 val DEFAULT_TYPE_LIST = listOf<String>("收入","支出","转账","借贷")
 val DEFAULT_MEMBER_LIST = listOf<String>("我",VOID_ITEM)

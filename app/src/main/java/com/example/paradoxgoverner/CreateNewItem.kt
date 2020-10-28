@@ -200,6 +200,7 @@ class CreateNewItem : AppCompatActivity() {
         )
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     
@@ -212,12 +213,14 @@ class CreateNewItem : AppCompatActivity() {
         }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     
     fun CancelChange(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     //新建  似乎只能写5个函数
