@@ -3,6 +3,7 @@ package com.example.paradoxgoverner
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -85,17 +86,22 @@ class PersonalActivity : AppCompatActivity() {
                 //kotlin list下标从0开始
                 when(adapterView.getItemAtPosition(i) as String){
                     CUSTOMIZED_LIST[0] -> {
-                        type = MEMBER_INDEX
-                        for (members in DAO.getAllMember()) {
-                            stringList.add(members.member)
+                        type = ACCOUNT_INDEX
+                        for (accounts in DAO.getAllAccount()) {
+                            if(accounts.account != ALL_ACCOUNT && accounts.account != VOID_ITEM){
+                                stringList.add(accounts.account)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
                     CUSTOMIZED_LIST[1] -> {
-                        type = CATEGORY_INDEX
                         for (categorys in DAO.getAllCategory()) {
-                            stringList.add(categorys.category)
+                            if(categorys.category != VOID_ITEM){
+                                stringList.add(categorys.category)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                         personal_custom_spinner3.visibility = View.VISIBLE
                         personal_custom_button3.visibility = View.VISIBLE
@@ -104,16 +110,33 @@ class PersonalActivity : AppCompatActivity() {
                     CUSTOMIZED_LIST[2] -> {
                         type = MERCHANT_INDEX
                         for (merchants in DAO.getAllMerchant()) {
-                            stringList.add(merchants.merchant)
+                            if(merchants.merchant != VOID_ITEM){
+                                stringList.add(merchants.merchant)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
 
                     CUSTOMIZED_LIST[3] -> {
                         type = ITEM_INDEX
                         for (items in DAO.getAllItem()) {
-                            stringList.add(items.item)
+                            if(items.item != VOID_ITEM){
+                                stringList.add(items.item)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
+                        InitSecondSpinner(stringList)
+                    }
+
+                    CUSTOMIZED_LIST[4] -> {
+                        type = MEMBER_INDEX
+                        for (members in DAO.getAllMember()) {
+                            if(members.member != VOID_ITEM){
+                                stringList.add(members.member)
+                            }
+                        }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
 
@@ -133,7 +156,7 @@ class PersonalActivity : AppCompatActivity() {
 
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
         val DAO = AppDatabase.instance.userDAO()
         selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -175,7 +198,7 @@ class PersonalActivity : AppCompatActivity() {
 
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
-        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         subcategoryspinner.setAdapter(subcategoryadapter)
 
         subcategoryspinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -215,7 +238,11 @@ class PersonalActivity : AppCompatActivity() {
                     val txt = itemText.text.toString()
                     when (type) {
                         MEMBER_INDEX -> DAO.insertAllMember(Member(0, txt))
-                        CATEGORY_INDEX -> DAO.insertAllCategory(Category(0, txt))
+                        //新增一级分类时，二级分类新增"无"
+                        CATEGORY_INDEX -> {
+                            DAO.insertAllCategory(Category(0, txt))
+                            DAO.insertAllSubcategory(Subcategory(0,txt, VOID_ITEM))
+                        }
                         MERCHANT_INDEX -> DAO.insertAllMerchant(Merchant(0, txt))
                         ITEM_INDEX -> DAO.insertAllItem(Item(0, txt))
                     }
@@ -351,6 +378,25 @@ class PersonalActivity : AppCompatActivity() {
                     SubcategorySpinnerAdapt()
             })
             .show()
+    }
+
+    fun ResetPatternPassword(view : View){
+        val settings: SharedPreferences = getSharedPreferences("info", 0)
+        val editor = settings.edit()
+        var isSetPassword:Boolean = false
+        editor.putBoolean("isSetPassword",isSetPassword)
+        editor.commit()
+        val intent = Intent()
+        intent.setClass(this, PatternPassword::class.java).putExtra(EXTRA_MESSAGE, RESET_PATTERN)
+        startActivity(intent)
+        finish()
+    }
+
+    fun ResetTextPassword(view : View){
+        val intent = Intent()
+        intent.setClass(this, resetPwd::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

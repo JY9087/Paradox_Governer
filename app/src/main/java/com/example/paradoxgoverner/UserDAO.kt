@@ -12,7 +12,40 @@ interface UserDAO {
     //查找
     @Query("SELECT * FROM Record WHERE Description LIKE :description " +
             "LIMIT 1")
+
     fun findByName(description: String): Record
+
+    fun findRecordByDescription(description: String): Record
+
+    @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
+    fun findRecordByUid(uid : Int): Record
+
+    @Query("SELECT * FROM Record WHERE type LIKE :type ")
+    fun findRecordByType(type : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE member LIKE :member ")
+    fun findRecordByMember(member : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE category LIKE :category ")
+    fun findRecordByCategory(category : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory")
+    fun findRecordBySubcategory(subcategory : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory AND category LIKE :category")
+    fun findRecordByCatSubcategory(category : String , subcategory : String): List<Record>
+
+    @Query("SELECT * FROM Record WHERE merchant LIKE :merchant ")
+    fun findRecordByMerchant(merchant: String) : List<Record>
+
+    @Query("SELECT * FROM Record WHERE item LIKE :item ")
+    fun findRecordByItem(item: String) : List<Record>
+
+    @Query("SELECT * FROM Record WHERE account LIKE :account ")
+    fun findRecordByAccount(account: String) : List<Record>
+
+
+    //其他查找
 
     //根据Category查找Subcategory
     @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
@@ -110,6 +143,7 @@ interface UserDAO {
     //也许我会修改这部分代码
     @Delete
     fun delete(record: Record)
+
 
     @Delete
     fun deleteMember(member : Member)

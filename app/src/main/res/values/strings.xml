@@ -60,6 +60,7 @@
     <string name="cardview_description_type">记账类型</string>
     <string name="cardview_description_description">描述</string>
     <string name="cardview_description_datetime">时间</string>
+    <string name="cardview_description_account">账户</string>
 
     <string name="personal_manage_customize">管理自定义选项</string>
     <string name="personal_manage_customize_new">新增</string>
@@ -69,4 +70,22 @@
     <string name="select_account_text">选择账户</string>
     <string name="select_account_spinner_text">账户</string>
 
+
+    <string name="personal_pwd_management_text">密码管理</string>
+    <string name="personal_pwd_reset_text_button">重置密码</string>
+    <string name="personal_pwd_reset_pattern_button">重置手势密码</string>
+
+
+    <string name="nav_fcatout">一级分类支出</string>
+    <string name="nav_scatout">二级分类支出</string>
+    <string name="nav_fcatin">一级分类收入</string>
+    <string name="nav_scatin">二级分类收入</string>
+    <string name="nav_memout">成员支出</string>
+    <string name="nav_memin">成员收入</string>
+    <string name="nav_mercout">商家支出</string>
+    <string name="nav_mercin">商家收入</string>
+    <string name="nav_accout">账户支出</string>
+    <string name="nav_accin">账户收入</string>
+    <string name="nav_itemout">项目支出</string>
+    <string name="nav_itemin">项目收入</string>
 </resources>
