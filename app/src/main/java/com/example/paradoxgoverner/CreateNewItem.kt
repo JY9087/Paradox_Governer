@@ -69,11 +69,15 @@ class CreateNewItem : AppCompatActivity() {
         InitSpinner(memberStringList.toList(),R.id.member_spinner, MEMBER_INDEX)
 
 
+
         //Category & Subcategory
         for (categorys in DAO.getAllCategory()) {
             categoryStringList.add(categorys.category)
         }
         InitCategotySpinner(categoryStringList.toList())
+        if(uid != 0){
+            category_spinner?.setSelection(categoryStringList.indexOf(rec.category))
+        }
 
 
         var subcategoryList = DAO.getAllSubcategory(categorystring)
@@ -83,7 +87,7 @@ class CreateNewItem : AppCompatActivity() {
         for (subcategorys in subcategoryList) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
-
+        SubcategorySpinnerAdapt(categorystring)
 
 
         //Type
@@ -124,9 +128,8 @@ class CreateNewItem : AppCompatActivity() {
             //假设不会有重名
             member_spinner?.setSelection(memberStringList.indexOf(rec.member))
 
-            category_spinner?.setSelection(categoryStringList.indexOf(rec.category))
-
             //rec.subcategory是对的，但就硬不能setSelection
+            //其他都可以setSelection
             subcategory_spinner?.setSelection(subcategoryStringList.indexOf(rec.subcategory))
 
             merchant_spinner?.setSelection(merchantStringList.indexOf(rec.merchant))
@@ -379,6 +382,10 @@ class CreateNewItem : AppCompatActivity() {
     fun InitCategotySpinner(itemlist : List<String>) {
         var selectedSpinner = findViewById<Spinner>(R.id.category_spinner)
 
+        if(uid != 0){
+            categorystring = rec.category
+        }
+
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -394,7 +401,10 @@ class CreateNewItem : AppCompatActivity() {
                 // Get the spinner selected item text
                 stringArray[CATEGORY_INDEX] = adapterView.getItemAtPosition(i) as String
                 categorystring = adapterView.getItemAtPosition(i) as String
-                SubcategorySpinnerAdapt(stringArray[CATEGORY_INDEX])
+                SubcategoryAdapt(categorystring)
+                if(uid != 0){
+                    subcategory_spinner?.setSelection(subcategoryStringList.indexOf(rec.subcategory))
+                }
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
