@@ -49,15 +49,18 @@ class MainActivity : AppCompatActivity() {
             for (init_member in DEFAULT_MEMBER_LIST) {
                 DAO.insertAllMember(Member(0, init_member))
             }
+
             for (init_category in DEFAULT_CATEGORY_LIST) {
                 DAO.insertAllCategory(Category(0, init_category))
             }
+
             //until不包含最后一个元素
             for (index in 0 until DEFAULT_CATEGORY_LIST.size) {
                 for (item in DEFAULT_SUBCATEGORY_LIST.get(index)) {
                     DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST.get(index), item))
                 }
             }
+
             for (init_merchant in DEFAULT_MERCHANT_LIST) {
                 DAO.insertAllMerchant(Merchant(0, init_merchant))
             }
@@ -72,10 +75,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         InitAccountSpinner()
-
-
 
 
         //RecycleView

@@ -64,16 +64,22 @@ class CreateNewItem : AppCompatActivity() {
 
         //Member
         for (members in DAO.getAllMember()) {
-            memberStringList.add(members.member)
+            if(members.member != VOID_ITEM){
+                memberStringList.add(members.member)
+            }
         }
+        memberStringList.add(VOID_ITEM)
         InitSpinner(memberStringList.toList(),R.id.member_spinner, MEMBER_INDEX)
 
 
 
         //Category & Subcategory
         for (categorys in DAO.getAllCategory()) {
-            categoryStringList.add(categorys.category)
+            if(categorys.category != VOID_ITEM){
+                categoryStringList.add(categorys.category)
+            }
         }
+        categoryStringList.add(VOID_ITEM)
         InitCategotySpinner(categoryStringList.toList())
         if(uid != 0){
             category_spinner?.setSelection(categoryStringList.indexOf(rec.category))
@@ -85,8 +91,11 @@ class CreateNewItem : AppCompatActivity() {
             subcategoryList = DAO.getAllSubcategory(rec.category)
         }
         for (subcategorys in subcategoryList) {
-            subcategoryStringList.add(subcategorys.subcategory)
+            if(subcategorys.subcategory != VOID_ITEM){
+                subcategoryStringList.add(subcategorys.subcategory)
+            }
         }
+        subcategoryStringList.add(VOID_ITEM)
         SubcategorySpinnerAdapt(categorystring)
 
 
@@ -95,22 +104,29 @@ class CreateNewItem : AppCompatActivity() {
 
         //Merchant
         for (merchants in DAO.getAllMerchant()) {
-            merchantStringList.add(merchants.merchant)
+            if(merchants.merchant != VOID_ITEM){
+                merchantStringList.add(merchants.merchant)
+            }
         }
+        merchantStringList.add(VOID_ITEM)
         InitSpinner(merchantStringList.toList(),R.id.merchant_spinner, MERCHANT_INDEX)
 
         //Item
         for (items in DAO.getAllItem()) {
-            itemStringList.add(items.item)
+            if(items.item != VOID_ITEM){
+                itemStringList.add(items.item)
+            }
         }
+        itemStringList.add(VOID_ITEM)
         InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
         //Account
         for (accounts in DAO.getAllAccount()) {
-            if(accounts.account != ALL_ACCOUNT){
+            if(accounts.account != ALL_ACCOUNT && accounts.account != VOID_ITEM){
                 accountStringList.add(accounts.account)
             }
         }
+        accountStringList.add(VOID_ITEM)
         InitSpinner(accountStringList.toList(),R.id.account_spinner, ACCOUNT_INDEX)
 
         //新建
@@ -530,9 +546,13 @@ class CreateNewItem : AppCompatActivity() {
     
     fun MemberAdapt() {
         memberStringList.clear()
-        for (members in AppDatabase.instance.userDAO().getAllMember()) {
-            memberStringList.add(members.member)
+        val DAO = AppDatabase.instance.userDAO()
+        for (members in DAO.getAllMember()) {
+            if(members.member != VOID_ITEM){
+                memberStringList.add(members.member)
+            }
         }
+        memberStringList.add(VOID_ITEM)
         var memberspinner = findViewById<Spinner>(R.id.member_spinner)
         val memberadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , memberStringList.toList())
@@ -542,9 +562,13 @@ class CreateNewItem : AppCompatActivity() {
 
     fun CategoryAdapt() {
         categoryStringList.clear()
-        for (categorys in AppDatabase.instance.userDAO().getAllCategory()) {
-            categoryStringList.add(categorys.category)
+        val DAO = AppDatabase.instance.userDAO()
+        for (categorys in DAO.getAllCategory()) {
+            if(categorys.category != VOID_ITEM){
+                categoryStringList.add(categorys.category)
+            }
         }
+        categoryStringList.add(VOID_ITEM)
         var categoryspinner = findViewById<Spinner>(R.id.category_spinner)
         val categoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , categoryStringList.toList())
@@ -555,9 +579,14 @@ class CreateNewItem : AppCompatActivity() {
 
     fun SubcategoryAdapt(category: String) {
         subcategoryStringList.clear()
-        for (subcategorys in AppDatabase.instance.userDAO().getAllSubcategory(category)) {
-            subcategoryStringList.add(subcategorys.subcategory)
+        val DAO = AppDatabase.instance.userDAO()
+        for (subcategorys in DAO.getAllSubcategory(category)) {
+            if(subcategorys.subcategory != VOID_ITEM){
+                subcategoryStringList.add(subcategorys.subcategory)
+            }
         }
+        subcategoryStringList.add(VOID_ITEM)
+
         var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
@@ -568,9 +597,13 @@ class CreateNewItem : AppCompatActivity() {
 
     fun MerchantAdapt() {
         merchantStringList.clear()
-        for (merchants in AppDatabase.instance.userDAO().getAllMerchant()) {
-            merchantStringList.add(merchants.merchant)
+        val DAO = AppDatabase.instance.userDAO()
+        for (merchants in DAO.getAllMerchant()) {
+            if(merchants.merchant != VOID_ITEM){
+                merchantStringList.add(merchants.merchant)
+            }
         }
+        merchantStringList.add(VOID_ITEM)
         var merchantspinner = findViewById<Spinner>(R.id.merchant_spinner)
         val merchantadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , merchantStringList.toList())
@@ -581,9 +614,13 @@ class CreateNewItem : AppCompatActivity() {
 
     fun ItemAdapt() {
         itemStringList.clear()
-        for (items in AppDatabase.instance.userDAO().getAllItem()) {
-            itemStringList.add(items.item)
+        val DAO = AppDatabase.instance.userDAO()
+        for (items in DAO.getAllItem()) {
+            if(items.item != VOID_ITEM){
+                itemStringList.add(items.item)
+            }
         }
+        itemStringList.add(VOID_ITEM)
         var itemspinner = findViewById<Spinner>(R.id.item_spinner)
         val itemadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemStringList.toList())
@@ -593,9 +630,13 @@ class CreateNewItem : AppCompatActivity() {
 
     fun AccountAdapt() {
         accountStringList.clear()
-        for (accounts in AppDatabase.instance.userDAO().getAllAccount()) {
-            accountStringList.add(accounts.account)
+        val DAO = AppDatabase.instance.userDAO()
+        for (accounts in DAO.getAllAccount()) {
+            if(accounts.account != ALL_ACCOUNT && accounts.account != VOID_ITEM){
+                accountStringList.add(accounts.account)
+            }
         }
+        accountStringList.add(VOID_ITEM)
         var itemspinner = findViewById<Spinner>(R.id.account_spinner)
         val itemadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
