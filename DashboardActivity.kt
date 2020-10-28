@@ -10,6 +10,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.statistics.*
+import java.nio.file.Files.size
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -34,8 +35,7 @@ class DashboardActivity : AppCompatActivity() {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                 }
-                R.id.navigation_dashboard -> {
-                }
+                R.id.navigation_dashboard-> {}
                 R.id.navigation_graph -> {
                     val intent = Intent(this, GraphActivity::class.java)
                     startActivity(intent)
@@ -54,11 +54,9 @@ class DashboardActivity : AppCompatActivity() {
             true
         })
         bottomNavigatior.selectedItemId = R.id.navigation_dashboard
-    }
-}
 
 
-        /*//------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------
         val memberStringList = mutableListOf<String>()
         val categoryStringList = mutableListOf<String>()
         val subcategoryStringList = mutableListOf<String>()
@@ -73,7 +71,6 @@ class DashboardActivity : AppCompatActivity() {
                 subcategoryStringList.add(subcategory.subcategory)
             }
         }
-        /*
         //查找所需要的数据包，返回值是一个List<Record>
         fun selectData(
             needAccount: String,
@@ -86,7 +83,7 @@ class DashboardActivity : AppCompatActivity() {
         ): List<Record> {
             val start:java.sql.Date = java.sql.Date(startDate.time)
             val end:java.sql.Date = java.sql.Date(endDate.time)
-            return AppDatabase.instance.userDAO().getSubCategoryBill(needAccount,start.time,end.time+86400000,needMember,needCategory,needSubcategory,income)
+            return AppDatabase.instance.userDAO().getSubCategoryBill(needAccount,start,end,needMember,needCategory,needSubcategory,income)
         }
 
         //给出一个List<Record>，求其金额之和
@@ -117,12 +114,14 @@ class DashboardActivity : AppCompatActivity() {
 
         //每日支出的数据包
         fun getDayPay(needAccount: String,needDate: Date):List<Record>{
-            return selectData(needAccount = needAccount,startDate = needDate,endDate = needDate,income = false)
+            val need:java.sql.Date = java.sql.Date(needDate.time)
+            return AppDatabase.instance.userDAO().getDateWaterBill(needAccount,need,false)
         }
 
         //每日收入的数据包
         fun getDayIncome(needAccount: String,needDate: Date):List<Record>{
-            return selectData(needAccount = needAccount,startDate = needDate,endDate = needDate,income = true)
+            val need:java.sql.Date = java.sql.Date(needDate.time)
+            return AppDatabase.instance.userDAO().getDateWaterBill(needAccount,need,true)
         }
 
         //每日收支
@@ -173,13 +172,13 @@ class DashboardActivity : AppCompatActivity() {
         }
 
 
-        //---------------------------------------------------------------------------------------------------------------*/
+        //---------------------------------------------------------------------------------------------------------------
 
 
 
 
-        val textView = findViewById<TextView>(R.id.UserNametextView)
-        textView.text = "***"//<-----------------这里传入当前账户名
+        val textView = findViewById<View>(R.id.UserNametextView) as TextView
+        textView.text = "学委好帅"//<-----------------这里传入当前账户名
         val searchCategory: MutableList<String> = mutableListOf()
         val searchSubCategory: MutableList<String> = mutableListOf()
         val searchMember:MutableList<String> = mutableListOf()
@@ -221,7 +220,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         //去除重复
-        fun removeDuplicate(list: MutableList<*>):MutableList<*>{
+        fun removeDuplicate(list: MutableList<*>){
             for (i in 0 until list.size) {
                 for (j in 0 until list.size) {
                     if(i!=j&& list[i] == list[j]) {
@@ -229,17 +228,18 @@ class DashboardActivity : AppCompatActivity() {
                     }
                 }
             }
-            return list
         }
-        /*
+
         //下一步按钮
         s1_next.setOnClickListener {
             val intent = Intent()
             intent.setClass(this, "下一个页面"::class.java)
             startActivity(intent)
             finish()
-        }*/
+        }
 
-    }*/
+    }
 
 
+
+}
