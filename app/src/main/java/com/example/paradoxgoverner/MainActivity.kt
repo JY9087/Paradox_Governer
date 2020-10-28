@@ -4,20 +4,17 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Dao
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import kotlin.properties.Delegates
-
-//全局变量。请小心使用
-var versionFlag = false
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,7 +25,9 @@ class MainActivity : AppCompatActivity() {
         var isAlreadyLogin = false
     }
 
+    var accountName = ALL_ACCOUNT
     var income = true
+    var accountStringList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,14 +69,11 @@ class MainActivity : AppCompatActivity() {
                 DAO.insertAllItem(Item(0, init_item))
             }
 
-        }
-
-
-
             for (init_account in DEFAULT_ACCOUNT_LIST) {
                 DAO.insertAllAccount(Account(0, init_account))
             }
         }
+
 
         InitAccountSpinner()
 
@@ -85,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         //RecycleView
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ForecastListAdapter(DAO.getAll())
+        var myadapter = ForecastListAdapter(DAO.getAllRecord())
         forecastList.adapter = myadapter
 
         var recyclertouchlistener = RecyclerTouchListener(
@@ -96,18 +92,17 @@ class MainActivity : AppCompatActivity() {
                 override fun onClick(view: View?, position: Int) {
                     //传递UID，由新Activity去进行查询
                     val intent = Intent(instance, CreateNewItem::class.java).putExtra(
-                        RECORD_UID, DAO.getAll().get(position).uid
+                        RECORD_UID, DAO.getAllRecord().get(position).uid
                     )
                     startActivity(intent)
                 }
                 override fun onLongClick(view: View?, position: Int) {
-                    wantToDelete(DAO.getAll().get(position).uid)
+                    wantToDelete(DAO.getAllRecord().get(position).uid)
                 }
             }
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
-
 
 
 
@@ -135,6 +130,7 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         //上述注册和登录完成
+
 
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -167,12 +163,7 @@ class MainActivity : AppCompatActivity() {
         })
         bottomNavigatior.selectedItemId = R.id.navigation_home
 
-        button.setOnClickListener {
-            val intent = Intent()
-            intent.setClass(this, StatisticActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+
     }
     //End Of OnCreate
 
@@ -194,7 +185,6 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_transfer -> r = "转账"
             else -> super.onOptionsItemSelected(item)
         }
-
         if(r == "全部") {
             forecastList.adapter = ForecastListAdapter(DAO.getAllRecord())
         }
@@ -264,7 +254,7 @@ class MainActivity : AppCompatActivity() {
 
     fun ShowIncome(view: View) {
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
-        forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findByType("收入"))
+        forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findRecordByType("收入"))
     }
 
     fun wantToDelete(uid: Int){
@@ -273,7 +263,6 @@ class MainActivity : AppCompatActivity() {
             .setTitle("确认删除？")
             .setIcon(android.R.drawable.ic_dialog_info)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
-
                 DAO.delete( DAO.findRecordByUid(uid) )
                 findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
             })

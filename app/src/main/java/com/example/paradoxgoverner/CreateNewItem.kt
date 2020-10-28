@@ -1,7 +1,6 @@
 package com.example.paradoxgoverner
 
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -29,21 +28,19 @@ class CreateNewItem : AppCompatActivity() {
     var income = true
     lateinit var rec : Record
 
-    //使用宏INDEX作为下标。
-    //可以将整个stringArray作为参数列表，传给数据库DAO。查询时，stringArray[MEMBER_INDEX]去匹配Record的member成员
     var stringArray = arrayOf<String>("","","","","","","","","","")
 
     var uid = 0
     var mcalendar = Calendar.getInstance()
+
 
     var memberStringList = mutableListOf<String>()
     var categoryStringList = mutableListOf<String>()
     var subcategoryStringList = mutableListOf<String>()
     var merchantStringList = mutableListOf<String>()
     var itemStringList = mutableListOf<String>()
-
+    var accountStringList = mutableListOf<String>()
     
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customization_of_new_item)
@@ -53,8 +50,9 @@ class CreateNewItem : AppCompatActivity() {
         //查看是否有携带uid，如果有就修改uid变量的值
         uid = intent.getIntExtra(RECORD_UID,0)
         if(uid != 0){
-            rec = AppDatabase.instance.userDAO().findByUid(uid)
+            rec = AppDatabase.instance.userDAO().findRecordByUid(uid)
         }
+
         //自动填充当前时间
         if(uid == 0){
             mcalendar.timeInMillis = System.currentTimeMillis() }
@@ -62,6 +60,7 @@ class CreateNewItem : AppCompatActivity() {
             mcalendar.timeInMillis = rec.time.time }
         //Todo : 使用PlaceHolder
         time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
+
 
         //Member
         for (members in DAO.getAllMember()) {
@@ -121,7 +120,6 @@ class CreateNewItem : AppCompatActivity() {
         itemStringList.add(VOID_ITEM)
         InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
-
         //Account
         for (accounts in DAO.getAllAccount()) {
             if(accounts.account != ALL_ACCOUNT && accounts.account != VOID_ITEM){
@@ -176,7 +174,6 @@ class CreateNewItem : AppCompatActivity() {
 
         var description = findViewById<EditText>(R.id.description).text.toString()
 
-        //Todo : 使用真实的Account
 
 
         //三种情况：新建时未赋值  修改时未赋值   已赋值
@@ -192,12 +189,13 @@ class CreateNewItem : AppCompatActivity() {
         }
         //修改时未赋值
         else if(uid != 0) {
-            amount = AppDatabase.instance.userDAO().findByUid(uid).amount
+            amount = AppDatabase.instance.userDAO().findRecordByUid(uid).amount
         }
 
         AppDatabase.instance.userDAO().insertAll(
             Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],account,amount,stringArray[TYPE_INDEX],income,
+                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                stringArray[ACCOUNT_INDEX],amount,stringArray[TYPE_INDEX],income,
                 stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
         )
         val intent = Intent(this, MainActivity::class.java)
@@ -209,7 +207,7 @@ class CreateNewItem : AppCompatActivity() {
         if(uid != 0)
         {
             AppDatabase.instance.userDAO().delete(
-                AppDatabase.instance.userDAO().findByUid(uid)
+                AppDatabase.instance.userDAO().findRecordByUid(uid)
             )
         }
         val intent = Intent(this, MainActivity::class.java)
@@ -317,7 +315,6 @@ class CreateNewItem : AppCompatActivity() {
             .show()
     }
 
-
     fun NewAccount(view : View) {
         var itemText = EditText(this)
         android.app.AlertDialog.Builder(this)
@@ -370,8 +367,7 @@ class CreateNewItem : AppCompatActivity() {
 
 
     //初始化通用Spinner(Member,Merchant,Item)
-    //itemList是spinner的下拉菜单  ID是控件View的ID，通过R.id来获得  Index是一系列宏，我用来标识Record的各个成员
-    //MEMBER_INDEX 对应 member
+    
     fun InitSpinner(itemlist : List<String> , ID : Int , Index : Int) {
         var selectedSpinner = findViewById<Spinner>(ID)
 
@@ -381,14 +377,12 @@ class CreateNewItem : AppCompatActivity() {
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
 
         selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
-            //这个函数在单击时被调用
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
                 i: Int,
                 l: Long
             ) {
-                //这里是onclick功能的具体实现
                 //用于新建/修改Record
                 stringArray[Index] = adapterView.getItemAtPosition(i) as String
             }
@@ -567,7 +561,6 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun CategoryAdapt() {
-
         categoryStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
         for (categorys in DAO.getAllCategory()) {
@@ -651,4 +644,5 @@ class CreateNewItem : AppCompatActivity() {
         itemspinner.setAdapter(itemadapter)
     }
 
+}
 

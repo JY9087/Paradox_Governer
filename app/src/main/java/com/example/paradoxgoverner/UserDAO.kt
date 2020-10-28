@@ -1,20 +1,14 @@
 package com.example.paradoxgoverner
 
 import androidx.room.*
-import java.sql.Date
-import java.sql.Time
-import android.app.DatePickerDialog
 
 @Dao
 interface UserDAO {
 
 
-    //查找
+    //查找Record
     @Query("SELECT * FROM Record WHERE Description LIKE :description " +
             "LIMIT 1")
-
-    fun findByName(description: String): Record
-
     fun findRecordByDescription(description: String): Record
 
     @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
@@ -52,11 +46,6 @@ interface UserDAO {
     fun findSubcategoryByCategory(category : String): List<Subcategory>
 
 
-    @Query("SELECT * FROM Record WHERE uid LIKE :uid ")
-    fun findByUid(uid : Int): Record
-
-    @Query("SELECT * FROM Record WHERE type LIKE :type ")
-    fun findByType(type : String): List<Record>
 
     @Query("SELECT * FROM Member WHERE member LIKE :member ")
     fun findMemberByString(member : String): List<Member>
@@ -72,6 +61,9 @@ interface UserDAO {
 
     @Query("SELECT * FROM Item WHERE item LIKE :item ")
     fun findItemByString(item : String): List<Item>
+
+    @Query("SELECT * FROM Account WHERE account LIKE :account ")
+    fun findAccountByString(account : String): List<Account>
 
 
     //根据UID进行查找
@@ -90,10 +82,15 @@ interface UserDAO {
     @Query("SELECT * FROM Item WHERE uid LIKE :item ")
     fun findItemByUid(item : Int): List<Item>
 
+    @Query("SELECT * FROM Account WHERE uid LIKE :account ")
+    fun findAccountByUid(account : Int): List<Account>
+
+
+
 
     //全选
     @Query("SELECT * FROM Record")
-    fun getAll(): List<Record>
+    fun getAllRecord(): List<Record>
 
     @Query("SELECT * FROM Member")
     fun getAllMember(): List<Member>
@@ -110,8 +107,12 @@ interface UserDAO {
     @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
     fun getAllSubcategory(category : String): List<Subcategory>
 
+    @Query("SELECT * FROM Account")
+    fun getAllAccount(): List<Account>
+
     @Query("SELECT * FROM Hidden")
     fun isInitialized(): List<Hidden>
+
 
 
     //插入
@@ -135,6 +136,9 @@ interface UserDAO {
     fun insertAllItem(vararg items: Item)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllAccount(vararg accounts : Account)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun initialize(vararg hide: Hidden)
 
 
@@ -143,6 +147,7 @@ interface UserDAO {
     //也许我会修改这部分代码
     @Delete
     fun delete(record: Record)
+
 
 
     @Delete
@@ -160,25 +165,18 @@ interface UserDAO {
     @Delete
     fun deleteItem(item : Item)
 
+    @Delete
+    fun deleteAccount(account : Account)
 
-    //------------------------------------------------------------------------------
-
-    //按账户的流水查询，以下是降序和升序
-    @Query("SELECT * FROM Record WHERE account = (:SelectAccount)ORDER BY date,time DESC")
-    fun getWaterBillDesc(SelectAccount : String): List<Record>
-
-    @Query("SELECT * FROM Record WHERE account = (:SelectAccount)ORDER BY date,time ASC")
-    fun getWaterBillAsc(SelectAccount : String): List<Record>
-
-    @Query("SELECT * FROM Record WHERE account = (:SelectAccount)AND income=(:SelectIncome)")
-    fun getWaterBillIncome(SelectAccount : String,SelectIncome:Boolean):List<Record>
-
-    //给出日期就可以得到包括要求账户的每日流水数据包
-    //@Query("SELECT * FROM Record WHERE account = (:SelectAccount) AND date BETWEEN(:StartDate)AND (:EndDate) AND income=(:SelectIncome) ORDER BY time DESC")
-    //fun getDateWaterBill(SelectAccount : String, SelectDate : Long, SelectIncome:Boolean): List<Record>
-
-    //分类统计成员一级二级选项的数据包
-    @Query("SELECT * FROM Record WHERE account = (:SelectAccount) And date BETWEEN(:StartDate)AND (:EndDate) and member in (:SelectMember)AND category in(:SelectCategory)And subcategory IN (:SelectSubCategory) and item in (:SelectItem) and merchant in(:SelectMerchant)AND income=(:SelectIncome)and type in(:SelectType)")
-    fun getSubCategoryBill(SelectAccount : String, StartDate :Long,EndDate :Long, SelectMember : List<String>,SelectCategory:List<String> ,SelectSubCategory : List<String>, SelectIncome:Boolean,SelectItem:List<String>,SelectMerchant:List<String>,SelectType:List<String>): List<Record>
+    //User Name And Password
+    @Insert
+    fun insertNameAndPwd(NameAndPwd:userNameAndPwd)
+    @Query("Select * From userNameAndPwd WHERE :element = userName")
+    fun searchNameAndPwd(element:String):Boolean
+    @Query("Select * From userNameAndPwd")
+    fun findAllUserNameAndPwd():List<userNameAndPwd>
+    @Query("Select password From userNameAndPwd WHERE :element = userName")
+    fun searchPwdByName(element: String):String
+    
 
 }

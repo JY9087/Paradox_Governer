@@ -1,19 +1,15 @@
 package com.example.paradoxgoverner
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.recyclerview.widget.RecyclerView
 import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
 import kotlin.properties.Delegates
-
 
 class GraphActivity : AppCompatActivity() {
 
@@ -258,15 +254,14 @@ class GraphActivity : AppCompatActivity() {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                 }
-                R.id.navigation_dashboard -> {
+                R.id.navigation_dashboard-> {
                     val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                 }
-                R.id.navigation_graph -> {
-                }
+                R.id.navigation_graph -> {}
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
                     startActivity(intent)
