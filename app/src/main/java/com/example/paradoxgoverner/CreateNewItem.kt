@@ -68,6 +68,7 @@ class CreateNewItem : AppCompatActivity() {
         }
         InitSpinner(memberStringList.toList(),R.id.member_spinner, MEMBER_INDEX)
 
+
         //Category & Subcategory
         for (categorys in DAO.getAllCategory()) {
             categoryStringList.add(categorys.category)
@@ -82,6 +83,8 @@ class CreateNewItem : AppCompatActivity() {
         for (subcategorys in subcategoryList) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
+
+
 
         //Type
         InitTypeSpinner(DEFAULT_TYPE_LIST)
@@ -115,6 +118,7 @@ class CreateNewItem : AppCompatActivity() {
             confirm_button.text =getString(R.string.confirm_button_text_old)
             cancel_button.text =getString(R.string.cancel_button_text_old)
             money_amount?.setText(rec.amount.toString())
+
             description?.setText(rec.description)
 
             //假设不会有重名
@@ -122,6 +126,7 @@ class CreateNewItem : AppCompatActivity() {
 
             category_spinner?.setSelection(categoryStringList.indexOf(rec.category))
 
+            //rec.subcategory是对的，但就硬不能setSelection
             subcategory_spinner?.setSelection(subcategoryStringList.indexOf(rec.subcategory))
 
             merchant_spinner?.setSelection(merchantStringList.indexOf(rec.merchant))
@@ -370,7 +375,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     //初始化一级目录Spinner，同时调用二级目录Spinner初始化
-    
+
     fun InitCategotySpinner(itemlist : List<String>) {
         var selectedSpinner = findViewById<Spinner>(R.id.category_spinner)
 
@@ -398,8 +403,6 @@ class CreateNewItem : AppCompatActivity() {
         })
     }
 
-    //Adapt二级分类
-    
     fun SubcategorySpinnerAdapt(category : String) {
         val DAO = AppDatabase.instance.userDAO()
         var subcategoryList = DAO.getAllSubcategory(category)
