@@ -2,11 +2,50 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_catagory"
-        android:title="@string/nav_cat" />
+        android:id="@+id/navigation_fcato"
+        android:title="@string/nav_fcatout" />
 
     <item
-        android:id="@+id/navigation_water_bill"
-        android:title="@string/nav_biil" />
+        android:id="@+id/navigation_scato"
+        android:title="@string/nav_scatout" />
 
+    <item
+        android:id="@+id/navigation_fcati"
+        android:title="@string/nav_fcatin" />
+
+    <item
+        android:id="@+id/navigation_scati"
+        android:title="@string/nav_scatin" />
+
+    <item
+        android:id="@+id/navigation_memin"
+        android:title="@string/nav_memin" />
+
+    <item
+        android:id="@+id/navigation_memout"
+        android:title="@string/nav_memout" />
+
+    <item
+        android:id="@+id/navigation_mercin"
+        android:title="@string/nav_mercin" />
+
+    <item
+        android:id="@+id/navigation_mercout"
+        android:title="@string/nav_mercout" />
+
+    <item
+        android:id="@+id/navigation_accin"
+        android:title="@string/nav_accin" />
+
+    <item
+        android:id="@+id/navigation_accout"
+        android:title="@string/nav_accout" />
+
+    <item
+        android:id="@+id/navigation_itemin"
+        android:title="@string/nav_itemin" />
+
+    <item
+        android:id="@+id/navigation_itemout"
+        android:title="@string/nav_itemout" />
 </menu>

@@ -26,6 +26,9 @@ interface UserDAO {
     @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory")
     fun findRecordBySubcategory(subcategory : String): List<Record>
 
+    @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory AND category LIKE :category")
+    fun findRecordByCatSubcategory(category : String , subcategory : String): List<Record>
+
     @Query("SELECT * FROM Record WHERE merchant LIKE :merchant ")
     fun findRecordByMerchant(merchant: String) : List<Record>
 
