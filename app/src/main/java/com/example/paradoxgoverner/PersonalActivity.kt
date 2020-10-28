@@ -88,15 +88,20 @@ class PersonalActivity : AppCompatActivity() {
                     CUSTOMIZED_LIST[0] -> {
                         type = ACCOUNT_INDEX
                         for (accounts in DAO.getAllAccount()) {
-                            stringList.add(accounts.account)
+                            if(accounts.account != ALL_ACCOUNT && accounts.account != VOID_ITEM){
+                                stringList.add(accounts.account)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
                     CUSTOMIZED_LIST[1] -> {
-                        type = CATEGORY_INDEX
                         for (categorys in DAO.getAllCategory()) {
-                            stringList.add(categorys.category)
+                            if(categorys.category != VOID_ITEM){
+                                stringList.add(categorys.category)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                         personal_custom_spinner3.visibility = View.VISIBLE
                         personal_custom_button3.visibility = View.VISIBLE
@@ -105,23 +110,32 @@ class PersonalActivity : AppCompatActivity() {
                     CUSTOMIZED_LIST[2] -> {
                         type = MERCHANT_INDEX
                         for (merchants in DAO.getAllMerchant()) {
-                            stringList.add(merchants.merchant)
+                            if(merchants.merchant != VOID_ITEM){
+                                stringList.add(merchants.merchant)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
 
                     CUSTOMIZED_LIST[3] -> {
                         type = ITEM_INDEX
                         for (items in DAO.getAllItem()) {
-                            stringList.add(items.item)
+                            if(items.item != VOID_ITEM){
+                                stringList.add(items.item)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
                     CUSTOMIZED_LIST[4] -> {
                         type = MEMBER_INDEX
                         for (members in DAO.getAllMember()) {
-                            stringList.add(members.member)
+                            if(members.member != VOID_ITEM){
+                                stringList.add(members.member)
+                            }
                         }
+                        stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
 
@@ -227,7 +241,7 @@ class PersonalActivity : AppCompatActivity() {
                         //新增一级分类时，二级分类新增"无"
                         CATEGORY_INDEX -> {
                             DAO.insertAllCategory(Category(0, txt))
-                            DAO.insertAllSubcategory(Subcategory(0,txt,"无"))
+                            DAO.insertAllSubcategory(Subcategory(0,txt, VOID_ITEM))
                         }
                         MERCHANT_INDEX -> DAO.insertAllMerchant(Merchant(0, txt))
                         ITEM_INDEX -> DAO.insertAllItem(Item(0, txt))

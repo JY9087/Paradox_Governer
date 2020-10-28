@@ -49,15 +49,18 @@ class MainActivity : AppCompatActivity() {
             for (init_member in DEFAULT_MEMBER_LIST) {
                 DAO.insertAllMember(Member(0, init_member))
             }
+
             for (init_category in DEFAULT_CATEGORY_LIST) {
                 DAO.insertAllCategory(Category(0, init_category))
             }
+
             //until不包含最后一个元素
             for (index in 0 until DEFAULT_CATEGORY_LIST.size) {
                 for (item in DEFAULT_SUBCATEGORY_LIST.get(index)) {
                     DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST.get(index), item))
                 }
             }
+
             for (init_merchant in DEFAULT_MERCHANT_LIST) {
                 DAO.insertAllMerchant(Merchant(0, init_merchant))
             }
@@ -72,10 +75,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         InitAccountSpinner()
-
-
 
 
         //RecycleView
@@ -178,14 +178,20 @@ class MainActivity : AppCompatActivity() {
         val DAO = AppDatabase.instance.userDAO()
         var r = "收入"
         when (item.itemId) {
-            R.id.navigation_all -> true
+            R.id.navigation_all -> r = "全部"
             R.id.navigation_income -> r = "收入"
             R.id.navigation_outlay -> r = "支出"
             R.id.navigation_loan -> r = "借贷"
             R.id.navigation_transfer -> r = "转账"
             else -> super.onOptionsItemSelected(item)
         }
-        forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
+        if(r == "全部") {
+            forecastList.adapter = ForecastListAdapter(DAO.getAllRecord())
+        }
+        else{
+            forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
+        }
+
         return true
     }
 
