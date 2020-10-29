@@ -17,6 +17,7 @@ class PersonalActivity : AppCompatActivity() {
     companion object {
         var instance: PersonalActivity by Delegates.notNull()
         fun instance() = instance
+        var themeColor = R.style.CustomizedAppThemePurple
     }
 
     var stringList = mutableListOf<String>()
@@ -24,12 +25,26 @@ class PersonalActivity : AppCompatActivity() {
     var uid = 0
     var subcategory_uid = 0
     var categoryString = DEFAULT_CATEGORY_LIST[0]
-
+    var staticThemeColorString = ""
     var lastModified = mutableListOf<String>("","","","","","","","","","")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setTheme(themeColor)
+        when(themeColor){
+            R.style.CustomizedAppThemePurple -> staticThemeColorString = THEME_PURPLE
+            R.style.CustomizedAppThemeRed -> staticThemeColorString = THEME_RED
+            R.style.CustomizedAppThemePink -> staticThemeColorString = THEME_PINK
+            R.style.CustomizedAppThemeOrange -> staticThemeColorString = THEME_ORANGE
+            R.style.CustomizedAppThemeYellow -> staticThemeColorString = THEME_YELLOW
+            R.style.CustomizedAppThemeBlue -> staticThemeColorString = THEME_BLUE
+            R.style.CustomizedAppThemeGreen -> staticThemeColorString = THEME_GREEN
+        }
+
         setContentView(R.layout.activity_personal)
+
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -65,6 +80,8 @@ class PersonalActivity : AppCompatActivity() {
         bottomNavigatior.selectedItemId = R.id.navigation_personal
 
         InitSpinner()
+        InitThemeSpinner()
+        theme_spinner.setSelection(THEME_LIST.indexOf(staticThemeColorString))
     }
 
     //让VOID_ITEM显示吧。但不应修改
@@ -486,4 +503,44 @@ class PersonalActivity : AppCompatActivity() {
         finish()
     }
 
+
+    fun InitThemeSpinner() {
+        var themeSpinner = findViewById<Spinner>(R.id.theme_spinner)
+
+        var selectedSpinnerAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , THEME_LIST)
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        themeSpinner.setAdapter(selectedSpinnerAdapter)
+
+        themeSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                val changeTheme = themeColor
+                //用于新建/修改Record
+                when(adapterView.getItemAtPosition(i) as String){
+                    THEME_PURPLE-> themeColor = R.style.CustomizedAppThemePurple
+                    THEME_RED-> themeColor = R.style.CustomizedAppThemeRed
+                    THEME_PINK-> themeColor = R.style.CustomizedAppThemePink
+                    THEME_ORANGE-> themeColor = R.style.CustomizedAppThemeOrange
+                    THEME_YELLOW-> themeColor = R.style.CustomizedAppThemeYellow
+                    THEME_BLUE-> themeColor = R.style.CustomizedAppThemeBlue
+                    THEME_GREEN-> themeColor = R.style.CustomizedAppThemeGreen
+                }
+                if(changeTheme != themeColor){
+                    val intent = Intent()
+                    intent.setClass(baseContext , PersonalActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+            }
+        })
+
+
+    }
 }

@@ -242,6 +242,7 @@ class GraphActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_graph)
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)

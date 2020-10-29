@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
-
     //静态内部类：伴生对象
     companion object {
         var instance: MainActivity by Delegates.notNull()
@@ -31,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_main)
 
         //判断版本

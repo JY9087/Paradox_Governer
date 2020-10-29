@@ -25,7 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
 
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:itemIconTint="@color/colorBottomNavigationText"
         app:itemTextColor="@color/colorBottomNavigationText"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,16 +33,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
-    <ImageButton
-        android:id="@+id/imageButton4"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/circle_shape"
+        android:clickable="true"
         android:onClick="CreateNewItem"
+        app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/forecast"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_24px" />

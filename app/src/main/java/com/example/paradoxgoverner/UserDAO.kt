@@ -5,7 +5,6 @@ import androidx.room.*
 @Dao
 interface UserDAO {
 
-
     //查找Record
     @Query("SELECT * FROM Record WHERE Description LIKE :description " +
             "LIMIT 1")

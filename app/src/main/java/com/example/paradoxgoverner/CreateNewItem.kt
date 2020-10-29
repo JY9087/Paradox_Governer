@@ -43,6 +43,7 @@ class CreateNewItem : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_customization_of_new_item)
 
         val DAO = AppDatabase.instance.userDAO()
