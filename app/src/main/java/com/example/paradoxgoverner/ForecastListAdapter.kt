@@ -1,6 +1,5 @@
 package com.example.paradoxgoverner
 
-import android.content.res.Resources
 import android.view.*
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
@@ -27,9 +26,9 @@ class ForecastListAdapter(var items: List<Record>):
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.view.card_view_discription.text=items.get(position).description
         holder.view.card_view_member.text=items.get(position).member
-        holder.view.card_view_time.text=items.get(position).time.toString()
+        holder.view.cardview_condition_type.text=items.get(position).time.toString()
         holder.view.card_view_money_amount.text=items.get(position).amount.toString()
-        holder.view.card_view_date.text = items.get(position).date.toString()
+        holder.view.cardview_condition_string.text = items.get(position).date.toString()
 
         var colorful = R.color.colorCardView收入
         //根据type改变背景颜色
@@ -39,7 +38,7 @@ class ForecastListAdapter(var items: List<Record>):
             "借贷"->colorful = R.color.colorCardView借贷
             "转账"->colorful = R.color.colorCardView转账
         }
-        holder.view.card_view.setCardBackgroundColor( getColor(MainActivity.instance,colorful)  )
+        holder.view.condition_cardview.setCardBackgroundColor( getColor(MainActivity.instance,colorful)  )
     }
 
     override fun getItemCount():  Int=items.size

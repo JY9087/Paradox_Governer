@@ -251,7 +251,7 @@ class GraphActivity : AppCompatActivity() {
                 R.id.navigation_home -> {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                     finish()
@@ -259,7 +259,7 @@ class GraphActivity : AppCompatActivity() {
                 R.id.navigation_dashboard-> {
                     val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                     finish()
@@ -268,7 +268,7 @@ class GraphActivity : AppCompatActivity() {
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                     finish()

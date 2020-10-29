@@ -90,6 +90,11 @@
     <string name="nav_itemin">项目收入</string>
 
 
-
     <string name="personal_theme_text">设置主题颜色</string>
+
+
+
+    <string name="stat_set_condition">设置筛选条件</string>
+    <string name="stat_confirm_condition">确认</string>
+
 </resources>
