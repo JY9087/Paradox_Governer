@@ -184,6 +184,9 @@ class statisticsActivity : AppCompatActivity() {
         getStatistics(true,searchAccount.toList(),searchMember.toList(),searchCategory.toList(),
             searchSubCategory.toList(),searchItem.toList(),searchMerchant.toList(),
             searchType.toList(),startCalendar,endCalendar)
+        getStatistics(false,searchAccount.toList(),searchMember.toList(),searchCategory.toList(),
+            searchSubCategory.toList(),searchItem.toList(),searchMerchant.toList(),
+            searchType.toList(),startCalendar,endCalendar)
         val intent = Intent(this, DashboardActivity::class.java)
         if (MainActivity.versionFlag) {
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
