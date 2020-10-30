@@ -95,6 +95,9 @@
 
 
     <string name="stat_set_condition">设置筛选条件</string>
-    <string name="stat_confirm_condition">确认</string>
+    <string name="stat_start_search_button">确认</string>
+    <string name="stat_confirm_condition_button">开始设置条件</string>
 
+
+    <string name="dashboard_add_condition_button">添加条件</string>
 </resources>

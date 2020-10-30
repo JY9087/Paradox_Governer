@@ -155,12 +155,15 @@ class CreateNewItem : AppCompatActivity() {
 
             type_spinner?.setSelection(DEFAULT_TYPE_LIST.indexOf(rec.type))
 
+            account_spinner?.setSelection(accountStringList.indexOf(rec.account))
+
             stringArray[MEMBER_INDEX]=rec.member
             stringArray[CATEGORY_INDEX]=rec.category
             stringArray[SUBCATEGORY_INDEX]=rec.subcategory
             stringArray[MERCHANT_INDEX]=rec.merchant
             stringArray[ITEM_INDEX]=rec.item
             stringArray[TYPE_INDEX]=rec.type
+            stringArray[ACCOUNT_INDEX]=rec.account
             income = rec.income
 
             cancel_change_button.visibility = View.VISIBLE

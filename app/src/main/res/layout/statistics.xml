@@ -173,7 +173,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginBottom="32dp"
         android:onClick="startSearch"
-        android:text="@string/stat_confirm_condition"
+        android:text="@string/stat_start_search_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -191,11 +191,21 @@
         android:id="@+id/ConditionRecycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="160dp"
+        android:layout_marginStart="192dp"
         android:layout_marginBottom="320dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:onClick="confirm"
+        android:text="@string/stat_confirm_condition_button"
+        app:layout_constraintBottom_toTopOf="@+id/button12"
+        app:layout_constraintEnd_toEndOf="@+id/button12" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -80,8 +80,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
         //用户名和密码数据库，及用于判断是进入注册界面还是登录界面还是直接进入主界面的变量
         //使用OnCreate的局部变量？有待商榷。看看是否需要修改
         val settings: SharedPreferences = getSharedPreferences("info", 0)
@@ -146,14 +144,7 @@ class MainActivity : AppCompatActivity() {
         //RecycleView
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ForecastListAdapter(statisticsActivity.recordList2)
-
-        /*
-        if( ! statisticsActivity.searchFlag){
-            myadapter = ForecastListAdapter(DAO.getAllRecord())
-        }
-        statisticsActivity.searchFlag = false
-         */
+        var myadapter = ForecastListAdapter(DAO.getAllRecord())
         forecastList.adapter = myadapter
 
         var recyclertouchlistener = RecyclerTouchListener(
@@ -198,10 +189,10 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
         if(r == "全部") {
-            //forecastList.adapter = ForecastListAdapter(DAO.getAllRecord())
+            forecastList.adapter = ForecastListAdapter(DAO.getAllRecord())
         }
         else{
-            //forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
+            forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
         }
 
         return true
@@ -273,7 +264,7 @@ class MainActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
                 DAO.delete( DAO.findRecordByUid(uid) )
-                //findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
+                findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
             })
             .setNegativeButton("取消", null)
             .show()
@@ -294,8 +285,21 @@ class MainActivity : AppCompatActivity() {
         AccountNameText.text = "全部账户"
 
         var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
-        //todo : 使用真正余额
-        AccountInfo.text = "余额："
+
+        var remainAmount = 0.0
+        var records = DAO.getAllRecord()
+        if(accountName != ALL_ACCOUNT){
+            records = DAO.findRecordByAccount(accountName)
+        }
+        for(record in records){
+            if(record.income){
+                remainAmount += record.amount
+            }
+            else{
+                remainAmount -= record.amount
+            }
+        }
+        AccountInfo.text = "余额："+remainAmount.toString()
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -313,15 +317,31 @@ class MainActivity : AppCompatActivity() {
                 accountName = adapterView.getItemAtPosition(i) as String
                 val forecastList = findViewById<RecyclerView>(R.id.forecast)
                 if(accountName == ALL_ACCOUNT) {
-                    //var myadapter = ForecastListAdapter(DAO.getAllRecord())
-                    //forecastList.adapter = myadapter
+                    var myadapter = ForecastListAdapter(DAO.getAllRecord())
+                    forecastList.adapter = myadapter
                     AccountNameText.text = "全部账户"
                 }
                 else{
-                    //var myadapter = ForecastListAdapter(DAO.findRecordByAccount(accountName))
-                    //forecastList.adapter = myadapter
+                    var myadapter = ForecastListAdapter(DAO.findRecordByAccount(accountName))
+                    forecastList.adapter = myadapter
                     AccountNameText.text = "当前账户：" + accountName
                 }
+
+
+                var remainAmount = 0.0
+                var records = DAO.getAllRecord()
+                if(accountName != ALL_ACCOUNT){
+                    records = DAO.findRecordByAccount(accountName)
+                }
+                for(record in records){
+                    if(record.income){
+                        remainAmount += record.amount
+                    }
+                    else{
+                        remainAmount -= record.amount
+                    }
+                }
+                AccountInfo.text = "余额："+remainAmount.toString()
 
             }
 

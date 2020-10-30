@@ -29,24 +29,27 @@
             androidx.cardview:layout_width="wrap_content"
             androidx.cardview:layout_height="wrap_content"
             androidx.cardview:layout_marginStart="8dp"
-            androidx.cardview:layout_marginLeft="8dp"
             androidx.cardview:text="TextView"
             androidx.cardview:textColor="@color/colorPureWhite"
             androidx.cardview:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/cardview_condition_string"
-            app:layout_constraintStart_toEndOf="@+id/cardview_condition_string"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/cardview_condition_string" />
 
         <TextView
             androidx.cardview:id="@+id/cardview_condition_string"
             androidx.cardview:layout_width="wrap_content"
             androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginTop="8dp"
+            androidx.cardview:layout_marginBottom="8dp"
             androidx.cardview:text="TextView"
             androidx.cardview:textColor="@color/colorPureWhite"
             androidx.cardview:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/cardview_condition_type"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
