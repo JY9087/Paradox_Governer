@@ -9,6 +9,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.statistics.*
@@ -24,18 +26,65 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_dashboard)
-
-
 
         button4.setOnClickListener {
             val intent = Intent()
             intent.setClass(this, statisticsActivity::class.java)
             startActivity(intent)
             finish()
-
         }
 
+        //统计
+        var acStr = "账户："
+        var caStr = "一级分类："
+        var subcaStr = "二级分类："
+        var memStr = "成员："
+        var merStr = "商家："
+        var itStr = "项目："
+        var tyStr = "类别："
+        var startTimeStr = "开始时间："
+        var endTimeStr = "结束时间："
+        var totalAmount = "总金额："
+
+        //下标从0开始
+        var valuesSize = statisticsActivity.types.size-1
+        if(valuesSize>=0){
+            for(index in 0..valuesSize){
+                when(statisticsActivity.types[index]){
+                    "账户"->acStr += statisticsActivity.values[index] +" "
+                    "一级分类" ->caStr += statisticsActivity.values[index]+" "
+                    "二级分类" ->subcaStr += statisticsActivity.values[index]+" "
+                    "成员" ->memStr += statisticsActivity.values[index]+" "
+                    "商家" -> merStr += statisticsActivity.values[index]+" "
+                    "项目" -> itStr += statisticsActivity.values[index]+" "
+                    "类别" -> tyStr += statisticsActivity.values[index]+" "
+                    "开始时间" -> startTimeStr += statisticsActivity.values[index]+" "
+                    "结束时间" -> endTimeStr += statisticsActivity.values[index]+" "
+                }
+            }
+        }
+        var remainAmount = 0.0
+        for(record in statisticsActivity.recordList2){
+            if(record.income){
+                remainAmount += record.amount
+            }
+            else{
+                remainAmount -= record.amount
+            }
+        }
+        totalAmount += remainAmount.toString()
+        dashAccountText.text = acStr
+        dashCategoryText.text = caStr
+        dashSubcategoryText.text = subcaStr
+        dashMemberText.text = memStr
+        dashMerchantText.text = merStr
+        dashItemText.text = itStr
+        dashTypeText.text = tyStr
+        dashStartTimeText.text = startTimeStr
+        dashEndTimeText.text = endTimeStr
+        dashTotalAmountText.text = totalAmount
 
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -44,7 +93,7 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.navigation_home -> {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                     finish()
@@ -55,7 +104,7 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.navigation_graph -> {
                     val intent = Intent(this, GraphActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                     finish()
@@ -63,7 +112,7 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
                     finish()
@@ -72,143 +121,21 @@ class DashboardActivity : AppCompatActivity() {
             true
         })
         bottomNavigatior.selectedItemId = R.id.navigation_dashboard
+
+        if(statisticsActivity.searchFlag){
+            val DashboardList = findViewById<RecyclerView>(R.id.dashboard_recyeleview)
+            DashboardList.layoutManager = LinearLayoutManager(this)
+            var myadapter = ForecastListAdapter(statisticsActivity.recordList2)
+            DashboardList.adapter = myadapter
+            statisticsActivity.searchFlag = false
+        }
+
+    }
+
+    fun vieaAll(view : View){
+        val intent = Intent()
+        intent.setClass(this, ViewAllActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
-        /*//-------------------------------------------------------------------------------------------<<<  UI
-        //获取所有项
-        val memberStringList = mutableListOf<String>()
-        val categoryStringList = mutableListOf<String>()
-        val subcategoryStringList = mutableListOf<String>()
-        val itemStringList = mutableListOf<String>()
-        val merchantStringList = mutableListOf<String>()
-        val accountStringList = mutableListOf<String>()
-        for (members in AppDatabase.instance.userDAO().getAllMember()) {
-            memberStringList.add(members.member)
-        }
-        for (category in AppDatabase.instance.userDAO().getAllCategory()) {
-            categoryStringList.add(category.category)
-        }
-        for (category in categoryStringList) {
-            for (subcategory in AppDatabase.instance.userDAO().getAllSubcategory(category))
-            {
-                subcategoryStringList.add(subcategory.subcategory)
-            }
-        }
-        for (item in AppDatabase.instance.userDAO().getAllItem()) {
-            itemStringList.add(item.item)
-        }
-        for (merchant in AppDatabase.instance.userDAO().getAllMerchant()) {
-            merchantStringList.add(merchant.merchant)
-        }
-        for (account in AppDatabase.instance.userDAO().getAllAccount()){
-            accountStringList.add(account.account)
-        }
-        //-------------------------------------------------<<通过Spinner得到的Set，要使用的话请用 .toList() 转为List
-        val searchCategory: MutableSet<String> = mutableSetOf()
-        val searchSubCategory: MutableSet<String> = mutableSetOf()
-        val searchMember:MutableSet<String> = mutableSetOf()
-        val searchItem:MutableSet<String> = mutableSetOf()
-        val searchMerchant:MutableSet<String> = mutableSetOf()
-        val searchType:MutableSet<String> = mutableSetOf()
-        val searchAccount:MutableSet<String> = mutableSetOf()
-        val statisticArray = arrayOf<String>("", "", "", "", "", "","")
-        val subcategoryStringListSpinner = mutableListOf<String>()
-
-        fun initStatisticSpinner(itemList: List<String>, ID: Int, Index: Int) {
-            var selectedSpinner = findViewById<Spinner>(ID)
-
-            var selectedSpinnerAdapter: ArrayAdapter<*> =
-                ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item, itemList)
-            selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            selectedSpinner.setAdapter(selectedSpinnerAdapter)
-
-            selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
-                //这个函数在单击时被调用
-                override fun onItemSelected(
-                    adapterView: AdapterView<*>,
-                    view: View,
-                    i: Int,
-                    l: Long
-                ) {
-                    //这里是onclick功能的具体实现
-                    //用于新建/修改Record
-                    statisticArray[Index] = adapterView.getItemAtPosition(i) as String
-                    if (Index == CATEGORY_INDEX) {
-                        subcategoryStringListSpinner.clear()
-                        for (subcategory in AppDatabase.instance.userDAO().getAllSubcategory(
-                            statisticArray[Index]
-                        )) {
-                            subcategoryStringListSpinner.add(subcategory.subcategory)
-                        }
-                        initStatisticSpinner(
-                            subcategoryStringListSpinner.toList(),
-                            R.id.spinnerSubCategory,
-                            SUBCATEGORY_INDEX
-                        )
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            })
-        }
-        //设定Spinner
-        initStatisticSpinner(categoryStringList.toList(), R.id.spinnerCategory, CATEGORY_INDEX)
-        initStatisticSpinner(subcategoryStringList.toList(), R.id.spinnerSubCategory, SUBCATEGORY_INDEX)
-        initStatisticSpinner(memberStringList.toList(), R.id.spinnerMember, MEMBER_INDEX)
-        initStatisticSpinner(itemStringList.toList(), R.id.spinnerItem, ITEM_INDEX)
-        initStatisticSpinner(merchantStringList.toList(), R.id.spinnerMerchant, MERCHANT_INDEX)
-        initStatisticSpinner(DEFAULT_TYPE_LIST, R.id.spinnerType, TYPE_INDEX)
-        initStatisticSpinner(accountStringList,R.id.spinnerAccount, ACCOUNT_INDEX)
-        //添加按钮
-        button_s_add.setOnClickListener{
-            searchAccount.add(statisticArray[ACCOUNT_INDEX])
-            searchCategory.add(statisticArray[CATEGORY_INDEX])
-            searchSubCategory.add(statisticArray[SUBCATEGORY_INDEX])
-            searchMember.add(statisticArray[MEMBER_INDEX])
-            searchItem.add(statisticArray[ITEM_INDEX])
-            searchMerchant.add((statisticArray[MERCHANT_INDEX]))
-            searchType.add(statisticArray[TYPE_INDEX])
-        }
-
-        //转到图表按钮，若有其他可用方式可用删掉
-        //这里我用来debug
-        s1_next.setOnClickListener {
-
-        }
-    }
-    //通过日历得到的两个Calendar
-    private val startCalendar: Calendar = Calendar.getInstance()
-    private val endCalendar: Calendar = Calendar.getInstance()
-    fun SelectStartTime(view: View) {
-        val cal=Calendar.getInstance()
-        val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
-        val month=cal.get(Calendar.MONTH)   //获取到的月份是从0开始计数
-        val day=cal.get(Calendar.DAY_OF_MONTH)
-        val listener =
-            DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
-                startCalendar.set(year,month,day,0, 0, 0)
-            }
-        val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
-        dialog.show()
-    }
-    fun SelectEndTime(view: View) {
-        val cal=Calendar.getInstance()
-        val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
-        val month=cal.get(Calendar.MONTH)   //获取到的月份是从0开始计数
-        val day=cal.get(Calendar.DAY_OF_MONTH)
-        val listener =
-            DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
-                //将选择的日期显示到TextView中,因为之前获取month直接使用，所以不需要+1，这个地方需要显示，所以+1
-                endCalendar.set(year,month,day,0, 0, 0)
-            }
-        val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
-        dialog.show()
-    }
-
-    //统计函数
-    fun getStatistics(
-        needAccount: List<String>
-    ):List<Record>{
-
-    }*/

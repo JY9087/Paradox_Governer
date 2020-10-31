@@ -31,4 +31,16 @@ const val ACCOUNT_INDEX = 6
 
 val CUSTOMIZED_LIST = listOf("账户","一级分类","商家","项目","成员")
 
+const val THEME_PURPLE = "紫色"
+const val THEME_RED = "红色"
+const val THEME_YELLOW = "黄色"
+const val THEME_ORANGE = "橙色"
+const val THEME_BLUE = "蓝色"
+const val THEME_GREEN = "绿色"
+const val THEME_PINK = "粉色"
+val THEME_LIST = listOf<String>(THEME_PURPLE, THEME_RED, THEME_PINK,THEME_ORANGE, THEME_YELLOW,
+    THEME_BLUE, THEME_GREEN)
+
 const val RESET_PATTERN = "reset pattern"
+
+const val VOID_TEMPLATE = "无模板"

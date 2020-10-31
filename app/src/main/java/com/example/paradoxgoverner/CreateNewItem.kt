@@ -1,7 +1,6 @@
 package com.example.paradoxgoverner
 
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -13,6 +12,7 @@ import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Delete
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import java.sql.Date
 import java.sql.Time
@@ -29,23 +29,24 @@ class CreateNewItem : AppCompatActivity() {
     var income = true
     lateinit var rec : Record
 
-    //使用宏INDEX作为下标。
-    //可以将整个stringArray作为参数列表，传给数据库DAO。查询时，stringArray[MEMBER_INDEX]去匹配Record的member成员
     var stringArray = arrayOf<String>("","","","","","","","","","")
 
     var uid = 0
     var mcalendar = Calendar.getInstance()
+
 
     var memberStringList = mutableListOf<String>()
     var categoryStringList = mutableListOf<String>()
     var subcategoryStringList = mutableListOf<String>()
     var merchantStringList = mutableListOf<String>()
     var itemStringList = mutableListOf<String>()
-
+    var accountStringList = mutableListOf<String>()
+    var subtypeStringList = listOf<String>()
+    var TemplateName = ""
     
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_customization_of_new_item)
 
         val DAO = AppDatabase.instance.userDAO()
@@ -53,8 +54,9 @@ class CreateNewItem : AppCompatActivity() {
         //查看是否有携带uid，如果有就修改uid变量的值
         uid = intent.getIntExtra(RECORD_UID,0)
         if(uid != 0){
-            rec = AppDatabase.instance.userDAO().findByUid(uid)
+            rec = AppDatabase.instance.userDAO().findRecordByUid(uid)
         }
+
         //自动填充当前时间
         if(uid == 0){
             mcalendar.timeInMillis = System.currentTimeMillis() }
@@ -63,13 +65,14 @@ class CreateNewItem : AppCompatActivity() {
         //Todo : 使用PlaceHolder
         time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
 
+
         //Member
+        memberStringList.add(VOID_ITEM)
         for (members in DAO.getAllMember()) {
             if(members.member != VOID_ITEM){
                 memberStringList.add(members.member)
             }
         }
-        memberStringList.add(VOID_ITEM)
         InitSpinner(memberStringList.toList(),R.id.member_spinner, MEMBER_INDEX)
 
 
@@ -104,23 +107,24 @@ class CreateNewItem : AppCompatActivity() {
         InitTypeSpinner(DEFAULT_TYPE_LIST)
 
         //Merchant
+        merchantStringList.add(VOID_ITEM)
         for (merchants in DAO.getAllMerchant()) {
             if(merchants.merchant != VOID_ITEM){
                 merchantStringList.add(merchants.merchant)
             }
         }
-        merchantStringList.add(VOID_ITEM)
+
         InitSpinner(merchantStringList.toList(),R.id.merchant_spinner, MERCHANT_INDEX)
 
         //Item
+        itemStringList.add(VOID_ITEM)
         for (items in DAO.getAllItem()) {
             if(items.item != VOID_ITEM){
                 itemStringList.add(items.item)
             }
         }
-        itemStringList.add(VOID_ITEM)
-        InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
+        InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
         //Account
         for (accounts in DAO.getAllAccount()) {
@@ -156,16 +160,21 @@ class CreateNewItem : AppCompatActivity() {
 
             type_spinner?.setSelection(DEFAULT_TYPE_LIST.indexOf(rec.type))
 
+            account_spinner?.setSelection(accountStringList.indexOf(rec.account))
+
             stringArray[MEMBER_INDEX]=rec.member
             stringArray[CATEGORY_INDEX]=rec.category
             stringArray[SUBCATEGORY_INDEX]=rec.subcategory
             stringArray[MERCHANT_INDEX]=rec.merchant
             stringArray[ITEM_INDEX]=rec.item
             stringArray[TYPE_INDEX]=rec.type
+            stringArray[ACCOUNT_INDEX]=rec.account
             income = rec.income
 
             cancel_change_button.visibility = View.VISIBLE
         }
+
+        InitTemplateSpinner()
     }
     //End of OnCreate
 
@@ -176,7 +185,6 @@ class CreateNewItem : AppCompatActivity() {
 
         var description = findViewById<EditText>(R.id.description).text.toString()
 
-        //Todo : 使用真实的Account
 
 
         //三种情况：新建时未赋值  修改时未赋值   已赋值
@@ -192,16 +200,18 @@ class CreateNewItem : AppCompatActivity() {
         }
         //修改时未赋值
         else if(uid != 0) {
-            amount = AppDatabase.instance.userDAO().findByUid(uid).amount
+            amount = AppDatabase.instance.userDAO().findRecordByUid(uid).amount
         }
 
         AppDatabase.instance.userDAO().insertAll(
             Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],account,amount,stringArray[TYPE_INDEX],income,
+                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                stringArray[ACCOUNT_INDEX],amount,stringArray[TYPE_INDEX],income,
                 stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
         )
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     
@@ -209,17 +219,19 @@ class CreateNewItem : AppCompatActivity() {
         if(uid != 0)
         {
             AppDatabase.instance.userDAO().delete(
-                AppDatabase.instance.userDAO().findByUid(uid)
+                AppDatabase.instance.userDAO().findRecordByUid(uid)
             )
         }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     
     fun CancelChange(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     //新建  似乎只能写5个函数
@@ -317,7 +329,6 @@ class CreateNewItem : AppCompatActivity() {
             .show()
     }
 
-
     fun NewAccount(view : View) {
         var itemText = EditText(this)
         android.app.AlertDialog.Builder(this)
@@ -370,8 +381,7 @@ class CreateNewItem : AppCompatActivity() {
 
 
     //初始化通用Spinner(Member,Merchant,Item)
-    //itemList是spinner的下拉菜单  ID是控件View的ID，通过R.id来获得  Index是一系列宏，我用来标识Record的各个成员
-    //MEMBER_INDEX 对应 member
+    
     fun InitSpinner(itemlist : List<String> , ID : Int , Index : Int) {
         var selectedSpinner = findViewById<Spinner>(ID)
 
@@ -381,14 +391,12 @@ class CreateNewItem : AppCompatActivity() {
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
 
         selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
-            //这个函数在单击时被调用
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
                 i: Int,
                 l: Long
             ) {
-                //这里是onclick功能的具体实现
                 //用于新建/修改Record
                 stringArray[Index] = adapterView.getItemAtPosition(i) as String
             }
@@ -498,7 +506,6 @@ class CreateNewItem : AppCompatActivity() {
     //初始化二级分类
     
     fun SubtypeSpinnerAdapt(type : String) {
-        var subtypeStringList = listOf<String>()
         when(type){
             "收入"->subtypeStringList = listOf<String>("收入")
             "支出"->subtypeStringList = listOf<String>("支出")
@@ -567,7 +574,6 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun CategoryAdapt() {
-
         categoryStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
         for (categorys in DAO.getAllCategory()) {
@@ -651,4 +657,114 @@ class CreateNewItem : AppCompatActivity() {
         itemspinner.setAdapter(itemadapter)
     }
 
+
+    fun SaveTemplate(view : View) {
+        var itemText = EditText(this)
+        android.app.AlertDialog.Builder(this)
+            .setTitle("请输入模板名称")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setView(itemText)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
+                if(itemText.text.toString() != ""){
+                    NewTemplate(itemText.text.toString())
+                }
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
+
+    //重名覆盖
+    fun NewTemplate(name : String){
+        TemplateName = name
+        val DAO = AppDatabase.instance.userDAO()
+
+        if(DAO.findTemplateByString(name).size == 0){
+            DAO.insertAllTemplate(
+                Template(0,name,stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                    stringArray[ACCOUNT_INDEX],stringArray[TYPE_INDEX],income,
+                    stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
+            )
+        }
+        else{
+            DAO.insertAllTemplate(
+                Template(DAO.findTemplateByString(name)[0].uid,name,stringArray[MEMBER_INDEX] ,
+                    stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                    stringArray[ACCOUNT_INDEX],stringArray[TYPE_INDEX],income,
+                    stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX]))
+        }
+        InitTemplateSpinner()
+    }
+
+    fun DeleteTemplate(view : View) {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("确认删除模板："+ TemplateName + "?")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
+                AppDatabase.instance.userDAO().deleteTemplate(AppDatabase.instance.userDAO().findTemplateByString(TemplateName)[0])
+                InitTemplateSpinner()
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
+
+    fun InitTemplateSpinner() {
+        var selectedSpinner = findViewById<Spinner>(R.id.TemplateSpinner)
+
+        val DAO = AppDatabase.instance.userDAO()
+
+        var TemplateNameList = mutableListOf<String>(VOID_TEMPLATE)
+        for(temp in DAO.getAllTemplate()){
+            TemplateNameList.add(temp.name)
+        }
+
+        var selectedSpinnerAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , TemplateNameList.toList())
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+
+        selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                //用于新建/修改Record
+                TemplateName =adapterView.getItemAtPosition(i) as String
+                if(TemplateName != VOID_TEMPLATE){
+                    DeleteTemplateButton.visibility = View.VISIBLE
+                    val temp = AppDatabase.instance.userDAO().findTemplateByString(TemplateName)[0]
+
+                    //使用模板
+                    member_spinner.setSelection(memberStringList.indexOf(temp.member))
+                    category_spinner.setSelection(categoryStringList.indexOf(temp.category))
+                    subcategory_spinner.setSelection(subcategoryStringList.indexOf(temp.subcategory))
+                    merchant_spinner.setSelection(merchantStringList.indexOf(temp.merchant))
+                    item_spinner.setSelection(itemStringList.indexOf(temp.item))
+                    account_spinner.setSelection(accountStringList.indexOf(temp.account))
+                    type_spinner.setSelection(DEFAULT_TYPE_LIST.indexOf(temp.type))
+                    if(temp.income){
+                        sub_type_spinner.setSelection(subtypeStringList.indexOf("收入"))
+                    }
+                    else{
+                        sub_type_spinner.setSelection(subtypeStringList.indexOf("收入"))
+                    }
+                }
+                else{
+                    DeleteTemplateButton.visibility = View.INVISIBLE
+                }
+
+
+
+            }
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+            }
+        })
+
+
+    }
+
+
+
+}
 

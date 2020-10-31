@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:androidx.cardview="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    androidx.cardview:layout_height="wrap_content"
+    androidx.cardview:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    androidx.cardview:id="@+id/condition_cardview"
+    androidx.cardview:clickable="true"
+    androidx.cardview:foreground="?android:attr/selectableItemBackground"
+    androidx.cardview:layout_marginBottom="2dp"
+    androidx.cardview:layout_marginTop="2dp"
+    androidx.cardview:layout_marginLeft="4dp"
+    androidx.cardview:layout_marginRight="4dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="8dp"
+    card_view:cardBackgroundColor="@color/colorCardViewBackground">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        androidx.cardview:id="@+id/linearLayout"
+        androidx.cardview:layout_width="match_parent"
+        androidx.cardview:layout_height="wrap_content"
+        androidx.cardview:orientation="horizontal">
+
+
+        <TextView
+            androidx.cardview:id="@+id/cardview_condition_type"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:text="TextView"
+            androidx.cardview:textColor="@color/colorPureWhite"
+            androidx.cardview:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardview_condition_string"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardview_condition_string" />
+
+        <TextView
+            androidx.cardview:id="@+id/cardview_condition_string"
+            androidx.cardview:layout_width="wrap_content"
+            androidx.cardview:layout_height="wrap_content"
+            androidx.cardview:layout_marginStart="8dp"
+            androidx.cardview:layout_marginTop="8dp"
+            androidx.cardview:layout_marginBottom="8dp"
+            androidx.cardview:text="TextView"
+            androidx.cardview:textColor="@color/colorPureWhite"
+            androidx.cardview:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardview_condition_type"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

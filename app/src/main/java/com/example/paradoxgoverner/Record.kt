@@ -83,4 +83,33 @@ data class Item(
     @ColumnInfo var item: String
 )
 
+@Entity
+data class Account(
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var account: String
+)
+
+@Entity
+data class userNameAndPwd (
+    @PrimaryKey
+    val id:Int,
+    var userName: String,
+    var password: String
+)
+
+
+@Entity
+data class Template(
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var name: String,
+    @ColumnInfo var member : String,
+    @ColumnInfo var category : String,
+    @ColumnInfo var subcategory : String,
+    @ColumnInfo var account : String,
+    @ColumnInfo var type : String,
+    @ColumnInfo var income: Boolean,
+    @ColumnInfo var merchant : String,
+    @ColumnInfo var item : String
+)
+
 //account表待实现

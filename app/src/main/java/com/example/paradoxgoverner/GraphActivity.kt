@@ -1,19 +1,15 @@
 package com.example.paradoxgoverner
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.recyclerview.widget.RecyclerView
 import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
 import kotlin.properties.Delegates
-
 
 class GraphActivity : AppCompatActivity() {
 
@@ -246,6 +242,7 @@ class GraphActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_graph)
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -254,25 +251,27 @@ class GraphActivity : AppCompatActivity() {
                 R.id.navigation_home -> {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
-                R.id.navigation_dashboard -> {
+                R.id.navigation_dashboard-> {
                     val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
-                R.id.navigation_graph -> {
-                }
+                R.id.navigation_graph -> {}
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
             }
             true

@@ -17,6 +17,7 @@ class PersonalActivity : AppCompatActivity() {
     companion object {
         var instance: PersonalActivity by Delegates.notNull()
         fun instance() = instance
+        var themeColor = R.style.CustomizedAppThemePurple
     }
 
     var stringList = mutableListOf<String>()
@@ -24,12 +25,26 @@ class PersonalActivity : AppCompatActivity() {
     var uid = 0
     var subcategory_uid = 0
     var categoryString = DEFAULT_CATEGORY_LIST[0]
+    var staticThemeColorString = ""
+    var lastModified = mutableListOf<String>("","","","","","","","","","")
 
-    var lastModified = mutableListOf<String>("","","","","","","","")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setTheme(themeColor)
+        when(themeColor){
+            R.style.CustomizedAppThemePurple -> staticThemeColorString = THEME_PURPLE
+            R.style.CustomizedAppThemeRed -> staticThemeColorString = THEME_RED
+            R.style.CustomizedAppThemePink -> staticThemeColorString = THEME_PINK
+            R.style.CustomizedAppThemeOrange -> staticThemeColorString = THEME_ORANGE
+            R.style.CustomizedAppThemeYellow -> staticThemeColorString = THEME_YELLOW
+            R.style.CustomizedAppThemeBlue -> staticThemeColorString = THEME_BLUE
+            R.style.CustomizedAppThemeGreen -> staticThemeColorString = THEME_GREEN
+        }
+
         setContentView(R.layout.activity_personal)
+
 
         var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -37,23 +52,26 @@ class PersonalActivity : AppCompatActivity() {
                 R.id.navigation_home -> {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_dashboard-> {
                     val intent = Intent(this, DashboardActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_graph -> {
                     val intent = Intent(this, GraphActivity::class.java)
                     startActivity(intent)
-                    if (versionFlag) {
+                    if (MainActivity.versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_personal -> {}
             }
@@ -62,9 +80,11 @@ class PersonalActivity : AppCompatActivity() {
         bottomNavigatior.selectedItemId = R.id.navigation_personal
 
         InitSpinner()
+        InitThemeSpinner()
+        theme_spinner.setSelection(THEME_LIST.indexOf(staticThemeColorString))
     }
 
-    
+    //让VOID_ITEM显示吧。但不应修改
     fun InitSpinner() {
         var selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -96,16 +116,17 @@ class PersonalActivity : AppCompatActivity() {
                         InitSecondSpinner(stringList)
                     }
                     CUSTOMIZED_LIST[1] -> {
+                        type = CATEGORY_INDEX
                         for (categorys in DAO.getAllCategory()) {
                             if(categorys.category != VOID_ITEM){
                                 stringList.add(categorys.category)
                             }
                         }
                         stringList.add(VOID_ITEM)
-                        InitSecondSpinner(stringList)
                         personal_custom_spinner3.visibility = View.VISIBLE
                         personal_custom_button3.visibility = View.VISIBLE
                         personal_custom_button4.visibility = View.VISIBLE
+                        InitSecondSpinner(stringList)
                     }
                     CUSTOMIZED_LIST[2] -> {
                         type = MERCHANT_INDEX
@@ -128,7 +149,6 @@ class PersonalActivity : AppCompatActivity() {
                         stringList.add(VOID_ITEM)
                         InitSecondSpinner(stringList)
                     }
-
                     CUSTOMIZED_LIST[4] -> {
                         type = MEMBER_INDEX
                         for (members in DAO.getAllMember()) {
@@ -175,6 +195,7 @@ class PersonalActivity : AppCompatActivity() {
                     }
                     MERCHANT_INDEX -> {uid = DAO.findMerchantByString(adapterView.getItemAtPosition(i).toString())[0].uid }
                     ITEM_INDEX -> {uid = DAO.findItemByString(adapterView.getItemAtPosition(i).toString())[0].uid }
+                    ACCOUNT_INDEX -> {uid = DAO.findAccountByString(adapterView.getItemAtPosition(i).toString())[0].uid }
                 }
             }
 
@@ -186,7 +207,7 @@ class PersonalActivity : AppCompatActivity() {
             personal_custom_spinner2?.setSelection(stringList.indexOf(lastModified[type]))
     }
 
-    
+    //对VOID_ITEM的处理
     fun SubcategorySpinnerAdapt() {
         val DAO = AppDatabase.instance.userDAO()
         var subcategoryList = DAO.getAllSubcategory(categoryString)
@@ -234,7 +255,7 @@ class PersonalActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(itemText)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
-                if(itemText.text.toString() != "") {
+                if(itemText.text.toString() != "" && itemText.text.toString() != VOID_ITEM) {
                     val txt = itemText.text.toString()
                     when (type) {
                         MEMBER_INDEX -> DAO.insertAllMember(Member(0, txt))
@@ -245,6 +266,7 @@ class PersonalActivity : AppCompatActivity() {
                         }
                         MERCHANT_INDEX -> DAO.insertAllMerchant(Merchant(0, txt))
                         ITEM_INDEX -> DAO.insertAllItem(Item(0, txt))
+                        ACCOUNT_INDEX ->  DAO.insertAllAccount(Account(0, txt))
                     }
                     lastModified[type] = txt
                     InitSpinner()
@@ -264,7 +286,8 @@ class PersonalActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(itemText)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
-                if(itemText.text.toString() != ""){
+                //不能新建空Subcategory ; 不能在VOID_ITEM Category下新建Subcategory
+                if(itemText.text.toString() != "" && categoryString != VOID_ITEM){
                     DAO.insertAllSubcategory(Subcategory(0,categoryString,itemText.text.toString()))
                     SubcategorySpinnerAdapt()
                     var subcategoryStringList = mutableListOf<String>()
@@ -283,13 +306,15 @@ class PersonalActivity : AppCompatActivity() {
         var title = "请输入"
         var typeLabel =""
         when(type){
-            MEMBER_INDEX->typeLabel = CUSTOMIZED_LIST[0]
+            MEMBER_INDEX->typeLabel = CUSTOMIZED_LIST[4]
             CATEGORY_INDEX->typeLabel = CUSTOMIZED_LIST[1]
             MERCHANT_INDEX->typeLabel = CUSTOMIZED_LIST[2]
             ITEM_INDEX->typeLabel = CUSTOMIZED_LIST[3]
+            ACCOUNT_INDEX->typeLabel = CUSTOMIZED_LIST[0]
         }
         title += typeLabel
         val DAO = AppDatabase.instance.userDAO()
+        var tmp_record : Record
         var itemText = EditText(this)
         var itemStr = ""
         when(type){
@@ -297,7 +322,9 @@ class PersonalActivity : AppCompatActivity() {
             CATEGORY_INDEX->itemStr = DAO.findCategoryByUid(uid)[0].category
             MERCHANT_INDEX->itemStr = DAO.findMerchantByUid(uid)[0].merchant
             ITEM_INDEX->itemStr = DAO.findItemByUid(uid)[0].item
+            ACCOUNT_INDEX->itemStr = DAO.findAccountByUid(uid)[0].account
         }
+        val origin_txt = itemStr
         itemText.setText(itemStr)
 
         AlertDialog.Builder(this)
@@ -305,49 +332,126 @@ class PersonalActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .setView(itemText)
             .setPositiveButton("修改", DialogInterface.OnClickListener{ dialogInterface, i ->
-                if(itemText.text.toString() != ""){
-                    val txt = itemText.text.toString()
-                    when(type){
-                        MEMBER_INDEX->DAO.insertAllMember(Member(uid,txt))
-                        CATEGORY_INDEX->DAO.insertAllCategory(Category(uid,txt))
-                        MERCHANT_INDEX->DAO.insertAllMerchant(Merchant(uid,txt))
-                        ITEM_INDEX->DAO.insertAllItem(Item(uid,txt))
-                    }
-                    lastModified[type] = txt
-                    InitSpinner()
-                    personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
+                //不能修改"无"
+                if(origin_txt != VOID_ITEM)
+                {
+                    if(itemText.text.toString() != ""){
+                        val txt = itemText.text.toString()
+                        when(type){
+                            MEMBER_INDEX->{
+                                for(records in DAO.findRecordByMember(origin_txt)){
+                                    tmp_record = records
+                                    tmp_record.member = txt
+                                    //修改了member，其他不变
+                                    DAO.insertAll(tmp_record)
+                                }
+                                DAO.insertAllMember(Member(uid,txt))
+                            }
+                            CATEGORY_INDEX->{
+                                for(records in DAO.findRecordByCategory(origin_txt)){
+                                    tmp_record = records
+                                    tmp_record.category = txt
+                                    DAO.insertAll(tmp_record)
+                                }
+                                DAO.insertAllCategory(Category(uid,txt))
+                            }
+                            MERCHANT_INDEX->{
+                                for(records in DAO.findRecordByMerchant(origin_txt)){
+                                    tmp_record = records
+                                    tmp_record.merchant = txt
+                                    DAO.insertAll(tmp_record)
+                                }
+                                DAO.insertAllMerchant(Merchant(uid,txt))
+                            }
+                            ITEM_INDEX->{
+                                for(records in DAO.findRecordByItem(origin_txt)){
+                                    tmp_record = records
+                                    tmp_record.item = txt
+                                    DAO.insertAll(tmp_record)
+                                }
+                                DAO.insertAllItem(Item(uid,txt))
+                            }
+                            ACCOUNT_INDEX->{
+                                for(records in DAO.findRecordByAccount(origin_txt)){
+                                    tmp_record = records
+                                    tmp_record.account = txt
+                                    DAO.insertAll(tmp_record)
+                                }
+                                DAO.insertAllAccount(Account(uid,txt))
+                            }
+                        }
+                        lastModified[type] = txt
+                        InitSpinner()
+                        personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
 
+                    }
                 }
+
             })
             .setNegativeButton("删除", DialogInterface.OnClickListener{ dialogInterface, i ->
-                var txt = ""
-                when(type) {
-                    MEMBER_INDEX -> {
-                        txt = DAO.findMemberByUid(uid)[0].member
-                        DAO.deleteMember(DAO.findMemberByUid(uid)[0])
-                    }
-                    CATEGORY_INDEX -> {
-                        txt = DAO.findCategoryByUid(uid)[0].category
-                        DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
-                        //删除一级分类也删除对应二级分类
-                        for (sc in DAO.findSubcategoryByCategory(categoryString)){
-                            DAO.deleteSubcategory(sc)
+                //不能删除VOID_ITEM
+                if(origin_txt != VOID_ITEM)
+                {
+                    var txt = ""
+                    when(type) {
+                        MEMBER_INDEX -> {
+                            for(records in DAO.findRecordByMember(origin_txt)){
+                                tmp_record = records
+                                tmp_record.member = VOID_ITEM
+                                //修改了member，其他不变
+                                DAO.insertAll(tmp_record)
+                            }
+                            txt = DAO.findMemberByUid(uid)[0].member
+                            DAO.deleteMember(DAO.findMemberByUid(uid)[0])
+                        }
+
+                        //删除一级分类的同时也删除二级分类
+                        CATEGORY_INDEX -> {
+                            for(records in DAO.findRecordByCategory(origin_txt)){
+                                tmp_record = records
+                                tmp_record.category = VOID_ITEM
+                                tmp_record.subcategory = VOID_ITEM
+                                DAO.insertAll(tmp_record)
+                            }
+                            txt = DAO.findCategoryByUid(uid)[0].category
+                            DAO.deleteCategory(DAO.findCategoryByUid(uid)[0])
+                            //删除一级分类也删除对应二级分类
+                            for (sc in DAO.findSubcategoryByCategory(categoryString)){
+                                DAO.deleteSubcategory(sc)
+                            }
+                        }
+                        MERCHANT_INDEX ->{
+                            for(records in DAO.findRecordByMerchant(origin_txt)){
+                                tmp_record = records
+                                tmp_record.merchant = VOID_ITEM
+                                DAO.insertAll(tmp_record)
+                            }
+                            txt = DAO.findMerchantByUid(uid)[0].merchant
+                            DAO.deleteMerchant(DAO.findMerchantByUid(uid)[0])
+                        }
+                        ITEM_INDEX -> {
+                            for(records in DAO.findRecordByItem(origin_txt)){
+                                tmp_record = records
+                                tmp_record.item = VOID_ITEM
+                                DAO.insertAll(tmp_record)
+                            }
+                            txt = DAO.findItemByUid(uid)[0].item
+                            DAO.deleteItem(DAO.findItemByUid(uid)[0])
+                        }
+                        //删除账户时删除所有记账
+                        ACCOUNT_INDEX -> {
+                            for(records in DAO.findRecordByAccount(origin_txt)){
+                                DAO.delete(records)
+                            }
+                            txt = DAO.findAccountByUid(uid)[0].account
+                            DAO.deleteAccount(DAO.findAccountByUid(uid)[0])
                         }
                     }
-                    MERCHANT_INDEX ->{
-                        txt = DAO.findMerchantByUid(uid)[0].merchant
-                        DAO.deleteMerchant(DAO.findMerchantByUid(uid)[0])
-                    }
-                    ITEM_INDEX -> {
-                        txt = DAO.findItemByUid(uid)[0].item
-                        DAO.deleteItem(DAO.findItemByUid(uid)[0])
-                    }
+                    if(lastModified[type] == txt)
+                        lastModified[type] = ""
+                    InitSpinner()
+                    personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
                 }
-                if(lastModified[type] == txt)
-                    lastModified[type] = ""
-                InitSpinner()
-                personal_custom_spinner?.setSelection(CUSTOMIZED_LIST.indexOf(typeLabel))
-
             })
             .show()
     }
@@ -399,4 +503,44 @@ class PersonalActivity : AppCompatActivity() {
         finish()
     }
 
+
+    fun InitThemeSpinner() {
+        var themeSpinner = findViewById<Spinner>(R.id.theme_spinner)
+
+        var selectedSpinnerAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , THEME_LIST)
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        themeSpinner.setAdapter(selectedSpinnerAdapter)
+
+        themeSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                val changeTheme = themeColor
+                //用于新建/修改Record
+                when(adapterView.getItemAtPosition(i) as String){
+                    THEME_PURPLE-> themeColor = R.style.CustomizedAppThemePurple
+                    THEME_RED-> themeColor = R.style.CustomizedAppThemeRed
+                    THEME_PINK-> themeColor = R.style.CustomizedAppThemePink
+                    THEME_ORANGE-> themeColor = R.style.CustomizedAppThemeOrange
+                    THEME_YELLOW-> themeColor = R.style.CustomizedAppThemeYellow
+                    THEME_BLUE-> themeColor = R.style.CustomizedAppThemeBlue
+                    THEME_GREEN-> themeColor = R.style.CustomizedAppThemeGreen
+                }
+                if(changeTheme != themeColor){
+                    val intent = Intent()
+                    intent.setClass(baseContext , PersonalActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+            }
+        })
+
+
+    }
 }

@@ -34,6 +34,9 @@ class resetPwd : AppCompatActivity() {
                         passwordEdit.setText("")
                         step = 1
                     }
+                    else{
+                        Toast.makeText(this,"密码错误",Toast.LENGTH_SHORT).show()
+                    }
                 }else{
                     Toast.makeText(this,"密码长度需大于4",Toast.LENGTH_SHORT).show()
                 }
