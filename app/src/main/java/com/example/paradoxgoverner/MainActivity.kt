@@ -299,6 +299,7 @@ class MainActivity : AppCompatActivity() {
                 remainAmount -= record.amount
             }
         }
+
         AccountInfo.text = "余额："+remainAmount.toString()
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)

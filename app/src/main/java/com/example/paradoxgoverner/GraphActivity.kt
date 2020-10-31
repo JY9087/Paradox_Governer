@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_graph.*
 import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 class GraphActivity : AppCompatActivity() {
@@ -30,8 +31,8 @@ class GraphActivity : AppCompatActivity() {
         fun instance() = instance
     }
 
-    fun getSumByMemberin(member: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByMemberin(member: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByMember(member) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis){
@@ -50,8 +51,8 @@ class GraphActivity : AppCompatActivity() {
         return Memin.toTypedArray()
     }
 
-    fun getSumByMemberout(member: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByMemberout(member: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByMember(member) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -72,8 +73,8 @@ class GraphActivity : AppCompatActivity() {
         return Memout.toTypedArray()
     }
 
-    fun getSumByItemin(item: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByItemin(item: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByItem(item) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -94,8 +95,8 @@ class GraphActivity : AppCompatActivity() {
         return Itemin.toTypedArray()
     }
 
-    fun getSumByItemout(item: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByItemout(item: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByItem(item) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -116,8 +117,8 @@ class GraphActivity : AppCompatActivity() {
         return Itemout.toTypedArray()
     }
 
-    fun getSumByMerchantin(merchant: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByMerchantin(merchant: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByMerchant(merchant) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -138,8 +139,8 @@ class GraphActivity : AppCompatActivity() {
         return Mercin.toTypedArray()
     }
 
-    fun getSumByMerchantout(merchant: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByMerchantout(merchant: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByMerchant(merchant) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -160,8 +161,8 @@ class GraphActivity : AppCompatActivity() {
         return Mercout.toTypedArray()
     }
 
-    fun getSumByAccountin(acc: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByAccountin(acc: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByAccount(acc) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -182,8 +183,8 @@ class GraphActivity : AppCompatActivity() {
         return Accin.toTypedArray()
     }
 
-    fun getSumByAccountout(acc: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByAccountout(acc: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByAccount(acc) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -204,8 +205,8 @@ class GraphActivity : AppCompatActivity() {
         return Accout.toTypedArray()
     }
 
-    fun getSumByFCatout(Fcat: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByFCatout(Fcat: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByCategory(Fcat) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -226,8 +227,8 @@ class GraphActivity : AppCompatActivity() {
         return Fcatout.toTypedArray()
     }
 
-    fun getSumByFCatin(Fcat: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumByFCatin(Fcat: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByCategory(Fcat) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -248,8 +249,8 @@ class GraphActivity : AppCompatActivity() {
         return Fcatin.toTypedArray()
     }
 
-    fun getSumBySCatout(Cat: String, Scat: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumBySCatout(Cat: String, Scat: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByCatSubcategory(Cat, Scat) ) {
             if(records.date.time >= StartTime.timeInMillis && records.date.time <= EndTime.timeInMillis) {
@@ -272,8 +273,8 @@ class GraphActivity : AppCompatActivity() {
         return Scatout.toTypedArray()
     }
 
-    fun getSumBySCatin(Cat: String, Scat: String, StartTime: Calendar, EndTime: Calendar) : Double {
-        var tot = 0.0
+    fun getSumBySCatin(Cat: String, Scat: String, StartTime: Calendar, EndTime: Calendar) : Float {
+        var tot = 0F
         val DAO = AppDatabase.instance.userDAO()
         for ( records in DAO.findRecordByCatSubcategory(Cat, Scat) ) {
             //假定收入为正，支出为负
@@ -404,6 +405,7 @@ class GraphActivity : AppCompatActivity() {
                     .borderWidth(0f)
                     .data(
                         getAllSumByFcatout(startCalendar, endCalendar)
+
                     )
             )
             )
