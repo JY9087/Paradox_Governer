@@ -461,6 +461,7 @@ class PersonalActivity : AppCompatActivity() {
         var title = "请输入二级分类"
         val DAO = AppDatabase.instance.userDAO()
         var itemText = EditText(this)
+        var tmp_record : Record
         itemText.setText(DAO.findSubcategoryByUid(subcategory_uid)[0].subcategory)
         AlertDialog.Builder(this)
             .setTitle(title)
@@ -468,6 +469,11 @@ class PersonalActivity : AppCompatActivity() {
             .setView(itemText)
             .setPositiveButton("修改", DialogInterface.OnClickListener{ dialogInterface, i ->
                 if(itemText.text.toString() != ""){
+                    for(records in DAO.findRecordByCatSubcategory(categoryString,DAO.findSubcategoryByUid(subcategory_uid)[0].subcategory)){
+                        tmp_record = records
+                        tmp_record.subcategory = itemText.text.toString()
+                        DAO.insertAll(tmp_record)
+                    }
                     DAO.insertAllSubcategory(Subcategory(subcategory_uid,categoryString,itemText.text.toString()))
                     SubcategorySpinnerAdapt()
                     var subcategoryStringList = mutableListOf<String>()
@@ -478,6 +484,14 @@ class PersonalActivity : AppCompatActivity() {
                 }
             })
             .setNegativeButton("删除", DialogInterface.OnClickListener{ dialogInterface, i ->
+                for(records in DAO.findRecordByCatSubcategory(categoryString,DAO.findSubcategoryByUid(subcategory_uid)[0].subcategory)){
+                    tmp_record = records
+                    tmp_record.subcategory = VOID_ITEM
+                    DAO.insertAll(tmp_record)
+                }
+                DAO.deleteAccount(DAO.findAccountByUid(uid)[0])
+
+
                     DAO.deleteSubcategory(DAO.findSubcategoryByUid(subcategory_uid)[0])
                     SubcategorySpinnerAdapt()
             })

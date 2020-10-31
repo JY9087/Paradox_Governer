@@ -29,7 +29,7 @@ const val MERCHANT_INDEX = 4
 const val ITEM_INDEX = 5
 const val ACCOUNT_INDEX = 6
 
-val CUSTOMIZED_LIST = listOf("账户","一级分类","商家","项目","成员")
+val CUSTOMIZED_LIST = listOf("账户","分类","商家","项目","成员")
 
 const val THEME_PURPLE = "紫色"
 const val THEME_RED = "红色"
