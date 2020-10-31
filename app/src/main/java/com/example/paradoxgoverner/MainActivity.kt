@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_view_all.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -77,6 +79,10 @@ class MainActivity : AppCompatActivity() {
 
 
         InitAccountSpinner()
+        if(ViewAllActivity.accountFlag){
+            AccountSpinner.setSelection(accountStringList.indexOf(ViewAllActivity.accountName))
+            ViewAllActivity.accountFlag = false
+        }
 
 
 
@@ -167,6 +173,10 @@ class MainActivity : AppCompatActivity() {
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
+
+
+
+
     }
     //End Of OnCreate
 

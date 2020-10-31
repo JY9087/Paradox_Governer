@@ -65,6 +65,9 @@ interface UserDAO {
     @Query("SELECT * FROM Account WHERE account LIKE :account ")
     fun findAccountByString(account : String): List<Account>
 
+    @Query("SELECT * FROM Template WHERE name LIKE :name ")
+    fun findTemplateByString(name : String): List<Template>
+
 
     //根据UID进行查找
     @Query("SELECT * FROM Member WHERE uid LIKE :member ")
@@ -107,8 +110,14 @@ interface UserDAO {
     @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
     fun getAllSubcategory(category : String): List<Subcategory>
 
+    @Query("SELECT * FROM Subcategory")
+    fun getAllSubcategoryWithoutCategory(): List<Subcategory>
+
     @Query("SELECT * FROM Account")
     fun getAllAccount(): List<Account>
+
+    @Query("SELECT * FROM Template")
+    fun getAllTemplate(): List<Template>
 
     @Query("SELECT * FROM Hidden")
     fun isInitialized(): List<Hidden>
@@ -139,6 +148,9 @@ interface UserDAO {
     fun insertAllAccount(vararg accounts : Account)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllTemplate(vararg accounts : Template)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun initialize(vararg hide: Hidden)
 
 
@@ -167,6 +179,9 @@ interface UserDAO {
 
     @Delete
     fun deleteAccount(account : Account)
+
+    @Delete
+    fun deleteTemplate(template: Template)
 
     //User Name And Password
     @Insert
