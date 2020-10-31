@@ -196,6 +196,4 @@ interface UserDAO {
     @Query("SELECT * FROM Record WHERE member in (:selectMember) AND category in(:selectCategory) AND subcategory in (:selectSubcategory) AND account in (:selectAccount) AND type in (:selectType) AND merchant in (:selectMerchant) AND item in (:selectItem) AND income=(:selectIncome)")
     fun selectDAO (selectMember: List<String>,selectCategory: List<String>,selectSubcategory: List<String>,selectAccount: List<String>,selectType:List<String>,selectMerchant: List<String>,selectItem: List<String>,selectIncome:Boolean):List<Record>
 
-    @Query("SELECT * FROM Subcategory")
-    fun getAllSubcategoryWithoutCategory(): List<Subcategory>
 }
