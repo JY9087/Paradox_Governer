@@ -297,7 +297,7 @@ class MainActivity : AppCompatActivity() {
 
         var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
 
-        var remainAmount = 0.0
+        var remainAmount = 0.0F
         var records = DAO.getAllRecord()
         if(accountName != ALL_ACCOUNT){
             records = DAO.findRecordByAccount(accountName)
@@ -311,8 +311,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         val remainAmountString :String = String.format("%.2f",(remainAmount))
         AccountInfo.text = "余额："+ remainAmountString
+
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
