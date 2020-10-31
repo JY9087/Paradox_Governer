@@ -151,12 +151,46 @@ class statisticsActivity : AppCompatActivity() {
     //确定按钮
     fun startSearch(view: View){
         searchFlag = true
-        recordList2.clear()
         val DAO = AppDatabase.instance.userDAO()
         //空总算是处理好了
         if(searchAccount.size == 0){ searchAccount = accountStringList}
-        if(searchCategory.size == 0){ searchCategory = categoryStringList}
-        if(searchSubCategory.size == 0){ searchSubCategory = subcategoryStringList}
+        //没有选择一级选项
+        if(searchCategory.size == 0){
+            searchCategory = categoryStringList
+            for (subcategory in AppDatabase.instance.userDAO().getAllSubcategoryWithoutCategory()) {
+                subcategoryStringList.add(subcategory.subcategory)
+            }
+            searchSubCategory = subcategoryStringList
+        }
+
+        //选了一级没选二级
+        if(searchSubCategory.size == 0 && searchCategory.size != 0){
+            var subStrList = mutableListOf<String>()
+            var ninFlag = true
+            for(category in searchCategory){
+                //选了一级分类没选二级分类就选择全部一级分类
+                subStrList.clear()
+                ninFlag = true
+                for (subcategory in AppDatabase.instance.userDAO().getAllSubcategory(category)) {
+                    subStrList.add(subcategory.subcategory)
+                }
+                for(sub in searchSubCategory){
+                    //查到了
+                    if(subStrList.indexOf(sub) != -1){
+                        ninFlag = false
+                    }
+                }
+                //没查到
+                if(ninFlag){
+                    for(subStr in subStrList){
+                        searchSubCategory.add(subStr)
+                    }
+                }
+            }
+        }
+
+
+
         if(searchMember.size == 0){ searchMember = memberStringList}
         if(searchMerchant.size == 0){ searchMerchant = merchantStringList}
         if(searchItem.size == 0){ searchItem = itemStringList}
@@ -180,10 +214,6 @@ class statisticsActivity : AppCompatActivity() {
             val day=cal.get(Calendar.DAY_OF_MONTH)
             endCalendar.set(year+100,month,day,0,0,0)
         }
-
-        getStatistics(true,searchAccount.toList(),searchMember.toList(),searchCategory.toList(),
-            searchSubCategory.toList(),searchItem.toList(),searchMerchant.toList(),
-            searchType.toList(),startCalendar,endCalendar)
         getStatistics(false,searchAccount.toList(),searchMember.toList(),searchCategory.toList(),
             searchSubCategory.toList(),searchItem.toList(),searchMerchant.toList(),
             searchType.toList(),startCalendar,endCalendar)
@@ -196,6 +226,7 @@ class statisticsActivity : AppCompatActivity() {
     }
 
     //现在的问题是在init时会点击
+    //无法点击已选项
     fun initStatisticSpinner(itemList: List<String>, ID: Int, Index: Int) {
         var selectedSpinner = findViewById<Spinner>(ID)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -289,9 +320,15 @@ class statisticsActivity : AppCompatActivity() {
         start:Calendar = startCalendar,
         end:Calendar = endCalendar
     ):List<Record>{
-        val recordList1 = AppDatabase.instance.userDAO().selectDAO(needMember,needCategory,needSubcategory,needAccount,needType,needMerchant,needItem,needIncome)
-
+        recordList2.clear()
+        val recordList1 = AppDatabase.instance.userDAO().selectDAO(needMember,needCategory,needSubcategory,needAccount,needType,needMerchant,needItem,true)
+        val recordList3 = AppDatabase.instance.userDAO().selectDAO(needMember,needCategory,needSubcategory,needAccount,needType,needMerchant,needItem,false)
         for (record in recordList1){
+            if(record.date.time >= startCalendar.timeInMillis && record.date.time <= endCalendar.timeInMillis){
+                recordList2.add(record)
+            }
+        }
+        for (record in recordList3){
             if(record.date.time >= startCalendar.timeInMillis && record.date.time <= endCalendar.timeInMillis){
                 recordList2.add(record)
             }
@@ -365,7 +402,7 @@ class statisticsActivity : AppCompatActivity() {
         val day=cal.get(Calendar.DAY_OF_MONTH)
         val listener =
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
-                startCalendar.set(year,month,day,23, 59, 59)
+                startCalendar.set(year,month,day,0, 0, 0)
                 startTimeFlag =true
                 var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
                 val startDate = Date(startCalendar.timeInMillis)
@@ -394,7 +431,7 @@ class statisticsActivity : AppCompatActivity() {
         val listener =
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 //将选择的日期显示到TextView中,因为之前获取month直接使用，所以不需要+1，这个地方需要显示，所以+1
-                endCalendar.set(year,month,day,0, 0, 0)
+                endCalendar.set(year,month,day,23, 59, 59)
                 endTimeFlag = true
                 var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
                 var endDate = Date(endCalendar.timeInMillis)

@@ -100,4 +100,6 @@
 
 
     <string name="dashboard_add_condition_button">添加条件</string>
+    <string name="conf_start">设置开始时间</string>
+    <string name="conf_end">设置结束时间</string>
 </resources>
