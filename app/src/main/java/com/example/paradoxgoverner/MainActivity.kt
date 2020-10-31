@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_view_all.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -77,6 +79,10 @@ class MainActivity : AppCompatActivity() {
 
 
         InitAccountSpinner()
+        if(ViewAllActivity.accountFlag){
+            AccountSpinner.setSelection(accountStringList.indexOf(ViewAllActivity.accountName))
+            ViewAllActivity.accountFlag = false
+        }
 
 
 
@@ -167,6 +173,10 @@ class MainActivity : AppCompatActivity() {
         )
         //onClick
         forecastList.addOnItemTouchListener(recyclertouchlistener)
+
+
+
+
     }
     //End Of OnCreate
 
@@ -265,6 +275,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
                 DAO.delete( DAO.findRecordByUid(uid) )
                 findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
+                InitAccountSpinner()
             })
             .setNegativeButton("取消", null)
             .show()
@@ -286,7 +297,7 @@ class MainActivity : AppCompatActivity() {
 
         var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
 
-        var remainAmount = 0.0
+        var remainAmount = 0.0F
         var records = DAO.getAllRecord()
         if(accountName != ALL_ACCOUNT){
             records = DAO.findRecordByAccount(accountName)
@@ -300,7 +311,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        AccountInfo.text = "余额："+remainAmount.toString()
+
+        val remainAmountString :String = String.format("%.2f",(remainAmount))
+        AccountInfo.text = "余额："+ remainAmountString
+
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -342,7 +356,8 @@ class MainActivity : AppCompatActivity() {
                         remainAmount -= record.amount
                     }
                 }
-                AccountInfo.text = "余额："+remainAmount.toString()
+                val remainAmountString :String = String.format("%.2f",(remainAmount))
+                AccountInfo.text = "余额：" + remainAmountString
 
             }
 

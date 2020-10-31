@@ -29,7 +29,7 @@ const val MERCHANT_INDEX = 4
 const val ITEM_INDEX = 5
 const val ACCOUNT_INDEX = 6
 
-val CUSTOMIZED_LIST = listOf("账户","一级分类","商家","项目","成员")
+val CUSTOMIZED_LIST = listOf("账户","分类","商家","项目","成员")
 
 const val THEME_PURPLE = "紫色"
 const val THEME_RED = "红色"
@@ -42,3 +42,5 @@ val THEME_LIST = listOf<String>(THEME_PURPLE, THEME_RED, THEME_PINK,THEME_ORANGE
     THEME_BLUE, THEME_GREEN)
 
 const val RESET_PATTERN = "reset pattern"
+
+const val VOID_TEMPLATE = "无模板"

@@ -62,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/dashItemText"
             app:layout_constraintStart_toStartOf="@+id/dashItemText"
             app:layout_constraintTop_toBottomOf="@+id/dashItemText" />
 
@@ -72,7 +71,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/dashMemberText"
             app:layout_constraintStart_toStartOf="@+id/dashMemberText"
             app:layout_constraintTop_toBottomOf="@+id/dashMemberText" />
 
@@ -92,7 +90,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/dashAccountText"
             app:layout_constraintStart_toStartOf="@+id/dashAccountText"
             app:layout_constraintTop_toBottomOf="@+id/dashAccountText" />
 
@@ -102,7 +99,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/dashCategoryText"
             app:layout_constraintStart_toStartOf="@+id/dashCategoryText"
             app:layout_constraintTop_toBottomOf="@+id/dashCategoryText" />
 
@@ -112,7 +108,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/dashSubcategoryText"
             app:layout_constraintStart_toStartOf="@+id/dashSubcategoryText"
             app:layout_constraintTop_toBottomOf="@+id/dashSubcategoryText" />
 
@@ -122,7 +117,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/dashMerchantText"
             app:layout_constraintStart_toStartOf="@+id/dashMerchantText"
             app:layout_constraintTop_toBottomOf="@+id/dashMerchantText" />
 
@@ -144,5 +138,15 @@
             app:layout_constraintStart_toStartOf="@+id/dashStartTimeText"
             app:layout_constraintTop_toBottomOf="@+id/dashStartTimeText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/dash_view_all_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:height="10dp"
+        android:onClick="vieaAll"
+        android:text="@string/dashboard_view_all_button"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

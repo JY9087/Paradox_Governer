@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Delete
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import java.sql.Date
 import java.sql.Time
@@ -40,6 +41,8 @@ class CreateNewItem : AppCompatActivity() {
     var merchantStringList = mutableListOf<String>()
     var itemStringList = mutableListOf<String>()
     var accountStringList = mutableListOf<String>()
+    var subtypeStringList = listOf<String>()
+    var TemplateName = ""
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +67,12 @@ class CreateNewItem : AppCompatActivity() {
 
 
         //Member
+        memberStringList.add(VOID_ITEM)
         for (members in DAO.getAllMember()) {
             if(members.member != VOID_ITEM){
                 memberStringList.add(members.member)
             }
         }
-        memberStringList.add(VOID_ITEM)
         InitSpinner(memberStringList.toList(),R.id.member_spinner, MEMBER_INDEX)
 
 
@@ -104,21 +107,23 @@ class CreateNewItem : AppCompatActivity() {
         InitTypeSpinner(DEFAULT_TYPE_LIST)
 
         //Merchant
+        merchantStringList.add(VOID_ITEM)
         for (merchants in DAO.getAllMerchant()) {
             if(merchants.merchant != VOID_ITEM){
                 merchantStringList.add(merchants.merchant)
             }
         }
-        merchantStringList.add(VOID_ITEM)
+
         InitSpinner(merchantStringList.toList(),R.id.merchant_spinner, MERCHANT_INDEX)
 
         //Item
+        itemStringList.add(VOID_ITEM)
         for (items in DAO.getAllItem()) {
             if(items.item != VOID_ITEM){
                 itemStringList.add(items.item)
             }
         }
-        itemStringList.add(VOID_ITEM)
+
         InitSpinner(itemStringList.toList(),R.id.item_spinner, ITEM_INDEX)
 
         //Account
@@ -168,6 +173,8 @@ class CreateNewItem : AppCompatActivity() {
 
             cancel_change_button.visibility = View.VISIBLE
         }
+
+        InitTemplateSpinner()
     }
     //End of OnCreate
 
@@ -499,7 +506,6 @@ class CreateNewItem : AppCompatActivity() {
     //初始化二级分类
     
     fun SubtypeSpinnerAdapt(type : String) {
-        var subtypeStringList = listOf<String>()
         when(type){
             "收入"->subtypeStringList = listOf<String>("收入")
             "支出"->subtypeStringList = listOf<String>("支出")
@@ -650,6 +656,115 @@ class CreateNewItem : AppCompatActivity() {
         itemadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         itemspinner.setAdapter(itemadapter)
     }
+
+
+    fun SaveTemplate(view : View) {
+        var itemText = EditText(this)
+        android.app.AlertDialog.Builder(this)
+            .setTitle("请输入模板名称")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setView(itemText)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
+                if(itemText.text.toString() != ""){
+                    NewTemplate(itemText.text.toString())
+                }
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
+
+    //重名覆盖
+    fun NewTemplate(name : String){
+        TemplateName = name
+        val DAO = AppDatabase.instance.userDAO()
+
+        if(DAO.findTemplateByString(name).size == 0){
+            DAO.insertAllTemplate(
+                Template(0,name,stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                    stringArray[ACCOUNT_INDEX],stringArray[TYPE_INDEX],income,
+                    stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
+            )
+        }
+        else{
+            DAO.insertAllTemplate(
+                Template(DAO.findTemplateByString(name)[0].uid,name,stringArray[MEMBER_INDEX] ,
+                    stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                    stringArray[ACCOUNT_INDEX],stringArray[TYPE_INDEX],income,
+                    stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX]))
+        }
+        InitTemplateSpinner()
+    }
+
+    fun DeleteTemplate(view : View) {
+        android.app.AlertDialog.Builder(this)
+            .setTitle("确认删除模板："+ TemplateName + "?")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
+                AppDatabase.instance.userDAO().deleteTemplate(AppDatabase.instance.userDAO().findTemplateByString(TemplateName)[0])
+                InitTemplateSpinner()
+            })
+            .setNegativeButton("取消", null)
+            .show()
+    }
+
+    fun InitTemplateSpinner() {
+        var selectedSpinner = findViewById<Spinner>(R.id.TemplateSpinner)
+
+        val DAO = AppDatabase.instance.userDAO()
+
+        var TemplateNameList = mutableListOf<String>(VOID_TEMPLATE)
+        for(temp in DAO.getAllTemplate()){
+            TemplateNameList.add(temp.name)
+        }
+
+        var selectedSpinnerAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , TemplateNameList.toList())
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+
+        selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                i: Int,
+                l: Long
+            ) {
+                //用于新建/修改Record
+                TemplateName =adapterView.getItemAtPosition(i) as String
+                if(TemplateName != VOID_TEMPLATE){
+                    DeleteTemplateButton.visibility = View.VISIBLE
+                    val temp = AppDatabase.instance.userDAO().findTemplateByString(TemplateName)[0]
+
+                    //使用模板
+                    member_spinner.setSelection(memberStringList.indexOf(temp.member))
+                    category_spinner.setSelection(categoryStringList.indexOf(temp.category))
+                    subcategory_spinner.setSelection(subcategoryStringList.indexOf(temp.subcategory))
+                    merchant_spinner.setSelection(merchantStringList.indexOf(temp.merchant))
+                    item_spinner.setSelection(itemStringList.indexOf(temp.item))
+                    account_spinner.setSelection(accountStringList.indexOf(temp.account))
+                    type_spinner.setSelection(DEFAULT_TYPE_LIST.indexOf(temp.type))
+                    if(temp.income){
+                        sub_type_spinner.setSelection(subtypeStringList.indexOf("收入"))
+                    }
+                    else{
+                        sub_type_spinner.setSelection(subtypeStringList.indexOf("收入"))
+                    }
+                }
+                else{
+                    DeleteTemplateButton.visibility = View.INVISIBLE
+                }
+
+
+
+            }
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+            }
+        })
+
+
+    }
+
+
 
 }
 
