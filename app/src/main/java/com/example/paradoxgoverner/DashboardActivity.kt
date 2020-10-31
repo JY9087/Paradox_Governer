@@ -74,7 +74,8 @@ class DashboardActivity : AppCompatActivity() {
                 remainAmount -= record.amount
             }
         }
-        totalAmount += remainAmount.toString()
+        val remainAmountString :String = String.format("%.2f",(remainAmount))
+        totalAmount += remainAmountString
         dashAccountText.text = acStr
         dashCategoryText.text = caStr
         dashSubcategoryText.text = subcaStr

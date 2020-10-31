@@ -34,7 +34,8 @@ class ViewAllActivity : AppCompatActivity() {
                 totalAmount -= record.amount
             }
         }
-        viewAllAccountSum.setText("总余额"+totalAmount.toString())
+        val remainAmountString :String = String.format("%.2f",(totalAmount))
+        viewAllAccountSum.setText("总余额"+remainAmountString)
 
         var accountList = mutableListOf<String>()
         var amountList = mutableListOf<Double>()

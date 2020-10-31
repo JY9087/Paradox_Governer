@@ -275,6 +275,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
                 DAO.delete( DAO.findRecordByUid(uid) )
                 findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
+                InitAccountSpinner()
             })
             .setNegativeButton("取消", null)
             .show()
@@ -309,7 +310,9 @@ class MainActivity : AppCompatActivity() {
                 remainAmount -= record.amount
             }
         }
-        AccountInfo.text = "余额："+remainAmount.toString()
+
+        val remainAmountString :String = String.format("%.2f",(remainAmount))
+        AccountInfo.text = "余额："+ remainAmountString
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
@@ -351,7 +354,8 @@ class MainActivity : AppCompatActivity() {
                         remainAmount -= record.amount
                     }
                 }
-                AccountInfo.text = "余额："+remainAmount.toString()
+                val remainAmountString :String = String.format("%.2f",(remainAmount))
+                AccountInfo.text = "余额：" + remainAmountString
 
             }
 
