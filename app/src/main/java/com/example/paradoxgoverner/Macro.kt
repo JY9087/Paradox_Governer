@@ -42,3 +42,5 @@ val THEME_LIST = listOf<String>(THEME_PURPLE, THEME_RED, THEME_PINK,THEME_ORANGE
     THEME_BLUE, THEME_GREEN)
 
 const val RESET_PATTERN = "reset pattern"
+
+const val VOID_TEMPLATE = "无模板"

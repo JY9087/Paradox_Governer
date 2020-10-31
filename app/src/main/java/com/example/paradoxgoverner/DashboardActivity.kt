@@ -34,7 +34,6 @@ class DashboardActivity : AppCompatActivity() {
             intent.setClass(this, statisticsActivity::class.java)
             startActivity(intent)
             finish()
-
         }
 
         //统计
@@ -123,9 +122,20 @@ class DashboardActivity : AppCompatActivity() {
         })
         bottomNavigatior.selectedItemId = R.id.navigation_dashboard
 
-        val DashboardList = findViewById<RecyclerView>(R.id.dashboard_recyeleview)
-        DashboardList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ForecastListAdapter(statisticsActivity.recordList2)
-        DashboardList.adapter = myadapter
+        if(statisticsActivity.searchFlag){
+            val DashboardList = findViewById<RecyclerView>(R.id.dashboard_recyeleview)
+            DashboardList.layoutManager = LinearLayoutManager(this)
+            var myadapter = ForecastListAdapter(statisticsActivity.recordList2)
+            DashboardList.adapter = myadapter
+            statisticsActivity.searchFlag = false
+        }
+
+    }
+
+    fun vieaAll(view : View){
+        val intent = Intent()
+        intent.setClass(this, ViewAllActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
