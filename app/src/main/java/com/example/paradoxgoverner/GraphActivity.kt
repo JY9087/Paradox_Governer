@@ -19,8 +19,8 @@ import kotlin.properties.Delegates
 
 class GraphActivity : AppCompatActivity() {
 
-    private val startCalendar: Calendar = Calendar.getInstance()
-    private val endCalendar: Calendar = Calendar.getInstance()
+    var startCalendar: Calendar = Calendar.getInstance()
+    var endCalendar: Calendar = Calendar.getInstance()
 
     var startTimeFlag = false
     var endTimeFlag = false
@@ -328,7 +328,6 @@ class GraphActivity : AppCompatActivity() {
         val day=cal.get(Calendar.DAY_OF_MONTH)
         val listener =
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
-                //将选择的日期显示到TextView中,因为之前获取month直接使用，所以不需要+1，这个地方需要显示，所以+1
                 endCalendar.set(year,month,day,23, 59, 59)
                 endTimeFlag = true
             }
