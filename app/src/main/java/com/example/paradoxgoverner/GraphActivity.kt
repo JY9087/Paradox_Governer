@@ -25,6 +25,7 @@ class GraphActivity : AppCompatActivity() {
 
     var startTimeFlag = false
     var endTimeFlag = false
+    var itemNameID = 0
 
     companion object {
         var instance: GraphActivity by Delegates.notNull()
@@ -308,6 +309,7 @@ class GraphActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 startCalendar.set(year, month, day, 0, 0, 0)
                 startTimeFlag = true
+                AAChartAdapt()
             }
         val dialog = DatePickerDialog(
             this,
@@ -331,6 +333,7 @@ class GraphActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 endCalendar.set(year,month,day,23, 59, 59)
                 endTimeFlag = true
+                AAChartAdapt()
             }
         val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
         dialog.show()
@@ -420,6 +423,7 @@ class GraphActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val aaChartView = findViewById<AAChartView>(R.id.aa_chart_view)
         var aaChartModel = AAChartModel()
+        itemNameID = item.itemId
         aaChartView.aa_drawChartWithChartModel(aaChartModel)
         when (item.itemId) {
             R.id.navigation_fcato -> {
@@ -654,6 +658,244 @@ class GraphActivity : AppCompatActivity() {
         }
         aaChartView.aa_refreshChartWithChartModel(aaChartModel)
         return true
+    }
+
+    fun AAChartAdapt(){
+        val aaChartView = findViewById<AAChartView>(R.id.aa_chart_view)
+        var aaChartModel = AAChartModel()
+        aaChartView.aa_drawChartWithChartModel(aaChartModel)
+        when (itemNameID) {
+            R.id.navigation_fcato -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("一级分类支出")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("支出")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByFcatout(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_fcati -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("一级分类收入")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("收入")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByFcatin(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_scati -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("二级分类收入")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("收入")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByScatin(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_scato -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("二级分类支出")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("支出")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByScatout(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_memin -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("成员收入")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("收入")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByMemin(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_memout -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("成员支出")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("支出")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByMemout(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_mercin -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("商家收入")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("收入")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByMerchantin(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_mercout -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("商家支出")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("支出")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByMerchantout(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_accin -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("账户收入")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("收入")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByAccountin(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_accout -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("账户支出")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("支出")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByAccountout(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_itemin -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("项目收入")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("收入")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByItemin(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+            R.id.navigation_itemout -> {
+                aaChartModel = AAChartModel()
+                    .chartType(AAChartType.Pie)
+                    .title("项目支出")
+                    .backgroundColor("#ffffff")
+                    .stacking(AAChartStackingType.Percent)
+                    .dataLabelsEnabled(true)
+                    .series(arrayOf(
+                        AASeriesElement()
+                            .name("支出")
+                            .size("40%")
+                            .innerSize("30%")
+                            .borderWidth(0f)
+                            .data(
+                                getAllSumByItemout(startCalendar, endCalendar)
+                            )
+                    )
+                    )
+            }
+        }
+        aaChartView.aa_refreshChartWithChartModel(aaChartModel)
+
     }
 
 }

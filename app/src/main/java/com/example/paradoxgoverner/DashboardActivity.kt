@@ -22,6 +22,7 @@ class DashboardActivity : AppCompatActivity() {
     companion object {
         var instance: DashboardActivity by Delegates.notNull()
         fun instance() = instance
+        var sourceDashFlag = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,17 +66,22 @@ class DashboardActivity : AppCompatActivity() {
                 }
             }
         }
-        var remainAmount = 0.0
-        for(record in statisticsActivity.recordList2){
-            if(record.income){
-                remainAmount += record.amount
+
+
+        if(statisticsActivity.searchFlag){
+            var remainAmount = 0.0
+            for(record in statisticsActivity.recordList2){
+                if(record.income){
+                    remainAmount += record.amount
+                }
+                else{
+                    remainAmount -= record.amount
+                }
             }
-            else{
-                remainAmount -= record.amount
-            }
+            val remainAmountString :String = String.format("%.2f",(remainAmount))
+            totalAmount += remainAmountString
         }
-        val remainAmountString :String = String.format("%.2f",(remainAmount))
-        totalAmount += remainAmountString
+
         dashAccountText.text = acStr
         dashCategoryText.text = caStr
         dashSubcategoryText.text = subcaStr
@@ -136,6 +142,7 @@ class DashboardActivity : AppCompatActivity() {
                 object : ClickListener {
                     //单击事件  进入Record
                     override fun onClick(view: View?, position: Int) {
+                        sourceDashFlag = true
                         //传递UID，由新Activity去进行查询
                         val intent =
                             Intent(MainActivity.instance, CreateNewItem::class.java).putExtra(

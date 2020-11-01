@@ -292,22 +292,6 @@ class statisticsActivity : AppCompatActivity() {
         })
     }
 
-    fun calendar_to_string(calendar:Calendar):String{
-        val A=calendar.get(Calendar.YEAR).toString()
-        val B=(calendar.get(Calendar.MONTH)+1).toString()
-        val C=calendar.get(Calendar.DAY_OF_MONTH).toString()
-        return "$A-$B-$C"
-    }
-
-    //给定Record，求其Amount之和
-    fun getSumAmount(SelectList: List<Record>):Float{
-        var sumAmount = 0F
-        for (item in SelectList)
-        {
-            sumAmount += item.amount
-        }
-        return sumAmount
-    }
 
     fun getStatistics(
         needIncome:Boolean = true,
@@ -443,6 +427,95 @@ class statisticsActivity : AppCompatActivity() {
                 else{
                     values[types.indexOf("结束时间")] = sdf.format(endDate)
                 }
+                val conditionList = findViewById<RecyclerView>(R.id.ConditionRecycleView)
+                conditionList.adapter = ConditionListAdapter(types.toList(), values.toList())
+            }
+        val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
+        dialog.show()
+
+    }
+
+
+    fun SelectStartTimeYear(view: View) {
+        val cal= Calendar.getInstance()
+        val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
+        val month=cal.get(Calendar.MONTH)   //获取到的月份是从0开始计数
+        val day=cal.get(Calendar.DAY_OF_MONTH)
+        val listener =
+            DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
+                startCalendar.set(year,0,1,0, 0, 0)
+                startTimeFlag =true
+                var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
+                val startDate = Date(startCalendar.timeInMillis)
+                //indexOf()返回-1 when not found
+                if(types.indexOf("开始时间") == -1){
+                    types.add("开始时间")
+                    values.add(sdf.format(startDate))
+                }
+                else{
+                    values[types.indexOf("开始时间")] = sdf.format(startDate)
+                }
+
+                endCalendar.set(year,11,31,23, 59, 59)
+                endTimeFlag = true
+                var endDate = Date(endCalendar.timeInMillis)
+                if(types.indexOf("结束时间") == -1){
+                    types.add("结束时间")
+                    values.add(sdf.format(endDate))
+                }
+                else{
+                    values[types.indexOf("结束时间")] = sdf.format(endDate)
+                }
+
+
+                val conditionList = findViewById<RecyclerView>(R.id.ConditionRecycleView)
+                conditionList.adapter = ConditionListAdapter(types.toList(), values.toList())
+            }
+        val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
+        dialog.show()
+
+    }
+
+
+
+    fun SelectStartTimeMonth(view: View) {
+        val cal= Calendar.getInstance()
+        val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
+        val month=cal.get(Calendar.MONTH)   //获取到的月份是从0开始计数
+        val day=cal.get(Calendar.DAY_OF_MONTH)
+        val listener =
+            DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
+                startCalendar.set(year,month,1,0, 0, 0)
+                startTimeFlag =true
+                var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
+                val startDate = Date(startCalendar.timeInMillis)
+                //indexOf()返回-1 when not found
+                if(types.indexOf("开始时间") == -1){
+                    types.add("开始时间")
+                    values.add(sdf.format(startDate))
+                }
+                else{
+                    values[types.indexOf("开始时间")] = sdf.format(startDate)
+                }
+
+                if(month == 11){
+                    endCalendar.set(year+1,0,1,0, 0, 0)
+                }
+                else{
+                    endCalendar.set(year,month+1,1,0, 0, 0)
+                }
+
+                endTimeFlag = true
+                var endDate = Date(endCalendar.timeInMillis)
+                if(types.indexOf("结束时间") == -1){
+                    types.add("结束时间")
+                    values.add(sdf.format(endDate))
+                }
+                else{
+                    values[types.indexOf("结束时间")] = sdf.format(endDate)
+                }
+
+
                 val conditionList = findViewById<RecyclerView>(R.id.ConditionRecycleView)
                 conditionList.adapter = ConditionListAdapter(types.toList(), values.toList())
             }
