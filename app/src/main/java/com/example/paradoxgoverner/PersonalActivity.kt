@@ -557,4 +557,12 @@ class PersonalActivity : AppCompatActivity() {
 
 
     }
+
+    fun logout(view : View){
+        MainActivity.isAlreadyLogin = false
+        val intent = Intent()
+        intent.setClass(this , MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }

@@ -129,6 +129,28 @@ class DashboardActivity : AppCompatActivity() {
             var myadapter = ForecastListAdapter(statisticsActivity.recordList2)
             DashboardList.adapter = myadapter
             statisticsActivity.searchFlag = false
+
+            var recyclertouchlistener = MainActivity.RecyclerTouchListener(
+                this,
+                DashboardList,
+                object : ClickListener {
+                    //单击事件  进入Record
+                    override fun onClick(view: View?, position: Int) {
+                        //传递UID，由新Activity去进行查询
+                        val intent =
+                            Intent(MainActivity.instance, CreateNewItem::class.java).putExtra(
+                                RECORD_UID, statisticsActivity.recordList2.get(position).uid
+                            )
+                        startActivity(intent)
+                        finish()
+                    }
+
+                    override fun onLongClick(view: View?, position: Int) {
+                    }
+                }
+            )
+            //onClick
+            DashboardList.addOnItemTouchListener(recyclertouchlistener)
         }
 
     }
