@@ -119,6 +119,9 @@ interface UserDAO {
     @Query("SELECT * FROM Template")
     fun getAllTemplate(): List<Template>
 
+    @Query("SELECT * FROM Theme")
+    fun getTheme(): List<Theme>
+
     @Query("SELECT * FROM Hidden")
     fun isInitialized(): List<Hidden>
 
@@ -148,7 +151,10 @@ interface UserDAO {
     fun insertAllAccount(vararg accounts : Account)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllTemplate(vararg accounts : Template)
+    fun insertAllTemplate(vararg templates : Template)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllTheme(vararg themes : Theme)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun initialize(vararg hide: Hidden)

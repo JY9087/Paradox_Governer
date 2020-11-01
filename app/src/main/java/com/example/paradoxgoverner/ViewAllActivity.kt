@@ -23,6 +23,7 @@ class ViewAllActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_view_all)
         val DAO = AppDatabase.instance.userDAO()
         var totalAmount = 0.0

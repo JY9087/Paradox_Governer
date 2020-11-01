@@ -18,7 +18,7 @@
         android:id="@+id/button11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:onClick="SelectEndTime"
         android:text="选择结束时间"
         app:layout_constraintEnd_toEndOf="@+id/button10"
@@ -207,5 +207,27 @@
         android:text="@string/stat_confirm_condition_button"
         app:layout_constraintBottom_toTopOf="@+id/button12"
         app:layout_constraintEnd_toEndOf="@+id/button12" />
+
+    <Button
+        android:id="@+id/YearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="SelectStartTimeYear"
+        android:text="选择年份"
+        app:layout_constraintEnd_toEndOf="@+id/button11"
+        app:layout_constraintStart_toStartOf="@+id/button11"
+        app:layout_constraintTop_toBottomOf="@+id/button11" />
+
+    <Button
+        android:id="@+id/MonthButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="SelectStartTimeMonth"
+        android:text="选择月份"
+        app:layout_constraintEnd_toEndOf="@+id/YearButton"
+        app:layout_constraintStart_toStartOf="@+id/YearButton"
+        app:layout_constraintTop_toBottomOf="@+id/YearButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

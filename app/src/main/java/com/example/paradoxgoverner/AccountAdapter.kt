@@ -27,7 +27,8 @@ class AccountAdapter(var account: List<String>, var amount: List<Double>):
     //绑定数据
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.view.cardview_condition_type.text=account.get(position)
-        holder.view.cardview_condition_string.text=amount.get(position).toString()
+        val amountStr = String.format("%.2f",(amount.get(position)))
+        holder.view.cardview_condition_string.text=" 余额："+amountStr
         //与主题颜色绑定
         var colorful = PersonalActivity.themeColor
         //holder.view.condition_cardview.setCardBackgroundColor( getColor(statisticsActivity.instance,colorful)  )

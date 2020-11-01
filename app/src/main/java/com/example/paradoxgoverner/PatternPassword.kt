@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_pattern_password.*
 class PatternPassword : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_pattern_password)
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()

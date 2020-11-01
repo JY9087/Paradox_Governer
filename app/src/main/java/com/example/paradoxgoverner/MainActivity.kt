@@ -33,6 +33,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Room
+        instance = this
+        val DAO: UserDAO = AppDatabase.instance.userDAO()
+
+        //继承主题
+        if(DAO.getTheme().size != 0){
+            PersonalActivity.themeColor = DAO.getTheme()[0].theme
+        }
+
         setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_main)
 
@@ -42,9 +52,7 @@ class MainActivity : AppCompatActivity() {
             versionFlag = true
         }
 
-        //Room
-        instance = this
-        val DAO: UserDAO = AppDatabase.instance.userDAO()
+
 
         //一次性初始化 , if判断
         if (DAO.isInitialized().size == 0) {

@@ -544,6 +544,7 @@ class PersonalActivity : AppCompatActivity() {
                     THEME_BLUE-> themeColor = R.style.CustomizedAppThemeBlue
                     THEME_GREEN-> themeColor = R.style.CustomizedAppThemeGreen
                 }
+                AppDatabase.instance.userDAO().insertAllTheme(Theme(1, themeColor))
                 if(changeTheme != themeColor){
                     val intent = Intent()
                     intent.setClass(baseContext , PersonalActivity::class.java)
@@ -556,5 +557,13 @@ class PersonalActivity : AppCompatActivity() {
         })
 
 
+    }
+
+    fun logout(view : View){
+        MainActivity.isAlreadyLogin = false
+        val intent = Intent()
+        intent.setClass(this , MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

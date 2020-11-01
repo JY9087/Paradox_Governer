@@ -16,6 +16,7 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_login)
         val passwordEdit = findViewById<EditText>(R.id.password)
         val settings: SharedPreferences = getSharedPreferences("info", 0)

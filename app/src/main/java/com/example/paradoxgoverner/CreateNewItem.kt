@@ -185,8 +185,6 @@ class CreateNewItem : AppCompatActivity() {
 
         var description = findViewById<EditText>(R.id.description).text.toString()
 
-
-
         //三种情况：新建时未赋值  修改时未赋值   已赋值
 
         var amount : Float
@@ -203,35 +201,89 @@ class CreateNewItem : AppCompatActivity() {
             amount = AppDatabase.instance.userDAO().findRecordByUid(uid).amount
         }
 
-        AppDatabase.instance.userDAO().insertAll(
-            Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
-                stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
-                stringArray[ACCOUNT_INDEX],amount,stringArray[TYPE_INDEX],income,
-                stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
-        )
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        if(amount > 10000000000){
+            Toast.makeText(this,"金额过大，超过10,000,000,000，请重新输入",Toast.LENGTH_SHORT).show()
+        }
+        else{
+
+            if(DashboardActivity.sourceDashFlag){
+                statisticsActivity.recordList2.remove(AppDatabase.instance.userDAO().findRecordByUid(uid))
+                statisticsActivity.recordList2.add(
+                    Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
+                        stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                        stringArray[ACCOUNT_INDEX],amount,stringArray[TYPE_INDEX],income,
+                        stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
+                )
+            }
+
+            AppDatabase.instance.userDAO().insertAll(
+                Record(uid,description, Date(mcalendar.timeInMillis),Time(mcalendar.timeInMillis),
+                    stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
+                    stringArray[ACCOUNT_INDEX],amount,stringArray[TYPE_INDEX],income,
+                    stringArray[MERCHANT_INDEX],stringArray[ITEM_INDEX])
+            )
+
+            if(DashboardActivity.sourceDashFlag){
+                DashboardActivity.sourceDashFlag = false
+                statisticsActivity.searchFlag = true
+                val intent = Intent(this, DashboardActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+            else{
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 
     
     fun DeleteRecord(view : View){
         if(uid != 0)
         {
+
+            if(DashboardActivity.sourceDashFlag){
+                statisticsActivity.recordList2.remove(AppDatabase.instance.userDAO().findRecordByUid(uid))
+            }
+
             AppDatabase.instance.userDAO().delete(
                 AppDatabase.instance.userDAO().findRecordByUid(uid)
             )
         }
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+
+        if(DashboardActivity.sourceDashFlag){
+            DashboardActivity.sourceDashFlag = false
+            statisticsActivity.searchFlag = true
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     
     fun CancelChange(view: View) {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+
+        if(DashboardActivity.sourceDashFlag){
+            DashboardActivity.sourceDashFlag = false
+            statisticsActivity.searchFlag = true
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
     }
 
     //新建  似乎只能写5个函数
