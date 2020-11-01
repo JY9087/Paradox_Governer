@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_reset_pwd.*
 class resetPwd : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_reset_pwd)
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
