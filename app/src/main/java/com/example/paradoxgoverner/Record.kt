@@ -112,4 +112,11 @@ data class Template(
     @ColumnInfo var item : String
 )
 
+@Entity
+data class Theme (
+    @PrimaryKey(autoGenerate = true) val uid : Int,
+    @ColumnInfo var theme: Int
+)
+
+
 //account表待实现

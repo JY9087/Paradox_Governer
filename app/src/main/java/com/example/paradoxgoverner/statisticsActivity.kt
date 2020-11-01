@@ -54,6 +54,7 @@ class statisticsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.statistics)
         //-------------------------------------------------------------------------------------------<<<  UI
         //获取所有项

@@ -41,7 +41,7 @@
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:onClick="CreateNewItem"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/forecast"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_24px" />
