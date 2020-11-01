@@ -95,10 +95,10 @@ class statisticsActivity : AppCompatActivity() {
         //RecycleView
         val conditionList = findViewById<RecyclerView>(R.id.ConditionRecycleView)
         conditionList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ConditionListAdapter(types.toList(),values.toList())
+        val myadapter = ConditionListAdapter(types.toList(),values.toList())
         conditionList.adapter = myadapter
 
-        var recyclertouchlistener = MainActivity.RecyclerTouchListener(
+        val recyclertouchlistener = MainActivity.RecyclerTouchListener(
             this,
             conditionList,
             object : ClickListener {
@@ -166,7 +166,7 @@ class statisticsActivity : AppCompatActivity() {
 
         //选了一级没选二级
         if(searchSubCategory.size == 0 && searchCategory.size != 0){
-            var subStrList = mutableListOf<String>()
+            val subStrList = mutableListOf<String>()
             var ninFlag = true
             for(category in searchCategory){
                 //选了一级分类没选二级分类就选择全部一级分类
@@ -215,9 +215,15 @@ class statisticsActivity : AppCompatActivity() {
             val day=cal.get(Calendar.DAY_OF_MONTH)
             endCalendar.set(year+100,month,day,0,0,0)
         }
-        getStatistics(false,searchAccount.toList(),searchMember.toList(),searchCategory.toList(),
-            searchSubCategory.toList(),searchItem.toList(),searchMerchant.toList(),
-            searchType.toList(),startCalendar,endCalendar)
+        getStatistics(
+            searchAccount.toList(),
+            searchMember.toList(),
+            searchCategory.toList(),
+            searchSubCategory.toList(),
+            searchItem.toList(),
+            searchMerchant.toList(),
+            searchType.toList()
+        )
         val intent = Intent(this, DashboardActivity::class.java)
         if (MainActivity.versionFlag) {
             overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
@@ -229,8 +235,8 @@ class statisticsActivity : AppCompatActivity() {
     //现在的问题是在init时会点击
     //无法点击已选项
     fun initStatisticSpinner(itemList: List<String>, ID: Int, Index: Int) {
-        var selectedSpinner = findViewById<Spinner>(ID)
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinner = findViewById<Spinner>(ID)
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item, itemList)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
@@ -294,16 +300,13 @@ class statisticsActivity : AppCompatActivity() {
 
 
     fun getStatistics(
-        needIncome:Boolean = true,
         needAccount: List<String> = accountStringList.toList(),
-        needMember:List<String> = memberStringList.toList(),
+        needMember: List<String> = memberStringList.toList(),
         needCategory: List<String> = categoryStringList.toList(),
         needSubcategory: List<String> = this.subcategoryStringList.toList(),
         needItem: List<String> = itemStringList.toList(),
         needMerchant: List<String> = merchantStringList.toList(),
-        needType : List<String> = DEFAULT_TYPE_LIST,
-        start:Calendar = startCalendar,
-        end:Calendar = endCalendar
+        needType: List<String> = DEFAULT_TYPE_LIST
     ):List<Record>{
         recordList2.clear()
         val recordList1 = AppDatabase.instance.userDAO().selectDAO(needMember,needCategory,needSubcategory,needAccount,needType,needMerchant,needItem,true)
@@ -323,119 +326,6 @@ class statisticsActivity : AppCompatActivity() {
     }
 
 
-    //巧妙的设计
-    fun getYearStatistics(
-        needIncome:Boolean = true,
-        needAccount: List<String> = accountStringList.toList(),
-        needMember:List<String> = memberStringList.toList(),
-        needCategory: List<String> = categoryStringList.toList(),
-        needSubcategory: List<String> = this.subcategoryStringList.toList(),
-        needItem: List<String> = itemStringList.toList(),
-        needMerchant: List<String> = merchantStringList.toList(),
-        needType : List<String> = DEFAULT_TYPE_LIST,
-        needCalendar:Calendar = Calendar.getInstance()
-    ):List<Record>{
-        val year = needCalendar.get(Calendar.YEAR)
-        val calendar1:Calendar = Calendar.getInstance()
-        val calendar2:Calendar = Calendar.getInstance()
-        calendar1.set(year,0,1)
-        calendar2.set(year,11,31)
-        return getStatistics(needIncome, needAccount, needMember, needCategory, needSubcategory, needItem, needMerchant,needType,calendar1,calendar2)
-    }
-
-    fun getMonthStatistics(
-        needIncome:Boolean = true,
-        needAccount: List<String> = accountStringList.toList(),
-        needMember:List<String> = memberStringList.toList(),
-        needCategory: List<String> = categoryStringList.toList(),
-        needSubcategory: List<String> = this.subcategoryStringList.toList(),
-        needItem: List<String> = itemStringList.toList(),
-        needMerchant: List<String> = merchantStringList.toList(),
-        needType : List<String> = DEFAULT_TYPE_LIST,
-        needCalendar:Calendar = Calendar.getInstance()
-    ):List<Record>{
-        val year = needCalendar.get(Calendar.YEAR)
-        val month = needCalendar.get(Calendar.MONTH)
-        val calendar1:Calendar = Calendar.getInstance()
-        val calendar2:Calendar = Calendar.getInstance()
-        calendar1.set(year,month,1)
-        calendar2.set(year,month+1,0)
-        return getStatistics(needIncome, needAccount, needMember, needCategory, needSubcategory, needItem, needMerchant,needType,calendar1,calendar2)
-    }
-
-    fun getDayStatistics(
-        needIncome:Boolean = true,
-        needAccount: List<String> = accountStringList.toList(),
-        needMember:List<String> = memberStringList.toList(),
-        needCategory: List<String> = categoryStringList.toList(),
-        needSubcategory: List<String> = this.subcategoryStringList.toList(),
-        needItem: List<String> = itemStringList.toList(),
-        needMerchant: List<String> = merchantStringList.toList(),
-        needType : List<String> = DEFAULT_TYPE_LIST,
-        needCalendar:Calendar = Calendar.getInstance()
-    ):List<Record>{
-        return getStatistics(needIncome, needAccount, needMember, needCategory, needSubcategory, needItem, needMerchant, needType,needCalendar,needCalendar)
-    }
-
-
-    //通过日历得到的两个Calendar,按按钮后精确到日
-
-    fun SelectStartTime(view: View) {
-        val cal= Calendar.getInstance()
-        val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
-        val month=cal.get(Calendar.MONTH)   //获取到的月份是从0开始计数
-        val day=cal.get(Calendar.DAY_OF_MONTH)
-        val listener =
-            DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
-                startCalendar.set(year,month,day,0, 0, 0)
-                startTimeFlag =true
-                var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
-                val startDate = Date(startCalendar.timeInMillis)
-                //indexOf()返回-1 when not found
-                if(types.indexOf("开始时间") == -1){
-                    types.add("开始时间")
-                    values.add(sdf.format(startDate))
-                }
-                else{
-                    values[types.indexOf("开始时间")] = sdf.format(startDate)
-                }
-
-                val conditionList = findViewById<RecyclerView>(R.id.ConditionRecycleView)
-                conditionList.adapter = ConditionListAdapter(types.toList(), values.toList())
-            }
-        val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
-        dialog.show()
-
-    }
-    fun SelectEndTime(view: View) {
-
-        val cal= Calendar.getInstance()
-        val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
-        val month=cal.get(Calendar.MONTH)   //获取到的月份是从0开始计数
-        val day=cal.get(Calendar.DAY_OF_MONTH)
-        val listener =
-            DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
-                //将选择的日期显示到TextView中,因为之前获取month直接使用，所以不需要+1，这个地方需要显示，所以+1
-                endCalendar.set(year,month,day,23, 59, 59)
-                endTimeFlag = true
-                var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
-                var endDate = Date(endCalendar.timeInMillis)
-                if(types.indexOf("结束时间") == -1){
-                    types.add("结束时间")
-                    values.add(sdf.format(endDate))
-                }
-                else{
-                    values[types.indexOf("结束时间")] = sdf.format(endDate)
-                }
-                val conditionList = findViewById<RecyclerView>(R.id.ConditionRecycleView)
-                conditionList.adapter = ConditionListAdapter(types.toList(), values.toList())
-            }
-        val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
-        dialog.show()
-
-    }
-
-
     fun SelectStartTimeYear(view: View) {
         val cal= Calendar.getInstance()
         val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
@@ -445,7 +335,7 @@ class statisticsActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 startCalendar.set(year,0,1,0, 0, 0)
                 startTimeFlag =true
-                var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
+                val sdf: Format = SimpleDateFormat("yyyy-MM-dd")
                 val startDate = Date(startCalendar.timeInMillis)
                 //indexOf()返回-1 when not found
                 if(types.indexOf("开始时间") == -1){
@@ -458,7 +348,7 @@ class statisticsActivity : AppCompatActivity() {
 
                 endCalendar.set(year,11,31,23, 59, 59)
                 endTimeFlag = true
-                var endDate = Date(endCalendar.timeInMillis)
+                val endDate = Date(endCalendar.timeInMillis)
                 if(types.indexOf("结束时间") == -1){
                     types.add("结束时间")
                     values.add(sdf.format(endDate))
@@ -487,7 +377,7 @@ class statisticsActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 startCalendar.set(year,month,1,0, 0, 0)
                 startTimeFlag =true
-                var sdf: Format = SimpleDateFormat("yyyy-MM-dd")
+                val sdf: Format = SimpleDateFormat("yyyy-MM-dd")
                 val startDate = Date(startCalendar.timeInMillis)
                 //indexOf()返回-1 when not found
                 if(types.indexOf("开始时间") == -1){
@@ -506,7 +396,7 @@ class statisticsActivity : AppCompatActivity() {
                 }
 
                 endTimeFlag = true
-                var endDate = Date(endCalendar.timeInMillis)
+                val endDate = Date(endCalendar.timeInMillis)
                 if(types.indexOf("结束时间") == -1){
                     types.add("结束时间")
                     values.add(sdf.format(endDate))

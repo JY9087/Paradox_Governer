@@ -16,17 +16,17 @@ class resetPwd : AppCompatActivity() {
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
         Toast.makeText(this,"请输入以前的密码",Toast.LENGTH_SHORT).show()
-        var passwordEdit = findViewById<EditText>(R.id.password)
+        val passwordEdit = findViewById<EditText>(R.id.password)
         //0:输入以前密码
         //1：第一次输入密码
         //2：第二次输入密码
         var step = 0
         var new_pwd1 = ""
         var new_pwd2 = ""
-        passwordEdit.setHint("请输入原密码")
+        passwordEdit.hint = "请输入原密码"
         reset.setOnClickListener {
             if(step == 0){
-                passwordEdit.setHint("请输入新密码")
+                passwordEdit.hint = "请输入新密码"
                 val pwd1 = passwordEdit.text.toString()
                 if(isPwdLegal(pwd1)){
                     val save_password = settings.getString("save_password","").toString()
@@ -42,7 +42,7 @@ class resetPwd : AppCompatActivity() {
                     Toast.makeText(this,"密码长度需大于4",Toast.LENGTH_SHORT).show()
                 }
             }else if(step == 1){
-                passwordEdit.setHint("请确认新密码")
+                passwordEdit.hint = "请确认新密码"
                 new_pwd1 = passwordEdit.text.toString()
                 if(isPwdLegal(new_pwd1)){
                     Toast.makeText(this,"请重复密码",Toast.LENGTH_SHORT).show()

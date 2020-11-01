@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_view_all.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     var accountName = ALL_ACCOUNT
-    var income = true
     var accountStringList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val DAO: UserDAO = AppDatabase.instance.userDAO()
 
         //继承主题
-        if(DAO.getTheme().size != 0){
+        if(DAO.getTheme().isNotEmpty()){
             PersonalActivity.themeColor = DAO.getTheme()[0].theme
         }
 
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //一次性初始化 , if判断
-        if (DAO.isInitialized().size == 0) {
+        if (DAO.isInitialized().isEmpty()) {
             DAO.initialize(Hidden(0))
             for (init_member in DEFAULT_MEMBER_LIST) {
                 DAO.insertAllMember(Member(0, init_member))
@@ -67,8 +65,8 @@ class MainActivity : AppCompatActivity() {
 
             //until不包含最后一个元素
             for (index in 0 until DEFAULT_CATEGORY_LIST.size) {
-                for (item in DEFAULT_SUBCATEGORY_LIST.get(index)) {
-                    DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST.get(index), item))
+                for (item in DEFAULT_SUBCATEGORY_LIST[index]) {
+                    DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST[index], item))
                 }
             }
 
@@ -98,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         //使用OnCreate的局部变量？有待商榷。看看是否需要修改
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
-        var isAlreadyRegister:Boolean = settings.getBoolean("isAlreadyRegister",false)
+        val isAlreadyRegister:Boolean = settings.getBoolean("isAlreadyRegister",false)
         //已经注册过，进入登录界面
 
         //尚未注册
@@ -121,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {}
@@ -158,10 +156,10 @@ class MainActivity : AppCompatActivity() {
         //RecycleView
         val forecastList = findViewById<RecyclerView>(R.id.forecast)
         forecastList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ForecastListAdapter(DAO.getAllRecord())
+        val myadapter = ForecastListAdapter(DAO.getAllRecord())
         forecastList.adapter = myadapter
 
-        var recyclertouchlistener = RecyclerTouchListener(
+        val recyclertouchlistener = RecyclerTouchListener(
             this,
             forecastList,
             object : ClickListener {
@@ -300,10 +298,10 @@ class MainActivity : AppCompatActivity() {
                 accountStringList.add(accounts.account)
             }
         }
-        var AccountNameText = findViewById<TextView>(R.id.AccountNameText)
+        val AccountNameText = findViewById<TextView>(R.id.AccountNameText)
         AccountNameText.text = "全部账户"
 
-        var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
+        val AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
 
         var remainAmount = 0.0F
         var records = DAO.getAllRecord()
@@ -321,16 +319,16 @@ class MainActivity : AppCompatActivity() {
 
 
         val remainAmountString :String = String.format("%.2f",(remainAmount))
-        AccountInfo.text = "余额："+ remainAmountString
+        AccountInfo.text = ("余额：$remainAmountString")
 
 
-        var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+        selectedSpinner.adapter = selectedSpinnerAdapter
 
-        selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        selectedSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -340,14 +338,13 @@ class MainActivity : AppCompatActivity() {
                 accountName = adapterView.getItemAtPosition(i) as String
                 val forecastList = findViewById<RecyclerView>(R.id.forecast)
                 if(accountName == ALL_ACCOUNT) {
-                    var myadapter = ForecastListAdapter(DAO.getAllRecord())
+                    val myadapter = ForecastListAdapter(DAO.getAllRecord())
                     forecastList.adapter = myadapter
                     AccountNameText.text = "全部账户"
-                }
-                else{
-                    var myadapter = ForecastListAdapter(DAO.findRecordByAccount(accountName))
+                } else{
+                    val myadapter = ForecastListAdapter(DAO.findRecordByAccount(accountName))
                     forecastList.adapter = myadapter
-                    AccountNameText.text = "当前账户：" + accountName
+                    AccountNameText.text = ("当前账户："+accountName)
                 }
 
 
@@ -359,8 +356,7 @@ class MainActivity : AppCompatActivity() {
                 for(record in records){
                     if(record.income){
                         remainAmount += record.amount
-                    }
-                    else{
+                    } else{
                         remainAmount -= record.amount
                     }
                 }
@@ -372,11 +368,11 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     fun NewAccount(view : View) {
-        var itemText = EditText(this)
+        val itemText = EditText(this)
         android.app.AlertDialog.Builder(this)
             .setTitle("请输入账户")
             .setIcon(android.R.drawable.ic_dialog_info)

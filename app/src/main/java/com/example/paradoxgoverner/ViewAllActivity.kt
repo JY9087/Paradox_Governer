@@ -38,8 +38,8 @@ class ViewAllActivity : AppCompatActivity() {
         val remainAmountString :String = String.format("%.2f",(totalAmount))
         viewAllAccountSum.setText("总余额"+remainAmountString)
 
-        var accountList = mutableListOf<String>()
-        var amountList = mutableListOf<Double>()
+        val accountList = mutableListOf<String>()
+        val amountList = mutableListOf<Double>()
         var amount = 0.0
         for(ac in DAO.getAllAccount()){
             if(ac.account != VOID_ITEM){
@@ -59,10 +59,10 @@ class ViewAllActivity : AppCompatActivity() {
 
         val viewAllList = findViewById<RecyclerView>(R.id.viewAllRecyclerView)
         viewAllList.layoutManager = LinearLayoutManager(this)
-        var myadapter = AccountAdapter(accountList,amountList)
+        val myadapter = AccountAdapter(accountList,amountList)
         viewAllList.adapter = myadapter
 
-        var recyclertouchlistener = MainActivity.RecyclerTouchListener(
+        val recyclertouchlistener = MainActivity.RecyclerTouchListener(
             this,
             viewAllList,
             object : ClickListener {
