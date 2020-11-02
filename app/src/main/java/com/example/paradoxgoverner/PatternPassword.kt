@@ -63,7 +63,7 @@ class PatternPassword : AppCompatActivity() {
                             val intent = Intent()
                             //在修改密码后跳转至Personal，在登录后跳转至Main
                             if(MainActivity.isAlreadyLogin){
-                            intent.setClass(this@PatternPassword, PersonalActivity::class.java)
+                                intent.setClass(this@PatternPassword, PersonalActivity::class.java)
                             }
                             else{
                                 intent.setClass(this@PatternPassword, MainActivity::class.java)
