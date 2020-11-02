@@ -32,7 +32,7 @@ class Register : AppCompatActivity() {
         if(password==password2){
             val settings: SharedPreferences = getSharedPreferences("info", 0)
             val editor = settings.edit()
-            var isAlreadyRegister = true
+            val isAlreadyRegister = true
             editor.putBoolean("isAlreadyRegister", isAlreadyRegister)
             editor.putString("save_password",password)
             editor.commit()

@@ -1,20 +1,13 @@
 package com.example.paradoxgoverner
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.statistics.*
-import java.util.*
 import kotlin.properties.Delegates
 
 class DashboardActivity : AppCompatActivity() {
@@ -50,7 +43,7 @@ class DashboardActivity : AppCompatActivity() {
         var totalAmount = "总金额："
 
         //下标从0开始
-        var valuesSize = statisticsActivity.types.size-1
+        val valuesSize = statisticsActivity.types.size-1
         if(valuesSize>=0){
             for(index in 0..valuesSize){
                 when(statisticsActivity.types[index]){
@@ -94,7 +87,7 @@ class DashboardActivity : AppCompatActivity() {
         dashTotalAmountText.text = totalAmount
 
 
-        var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -132,11 +125,11 @@ class DashboardActivity : AppCompatActivity() {
         if(statisticsActivity.searchFlag){
             val DashboardList = findViewById<RecyclerView>(R.id.dashboard_recyeleview)
             DashboardList.layoutManager = LinearLayoutManager(this)
-            var myadapter = ForecastListAdapter(statisticsActivity.recordList2)
+            val myadapter = ForecastListAdapter(statisticsActivity.recordList2)
             DashboardList.adapter = myadapter
             statisticsActivity.searchFlag = false
 
-            var recyclertouchlistener = MainActivity.RecyclerTouchListener(
+            val recyclertouchlistener = MainActivity.RecyclerTouchListener(
                 this,
                 DashboardList,
                 object : ClickListener {

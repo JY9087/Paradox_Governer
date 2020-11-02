@@ -8,14 +8,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_graph.*
-import java.text.Format
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 class GraphActivity : AppCompatActivity() {
@@ -299,7 +294,7 @@ class GraphActivity : AppCompatActivity() {
         return Scatin.toTypedArray()
     }
 
-    fun SelectStartTime(view: View) {
+    fun selectStartTime(view: View) {
 
         val cal = Calendar.getInstance()
         val year = cal.get(Calendar.YEAR)      //获取年月日时分秒
@@ -309,7 +304,7 @@ class GraphActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 startCalendar.set(year, month, day, 0, 0, 0)
                 startTimeFlag = true
-                AAChartAdapt()
+                aaChartAdapt()
             }
         val dialog = DatePickerDialog(
             this,
@@ -323,7 +318,7 @@ class GraphActivity : AppCompatActivity() {
 
     }
 
-    fun SelectEndTime(view: View) {
+    fun selectEndTime(view: View) {
 
         val cal= Calendar.getInstance()
         val year=cal.get(Calendar.YEAR)      //获取年月日时分秒
@@ -333,7 +328,7 @@ class GraphActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { arg0, year, month, day ->
                 endCalendar.set(year,month,day,23, 59, 59)
                 endTimeFlag = true
-                AAChartAdapt()
+                aaChartAdapt()
             }
         val dialog = DatePickerDialog(this, 0, listener, year, month, day) //后边三个参数为显示dialog时默认的日期，月份从0开始，0-11对应1-12个月
         dialog.show()
@@ -394,7 +389,7 @@ class GraphActivity : AppCompatActivity() {
         bottomNavigatior.selectedItemId = R.id.navigation_graph
 
         val aaChartView = findViewById<AAChartView>(R.id.aa_chart_view)
-        var aaChartModel = AAChartModel()
+        val aaChartModel = AAChartModel()
             .chartType(AAChartType.Pie)
             .title("一级分类支出")
             .backgroundColor("#ffffff")
@@ -660,7 +655,7 @@ class GraphActivity : AppCompatActivity() {
         return true
     }
 
-    fun AAChartAdapt(){
+    private fun aaChartAdapt(){
         val aaChartView = findViewById<AAChartView>(R.id.aa_chart_view)
         var aaChartModel = AAChartModel()
         aaChartView.aa_drawChartWithChartModel(aaChartModel)

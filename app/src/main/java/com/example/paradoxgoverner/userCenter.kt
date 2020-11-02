@@ -20,7 +20,7 @@ class userCenter : AppCompatActivity() {
     fun onClick1(){
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
-        var isSetPassword:Boolean = false
+        val isSetPassword:Boolean = false
         editor.putBoolean("isSetPassword",isSetPassword)
         editor.putInt("PatternStep",0)
         editor.commit()

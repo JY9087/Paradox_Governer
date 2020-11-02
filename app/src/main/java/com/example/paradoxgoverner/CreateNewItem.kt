@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Delete
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
 import java.sql.Date
 import java.sql.Time
@@ -22,8 +21,6 @@ import java.util.*
 class CreateNewItem : AppCompatActivity() {
 
     var categorystring = DEFAULT_CATEGORY_LIST.get(0)
-    lateinit var subcategorystring : String
-    var typestring = DEFAULT_TYPE_LIST[0]
     lateinit var subtypestring : String
     var account = "Account"
     var income = true
@@ -63,7 +60,7 @@ class CreateNewItem : AppCompatActivity() {
         else{
             mcalendar.timeInMillis = rec.time.time }
         //Todo : 使用PlaceHolder
-        time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
+        time_text.text = ("时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString())
 
 
         //Member
@@ -84,7 +81,7 @@ class CreateNewItem : AppCompatActivity() {
             }
         }
         categoryStringList.add(VOID_ITEM)
-        InitCategotySpinner(categoryStringList.toList())
+        initCategotySpinner(categoryStringList.toList())
         if(uid != 0){
             category_spinner?.setSelection(categoryStringList.indexOf(rec.category))
         }
@@ -100,11 +97,11 @@ class CreateNewItem : AppCompatActivity() {
             }
         }
         subcategoryStringList.add(VOID_ITEM)
-        SubcategorySpinnerAdapt(categorystring)
+        subcategorySpinnerAdapt(categorystring)
 
 
         //Type
-        InitTypeSpinner(DEFAULT_TYPE_LIST)
+        initTypeSpinner(DEFAULT_TYPE_LIST)
 
         //Merchant
         merchantStringList.add(VOID_ITEM)
@@ -181,7 +178,7 @@ class CreateNewItem : AppCompatActivity() {
 
 
     
-    fun CreateNewRecord(view: View) {
+    fun createNewRecord(view: View) {
 
         var description = findViewById<EditText>(R.id.description).text.toString()
 
@@ -239,7 +236,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     
-    fun DeleteRecord(view : View){
+    fun deleteRecord(view : View){
         if(uid != 0)
         {
 
@@ -268,7 +265,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     
-    fun CancelChange(view: View) {
+    fun cancelChange(view: View) {
 
         if(DashboardActivity.sourceDashFlag){
             DashboardActivity.sourceDashFlag = false
@@ -289,7 +286,7 @@ class CreateNewItem : AppCompatActivity() {
     //新建  似乎只能写5个函数
     
     fun NewMember(view : View) {
-        var memberText = EditText(this)
+        val memberText = EditText(this)
         AlertDialog.Builder(this)
             .setTitle("请输入成员")
             .setIcon(android.R.drawable.ic_dialog_info)
@@ -297,7 +294,7 @@ class CreateNewItem : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
                 if(memberText.text.toString() != ""){
                     AppDatabase.instance.userDAO().insertAllMember(Member(0,memberText.text.toString()))
-                    MemberAdapt()
+                    memberAdapt()
                     member_spinner?.setSelection(memberStringList.indexOf(memberText.text.toString()))
                 }
             })
@@ -306,7 +303,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun NewCategory(view : View) {
-        var categoryText = EditText(this)
+        val categoryText = EditText(this)
         AlertDialog.Builder(this)
             .setTitle("请输入一级分类")
             .setIcon(android.R.drawable.ic_dialog_info)
@@ -316,7 +313,7 @@ class CreateNewItem : AppCompatActivity() {
                     AppDatabase.instance.userDAO().insertAllCategory(Category(0,categoryText.text.toString()))
                     AppDatabase.instance.userDAO().insertAllSubcategory(Subcategory(0,categoryText.text.toString(),
                         VOID_ITEM))
-                    CategoryAdapt()
+                    categoryAdapt()
                     category_spinner?.setSelection(categoryStringList.indexOf(categoryText.text.toString()))
                 }
             })
@@ -325,7 +322,7 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun NewSubcategory(view : View) {
-        var subcategoryText = EditText(this)
+        val subcategoryText = EditText(this)
         AlertDialog.Builder(this)
             .setTitle("请输入二级分类")
             .setIcon(android.R.drawable.ic_dialog_info)
@@ -335,10 +332,10 @@ class CreateNewItem : AppCompatActivity() {
                     AppDatabase.instance.userDAO().insertAllSubcategory(Subcategory(0,categorystring,subcategoryText.text.toString()))
                     SubcategoryAdapt(categorystring)
                     val DAO = AppDatabase.instance.userDAO()
-                    var subcategoryList = DAO.getAllSubcategory(categorystring)
-                    var subcategoryStringList = mutableListOf<String>()
-                    for (subcategorys in subcategoryList) {
-                        subcategoryStringList.add(subcategorys.subcategory)
+                    val subcategoryList = DAO.getAllSubcategory(categorystring)
+                    val subcategoryStringList = mutableListOf<String>()
+                    for (subcategory in subcategoryList) {
+                        subcategoryStringList.add(subcategory.subcategory)
                     }
                     subcategory_spinner?.setSelection(subcategoryStringList.indexOf(subcategoryText.text.toString()))
                 }
@@ -356,7 +353,7 @@ class CreateNewItem : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
                 if(merchantText.text.toString() != ""){
                     AppDatabase.instance.userDAO().insertAllMerchant(Merchant(0,merchantText.text.toString()))
-                    MerchantAdapt()
+                    merchantAdapt()
                     merchant_spinner?.setSelection(merchantStringList.indexOf(merchantText.text.toString()))
                 }
             })
@@ -373,7 +370,7 @@ class CreateNewItem : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
                 if(itemText.text.toString() != ""){
                     AppDatabase.instance.userDAO().insertAllItem(Item(0,itemText.text.toString()))
-                    ItemAdapt()
+                    itemAdapt()
                     item_spinner?.setSelection(itemStringList.indexOf(itemText.text.toString()))
                 }
             })
@@ -390,7 +387,7 @@ class CreateNewItem : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{dialogInterface, i ->
                 if(itemText.text.toString() != ""){
                     AppDatabase.instance.userDAO().insertAllAccount(Account(0,itemText.text.toString()))
-                    AccountAdapt()
+                    accountAdapt()
                     account_spinner?.setSelection(accountStringList.indexOf(itemText.text.toString()))
                 }
             })
@@ -414,7 +411,7 @@ class CreateNewItem : AppCompatActivity() {
                 mhourofday = hourofday
                 mminute = minute
                 mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-                time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
+                time_text.text = ("时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString())
             }, mhourofday, mminute, true)
             .show()
 
@@ -424,25 +421,25 @@ class CreateNewItem : AppCompatActivity() {
                 mmonth = month
                 mday = day
                 mcalendar.set(myear,mmonth,mday,mhourofday,mminute)
-                time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
+                time_text.text = ("时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString())
             }, myear,mmonth,mday)
             .show()
 
-        time_text.text = "时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString()
+        time_text.text = ("时间：" + Date(mcalendar.timeInMillis).toString() + " " + Time(mcalendar.timeInMillis).toString())
     }
 
 
     //初始化通用Spinner(Member,Merchant,Item)
     
     fun InitSpinner(itemlist : List<String> , ID : Int , Index : Int) {
-        var selectedSpinner = findViewById<Spinner>(ID)
+        val selectedSpinner = findViewById<Spinner>(ID)
 
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+        selectedSpinner.adapter = selectedSpinnerAdapter
 
-        selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        selectedSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -452,28 +449,29 @@ class CreateNewItem : AppCompatActivity() {
                 //用于新建/修改Record
                 stringArray[Index] = adapterView.getItemAtPosition(i) as String
             }
+
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
             }
-        })
+        }
 
 
     }
 
     //初始化一级目录Spinner，同时调用二级目录Spinner初始化
 
-    fun InitCategotySpinner(itemlist : List<String>) {
-        var selectedSpinner = findViewById<Spinner>(R.id.category_spinner)
+    fun initCategotySpinner(itemList : List<String>) {
+        val selectedSpinner = findViewById<Spinner>(R.id.category_spinner)
 
         if(uid != 0){
             categorystring = rec.category
         }
 
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemList)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+        selectedSpinner.adapter = selectedSpinnerAdapter
 
-        selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        selectedSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -492,24 +490,24 @@ class CreateNewItem : AppCompatActivity() {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
-    fun SubcategorySpinnerAdapt(category : String) {
+    fun subcategorySpinnerAdapt(category : String) {
         val DAO = AppDatabase.instance.userDAO()
-        var subcategoryList = DAO.getAllSubcategory(category)
-        var subcategoryStringList = mutableListOf<String>()
-        for (subcategorys in subcategoryList) {
-            subcategoryStringList.add(subcategorys.subcategory)
+        val subcategoryList = DAO.getAllSubcategory(category)
+        val subcategoryStringList = mutableListOf<String>()
+        for (subcategory in subcategoryList) {
+            subcategoryStringList.add(subcategory.subcategory)
         }
-        var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
+        val subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
 
-        val subcategoryadapter: ArrayAdapter<*> =
+        val subcategoryAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
-        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        subcategoryspinner.setAdapter(subcategoryadapter)
+        subcategoryAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        subcategoryspinner.adapter = subcategoryAdapter
 
-        subcategoryspinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        subcategoryspinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -523,20 +521,20 @@ class CreateNewItem : AppCompatActivity() {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     //初始化类型Spinner
     
-    fun InitTypeSpinner(itemlist : List<String>) {
-        var selectedSpinner = findViewById<Spinner>(R.id.type_spinner)
+    fun initTypeSpinner(itemList : List<String>) {
+        val selectedSpinner = findViewById<Spinner>(R.id.type_spinner)
 
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemList)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+        selectedSpinner.adapter = selectedSpinnerAdapter
 
-        selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        selectedSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -545,48 +543,46 @@ class CreateNewItem : AppCompatActivity() {
             ) {
                 // Get the spinner selected item text
                 stringArray[TYPE_INDEX] = adapterView.getItemAtPosition(i) as String
-                SubtypeSpinnerAdapt(stringArray[TYPE_INDEX])
+                subtypeSpinnerAdapt(stringArray[TYPE_INDEX])
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
 
     //初始化二级分类
     
-    fun SubtypeSpinnerAdapt(type : String) {
+    fun subtypeSpinnerAdapt(type : String) {
         when(type){
             "收入"->subtypeStringList = listOf<String>("收入")
             "支出"->subtypeStringList = listOf<String>("支出")
             //使用离谱的方法，终于解决Subtype了
             "借贷"->{
-                if(uid != 0 && rec.income == false && rec.type != "支出"){
-                    subtypeStringList = listOf<String>("支出","收入")
-                }
-                else{
-                    subtypeStringList = listOf<String>("收入","支出")
+                subtypeStringList = if(uid != 0 && !rec.income && rec.type != "支出"){
+                    listOf<String>("支出","收入")
+                } else{
+                    listOf<String>("收入","支出")
                 }
             }
             "转账"->{
-                if(uid != 0 && rec.income == false && rec.type != "支出"){
-                    subtypeStringList = listOf<String>("支出","收入")
-                }
-                else{
-                    subtypeStringList = listOf<String>("收入","支出")
+                subtypeStringList = if(uid != 0 && !rec.income && rec.type != "支出"){
+                    listOf<String>("支出","收入")
+                } else{
+                    listOf<String>("收入","支出")
                 }
             }
         }
-        var subtypespinner = findViewById<Spinner>(R.id.sub_type_spinner)
+        val subTypeSpinner = findViewById<Spinner>(R.id.sub_type_spinner)
 
-        val subtypeadapter: ArrayAdapter<*> =
+        val subTypeAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subtypeStringList)
-        subtypeadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        subtypespinner.setAdapter(subtypeadapter)
+        subTypeAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        subTypeSpinner.adapter = subTypeAdapter
 
-        subtypespinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        subTypeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -604,12 +600,12 @@ class CreateNewItem : AppCompatActivity() {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     //成员Spinner Adapt
     
-    fun MemberAdapt() {
+    fun memberAdapt() {
         memberStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
         for (members in DAO.getAllMember()) {
@@ -618,49 +614,49 @@ class CreateNewItem : AppCompatActivity() {
             }
         }
         memberStringList.add(VOID_ITEM)
-        var memberspinner = findViewById<Spinner>(R.id.member_spinner)
-        val memberadapter: ArrayAdapter<*> =
+        val memberSpinner = findViewById<Spinner>(R.id.member_spinner)
+        val memberAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , memberStringList.toList())
-        memberadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        memberspinner.setAdapter(memberadapter)
+        memberAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        memberSpinner.adapter = memberAdapter
     }
 
-    fun CategoryAdapt() {
+    fun categoryAdapt() {
         categoryStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
-        for (categorys in DAO.getAllCategory()) {
-            if(categorys.category != VOID_ITEM){
-                categoryStringList.add(categorys.category)
+        for (category in DAO.getAllCategory()) {
+            if(category.category != VOID_ITEM){
+                categoryStringList.add(category.category)
             }
         }
         categoryStringList.add(VOID_ITEM)
-        var categoryspinner = findViewById<Spinner>(R.id.category_spinner)
-        val categoryadapter: ArrayAdapter<*> =
+        val categorySpinner = findViewById<Spinner>(R.id.category_spinner)
+        val categoryAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , categoryStringList.toList())
-        categoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        categoryspinner.setAdapter(categoryadapter)
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        categorySpinner.adapter = categoryAdapter
 
     }
 
     fun SubcategoryAdapt(category: String) {
         subcategoryStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
-        for (subcategorys in DAO.getAllSubcategory(category)) {
-            if(subcategorys.subcategory != VOID_ITEM){
-                subcategoryStringList.add(subcategorys.subcategory)
+        for (subcategory in DAO.getAllSubcategory(category)) {
+            if(subcategory.subcategory != VOID_ITEM){
+                subcategoryStringList.add(subcategory.subcategory)
             }
         }
         subcategoryStringList.add(VOID_ITEM)
 
-        var subcategoryspinner = findViewById<Spinner>(R.id.subcategory_spinner)
-        val subcategoryadapter: ArrayAdapter<*> =
+        val subcategorySpinner = findViewById<Spinner>(R.id.subcategory_spinner)
+        val subcategoryAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
-        subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        subcategoryspinner.setAdapter(subcategoryadapter)
+        subcategoryAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        subcategorySpinner.adapter = subcategoryAdapter
 
     }
 
-    fun MerchantAdapt() {
+    fun merchantAdapt() {
         merchantStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
         for (merchants in DAO.getAllMerchant()) {
@@ -669,15 +665,15 @@ class CreateNewItem : AppCompatActivity() {
             }
         }
         merchantStringList.add(VOID_ITEM)
-        var merchantspinner = findViewById<Spinner>(R.id.merchant_spinner)
-        val merchantadapter: ArrayAdapter<*> =
+        val merchantSpinner = findViewById<Spinner>(R.id.merchant_spinner)
+        val merchantAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , merchantStringList.toList())
-        merchantadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        merchantspinner.setAdapter(merchantadapter)
+        merchantAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        merchantSpinner.adapter = merchantAdapter
 
     }
 
-    fun ItemAdapt() {
+    fun itemAdapt() {
         itemStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
         for (items in DAO.getAllItem()) {
@@ -686,14 +682,14 @@ class CreateNewItem : AppCompatActivity() {
             }
         }
         itemStringList.add(VOID_ITEM)
-        var itemspinner = findViewById<Spinner>(R.id.item_spinner)
-        val itemadapter: ArrayAdapter<*> =
+        val itemSpinner = findViewById<Spinner>(R.id.item_spinner)
+        val itemAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemStringList.toList())
-        itemadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        itemspinner.setAdapter(itemadapter)
+        itemAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        itemSpinner.adapter = itemAdapter
     }
 
-    fun AccountAdapt() {
+    fun accountAdapt() {
         accountStringList.clear()
         val DAO = AppDatabase.instance.userDAO()
         for (accounts in DAO.getAllAccount()) {
@@ -702,16 +698,16 @@ class CreateNewItem : AppCompatActivity() {
             }
         }
         accountStringList.add(VOID_ITEM)
-        var itemspinner = findViewById<Spinner>(R.id.account_spinner)
-        val itemadapter: ArrayAdapter<*> =
+        val itemSpinner = findViewById<Spinner>(R.id.account_spinner)
+        val itemAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
-        itemadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        itemspinner.setAdapter(itemadapter)
+        itemAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        itemSpinner.adapter = itemAdapter
     }
 
 
     fun SaveTemplate(view : View) {
-        var itemText = EditText(this)
+        val itemText = EditText(this)
         android.app.AlertDialog.Builder(this)
             .setTitle("请输入模板名称")
             .setIcon(android.R.drawable.ic_dialog_info)
@@ -730,7 +726,7 @@ class CreateNewItem : AppCompatActivity() {
         TemplateName = name
         val DAO = AppDatabase.instance.userDAO()
 
-        if(DAO.findTemplateByString(name).size == 0){
+        if(DAO.findTemplateByString(name).isEmpty()){
             DAO.insertAllTemplate(
                 Template(0,name,stringArray[MEMBER_INDEX] ,stringArray[CATEGORY_INDEX],stringArray[SUBCATEGORY_INDEX],
                     stringArray[ACCOUNT_INDEX],stringArray[TYPE_INDEX],income,
@@ -749,7 +745,7 @@ class CreateNewItem : AppCompatActivity() {
 
     fun DeleteTemplate(view : View) {
         android.app.AlertDialog.Builder(this)
-            .setTitle("确认删除模板："+ TemplateName + "?")
+            .setTitle("确认删除模板：$TemplateName?")
             .setIcon(android.R.drawable.ic_dialog_info)
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
                 AppDatabase.instance.userDAO().deleteTemplate(AppDatabase.instance.userDAO().findTemplateByString(TemplateName)[0])
@@ -760,21 +756,21 @@ class CreateNewItem : AppCompatActivity() {
     }
 
     fun InitTemplateSpinner() {
-        var selectedSpinner = findViewById<Spinner>(R.id.TemplateSpinner)
+        val selectedSpinner = findViewById<Spinner>(R.id.TemplateSpinner)
 
         val DAO = AppDatabase.instance.userDAO()
 
-        var TemplateNameList = mutableListOf<String>(VOID_TEMPLATE)
+        val TemplateNameList = mutableListOf<String>(VOID_TEMPLATE)
         for(temp in DAO.getAllTemplate()){
             TemplateNameList.add(temp.name)
         }
 
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , TemplateNameList.toList())
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+        selectedSpinner.adapter = selectedSpinnerAdapter
 
-        selectedSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+        selectedSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -797,21 +793,19 @@ class CreateNewItem : AppCompatActivity() {
                     type_spinner.setSelection(DEFAULT_TYPE_LIST.indexOf(temp.type))
                     if(temp.income){
                         sub_type_spinner.setSelection(subtypeStringList.indexOf("收入"))
-                    }
-                    else{
+                    } else{
                         sub_type_spinner.setSelection(subtypeStringList.indexOf("收入"))
                     }
-                }
-                else{
+                } else{
                     DeleteTemplateButton.visibility = View.INVISIBLE
                 }
 
 
-
             }
+
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
             }
-        })
+        }
 
 
     }

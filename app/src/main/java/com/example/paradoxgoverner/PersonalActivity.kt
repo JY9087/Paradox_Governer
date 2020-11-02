@@ -46,7 +46,7 @@ class PersonalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_personal)
 
 
-        var bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigatior = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigatior.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -86,13 +86,13 @@ class PersonalActivity : AppCompatActivity() {
 
     //让VOID_ITEM显示吧。但不应修改
     fun InitSpinner() {
-        var selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner)
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner)
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , CUSTOMIZED_LIST)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectedSpinner.setAdapter(selectedSpinnerAdapter)
+        selectedSpinner.adapter = selectedSpinnerAdapter
         val DAO = AppDatabase.instance.userDAO()
-        selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        selectedSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -167,14 +167,14 @@ class PersonalActivity : AppCompatActivity() {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     
     fun InitSecondSpinner(itemlist : List<String>) {
-        var selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner2)
+        val selectedSpinner = findViewById<Spinner>(R.id.personal_custom_spinner2)
 
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , itemlist)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
@@ -210,19 +210,19 @@ class PersonalActivity : AppCompatActivity() {
     //对VOID_ITEM的处理
     fun SubcategorySpinnerAdapt() {
         val DAO = AppDatabase.instance.userDAO()
-        var subcategoryList = DAO.getAllSubcategory(categoryString)
-        var subcategoryStringList = mutableListOf<String>()
+        val subcategoryList = DAO.getAllSubcategory(categoryString)
+        val subcategoryStringList = mutableListOf<String>()
         for (subcategorys in subcategoryList) {
             subcategoryStringList.add(subcategorys.subcategory)
         }
-        var subcategoryspinner = findViewById<Spinner>(R.id.personal_custom_spinner3)
+        val subcategoryspinner = findViewById<Spinner>(R.id.personal_custom_spinner3)
 
         val subcategoryadapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , subcategoryStringList.toList())
         subcategoryadapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        subcategoryspinner.setAdapter(subcategoryadapter)
+        subcategoryspinner.adapter = subcategoryadapter
 
-        subcategoryspinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        subcategoryspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -235,7 +235,7 @@ class PersonalActivity : AppCompatActivity() {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 Toast.makeText(applicationContext, "No selection", Toast.LENGTH_LONG).show()
             }
-        })
+        }
     }
 
     fun NewCustomizedItem(view : View) {
@@ -249,7 +249,7 @@ class PersonalActivity : AppCompatActivity() {
         }
         title += typeLabel
         val DAO = AppDatabase.instance.userDAO()
-        var itemText = EditText(this)
+        val itemText = EditText(this)
         AlertDialog.Builder(this)
             .setTitle(title)
             .setIcon(android.R.drawable.ic_dialog_info)
@@ -278,9 +278,9 @@ class PersonalActivity : AppCompatActivity() {
     }
 
     fun NewCustomizedSubcategory(view : View) {
-        var title = "请输入二级分类"
+        val title = "请输入二级分类"
         val DAO = AppDatabase.instance.userDAO()
-        var itemText = EditText(this)
+        val itemText = EditText(this)
         AlertDialog.Builder(this)
             .setTitle(title)
             .setIcon(android.R.drawable.ic_dialog_info)
@@ -290,7 +290,7 @@ class PersonalActivity : AppCompatActivity() {
                 if(itemText.text.toString() != "" && categoryString != VOID_ITEM){
                     DAO.insertAllSubcategory(Subcategory(0,categoryString,itemText.text.toString()))
                     SubcategorySpinnerAdapt()
-                    var subcategoryStringList = mutableListOf<String>()
+                    val subcategoryStringList = mutableListOf<String>()
                     for (subcategorys in DAO.getAllSubcategory(categoryString)) {
                         subcategoryStringList.add(subcategorys.subcategory)
                     }
@@ -315,7 +315,7 @@ class PersonalActivity : AppCompatActivity() {
         title += typeLabel
         val DAO = AppDatabase.instance.userDAO()
         var tmp_record : Record
-        var itemText = EditText(this)
+        val itemText = EditText(this)
         var itemStr = ""
         when(type){
             MEMBER_INDEX->itemStr = DAO.findMemberByUid(uid)[0].member
@@ -458,9 +458,9 @@ class PersonalActivity : AppCompatActivity() {
 
     
     fun ChangeCustomizedSubcategory(view : View) {
-        var title = "请输入二级分类"
+        val title = "请输入二级分类"
         val DAO = AppDatabase.instance.userDAO()
-        var itemText = EditText(this)
+        val itemText = EditText(this)
         var tmp_record : Record
         itemText.setText(DAO.findSubcategoryByUid(subcategory_uid)[0].subcategory)
         AlertDialog.Builder(this)
@@ -476,7 +476,7 @@ class PersonalActivity : AppCompatActivity() {
                     }
                     DAO.insertAllSubcategory(Subcategory(subcategory_uid,categoryString,itemText.text.toString()))
                     SubcategorySpinnerAdapt()
-                    var subcategoryStringList = mutableListOf<String>()
+                    val subcategoryStringList = mutableListOf<String>()
                     for (subcategorys in DAO.getAllSubcategory(categoryString)) {
                         subcategoryStringList.add(subcategorys.subcategory)
                     }
@@ -501,7 +501,7 @@ class PersonalActivity : AppCompatActivity() {
     fun ResetPatternPassword(view : View){
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
-        var isSetPassword:Boolean = false
+        val isSetPassword:Boolean = false
         editor.putBoolean("isSetPassword",isSetPassword)
         editor.commit()
         val intent = Intent()
@@ -519,14 +519,14 @@ class PersonalActivity : AppCompatActivity() {
 
 
     fun InitThemeSpinner() {
-        var themeSpinner = findViewById<Spinner>(R.id.theme_spinner)
+        val themeSpinner = findViewById<Spinner>(R.id.theme_spinner)
 
-        var selectedSpinnerAdapter: ArrayAdapter<*> =
+        val selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , THEME_LIST)
         selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        themeSpinner.setAdapter(selectedSpinnerAdapter)
+        themeSpinner.adapter = selectedSpinnerAdapter
 
-        themeSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        themeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -552,9 +552,10 @@ class PersonalActivity : AppCompatActivity() {
                     finish()
                 }
             }
+
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
             }
-        })
+        }
 
 
     }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
@@ -29,17 +28,17 @@ class Login : AppCompatActivity() {
             onClick3()
         }
 
-        var rememberPwd = settings.getBoolean("rememberPwd",false)
+        val rememberPwd = settings.getBoolean("rememberPwd",false)
         if(rememberPwd){
-            var pwd = settings.getString("save_password","").toString()
+            val pwd = settings.getString("save_password","").toString()
             passwordEdit.setText(pwd)
-            checkBox1.setChecked(true)
+            checkBox1.isChecked = true
         }
         mLoginBtn.setOnClickListener {
-            var password = passwordEdit.text.toString()
-            var save_password = settings.getString("save_password","").toString()
+            val password = passwordEdit.text.toString()
+            val savePassword = settings.getString("save_password","").toString()
             if(isPwdLegal(password)){
-                if(password == save_password){
+                if(password == savePassword){
                     if(checkBox1.isChecked){
                         editor.putBoolean("rememberPwd",true)
                         editor.commit()
