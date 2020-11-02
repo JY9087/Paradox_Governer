@@ -104,4 +104,5 @@ class Login : AppCompatActivity() {
     fun isPwdLegal(pwd:String):Boolean{
         return pwd.length > 4
     }
+
 }

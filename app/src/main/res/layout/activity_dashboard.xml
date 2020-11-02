@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:itemIconTint="@color/colorBottomNavigationText"
         app:itemTextColor="@color/colorBottomNavigationText"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,15 +20,133 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:text="@string/title_dashboard"
+        android:height="10dp"
+        android:text="@string/dashboard_add_condition_button"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dashboard_recyeleview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/dashStartTimeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashTypeText"
+            app:layout_constraintTop_toBottomOf="@+id/dashTypeText" />
+
+        <TextView
+            android:id="@+id/dashTypeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashItemText"
+            app:layout_constraintTop_toBottomOf="@+id/dashItemText" />
+
+        <TextView
+            android:id="@+id/dashMerchantText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashMemberText"
+            app:layout_constraintTop_toBottomOf="@+id/dashMemberText" />
+
+        <TextView
+            android:id="@+id/dashAccountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dashCategoryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashAccountText"
+            app:layout_constraintTop_toBottomOf="@+id/dashAccountText" />
+
+        <TextView
+            android:id="@+id/dashSubcategoryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashCategoryText"
+            app:layout_constraintTop_toBottomOf="@+id/dashCategoryText" />
+
+        <TextView
+            android:id="@+id/dashMemberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashSubcategoryText"
+            app:layout_constraintTop_toBottomOf="@+id/dashSubcategoryText" />
+
+        <TextView
+            android:id="@+id/dashItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashMerchantText"
+            app:layout_constraintTop_toBottomOf="@+id/dashMerchantText" />
+
+        <TextView
+            android:id="@+id/dashTotalAmountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashStartTimeText"
+            app:layout_constraintTop_toBottomOf="@+id/dashEndTimeText" />
+
+        <TextView
+            android:id="@+id/dashEndTimeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/dashStartTimeText"
+            app:layout_constraintTop_toBottomOf="@+id/dashStartTimeText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/dash_view_all_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:height="10dp"
+        android:onClick="vieaAll"
+        android:text="@string/dashboard_view_all_button"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

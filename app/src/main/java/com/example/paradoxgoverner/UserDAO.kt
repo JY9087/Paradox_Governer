@@ -26,6 +26,9 @@ interface UserDAO {
     @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory")
     fun findRecordBySubcategory(subcategory : String): List<Record>
 
+    @Query("SELECT * FROM Record WHERE subcategory LIKE :subcategory AND category LIKE :category")
+    fun findRecordByCatSubcategory(category : String , subcategory : String): List<Record>
+
     @Query("SELECT * FROM Record WHERE merchant LIKE :merchant ")
     fun findRecordByMerchant(merchant: String) : List<Record>
 
@@ -61,6 +64,9 @@ interface UserDAO {
 
     @Query("SELECT * FROM Account WHERE account LIKE :account ")
     fun findAccountByString(account : String): List<Account>
+
+    @Query("SELECT * FROM Template WHERE name LIKE :name ")
+    fun findTemplateByString(name : String): List<Template>
 
 
     //根据UID进行查找
@@ -104,8 +110,17 @@ interface UserDAO {
     @Query("SELECT * FROM Subcategory WHERE category LIKE :category")
     fun getAllSubcategory(category : String): List<Subcategory>
 
+    @Query("SELECT * FROM Subcategory")
+    fun getAllSubcategoryWithoutCategory(): List<Subcategory>
+
     @Query("SELECT * FROM Account")
     fun getAllAccount(): List<Account>
+
+    @Query("SELECT * FROM Template")
+    fun getAllTemplate(): List<Template>
+
+    @Query("SELECT * FROM Theme")
+    fun getTheme(): List<Theme>
 
     @Query("SELECT * FROM Hidden")
     fun isInitialized(): List<Hidden>
@@ -134,6 +149,12 @@ interface UserDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllAccount(vararg accounts : Account)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllTemplate(vararg templates : Template)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllTheme(vararg themes : Theme)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun initialize(vararg hide: Hidden)
@@ -165,6 +186,9 @@ interface UserDAO {
     @Delete
     fun deleteAccount(account : Account)
 
+    @Delete
+    fun deleteTemplate(template: Template)
+
     //User Name And Password
     @Insert
     fun insertNameAndPwd(NameAndPwd:userNameAndPwd)
@@ -174,6 +198,8 @@ interface UserDAO {
     fun findAllUserNameAndPwd():List<userNameAndPwd>
     @Query("Select password From userNameAndPwd WHERE :element = userName")
     fun searchPwdByName(element: String):String
-    
+
+    @Query("SELECT * FROM Record WHERE member in (:selectMember) AND category in(:selectCategory) AND subcategory in (:selectSubcategory) AND account in (:selectAccount) AND type in (:selectType) AND merchant in (:selectMerchant) AND item in (:selectItem) AND income=(:selectIncome)")
+    fun selectDAO (selectMember: List<String>,selectCategory: List<String>,selectSubcategory: List<String>,selectAccount: List<String>,selectType:List<String>,selectMerchant: List<String>,selectItem: List<String>,selectIncome:Boolean):List<Record>
 
 }

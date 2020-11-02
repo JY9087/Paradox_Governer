@@ -14,15 +14,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_customization_of_new_item.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_view_all.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
-
     //静态内部类：伴生对象
     companion object {
         var instance: MainActivity by Delegates.notNull()
         fun instance() = instance
         var isAlreadyLogin = false
+        var versionFlag = false
     }
 
     var accountName = ALL_ACCOUNT
@@ -31,6 +33,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Room
+        instance = this
+        val DAO: UserDAO = AppDatabase.instance.userDAO()
+
+        //继承主题
+        if(DAO.getTheme().size != 0){
+            PersonalActivity.themeColor = DAO.getTheme()[0].theme
+        }
+
+        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_main)
 
         //判断版本
@@ -39,9 +52,7 @@ class MainActivity : AppCompatActivity() {
             versionFlag = true
         }
 
-        //Room
-        instance = this
-        val DAO: UserDAO = AppDatabase.instance.userDAO()
+
 
         //一次性初始化 , if判断
         if (DAO.isInitialized().size == 0) {
@@ -49,15 +60,18 @@ class MainActivity : AppCompatActivity() {
             for (init_member in DEFAULT_MEMBER_LIST) {
                 DAO.insertAllMember(Member(0, init_member))
             }
+
             for (init_category in DEFAULT_CATEGORY_LIST) {
                 DAO.insertAllCategory(Category(0, init_category))
             }
+
             //until不包含最后一个元素
             for (index in 0 until DEFAULT_CATEGORY_LIST.size) {
                 for (item in DEFAULT_SUBCATEGORY_LIST.get(index)) {
                     DAO.insertAllSubcategory(Subcategory(0, DEFAULT_CATEGORY_LIST.get(index), item))
                 }
             }
+
             for (init_merchant in DEFAULT_MERCHANT_LIST) {
                 DAO.insertAllMerchant(Merchant(0, init_merchant))
             }
@@ -72,37 +86,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         InitAccountSpinner()
-
-
-
-
-        //RecycleView
-        val forecastList = findViewById<RecyclerView>(R.id.forecast)
-        forecastList.layoutManager = LinearLayoutManager(this)
-        var myadapter = ForecastListAdapter(DAO.getAllRecord())
-        forecastList.adapter = myadapter
-
-        var recyclertouchlistener = RecyclerTouchListener(
-            this,
-            forecastList,
-            object : ClickListener {
-                //单击事件  进入Record
-                override fun onClick(view: View?, position: Int) {
-                    //传递UID，由新Activity去进行查询
-                    val intent = Intent(instance, CreateNewItem::class.java).putExtra(
-                        RECORD_UID, DAO.getAllRecord().get(position).uid
-                    )
-                    startActivity(intent)
-                }
-                override fun onLongClick(view: View?, position: Int) {
-                    wantToDelete(DAO.getAllRecord().get(position).uid)
-                }
-            }
-        )
-        //onClick
-        forecastList.addOnItemTouchListener(recyclertouchlistener)
+        if(ViewAllActivity.accountFlag){
+            AccountSpinner.setSelection(accountStringList.indexOf(ViewAllActivity.accountName))
+            ViewAllActivity.accountFlag = false
+        }
 
 
 
@@ -113,9 +101,9 @@ class MainActivity : AppCompatActivity() {
         var isAlreadyRegister:Boolean = settings.getBoolean("isAlreadyRegister",false)
         //已经注册过，进入登录界面
 
-        //尚未登录
+        //尚未注册
         if(isAlreadyRegister) {
-            //已经登录了，进入主界面
+            //尚未登录：前往登录
             if(!isAlreadyLogin){
                 val intent = Intent()
                 intent.setClass(this, Login::class.java)
@@ -143,6 +131,7 @@ class MainActivity : AppCompatActivity() {
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_graph -> {
                     val intent = Intent(this, GraphActivity::class.java)
@@ -150,6 +139,7 @@ class MainActivity : AppCompatActivity() {
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
                 R.id.navigation_personal -> {
                     val intent = Intent(this, PersonalActivity::class.java)
@@ -157,11 +147,42 @@ class MainActivity : AppCompatActivity() {
                     if (versionFlag) {
                         overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
                     }
+                    finish()
                 }
             }
             true
         })
         bottomNavigatior.selectedItemId = R.id.navigation_home
+
+
+        //RecycleView
+        val forecastList = findViewById<RecyclerView>(R.id.forecast)
+        forecastList.layoutManager = LinearLayoutManager(this)
+        var myadapter = ForecastListAdapter(DAO.getAllRecord())
+        forecastList.adapter = myadapter
+
+        var recyclertouchlistener = RecyclerTouchListener(
+            this,
+            forecastList,
+            object : ClickListener {
+                //单击事件  进入Record
+                override fun onClick(view: View?, position: Int) {
+                    //传递UID，由新Activity去进行查询
+                    val intent = Intent(instance, CreateNewItem::class.java).putExtra(
+                        RECORD_UID, DAO.getAllRecord().get(position).uid
+                    )
+                    startActivity(intent)
+                    finish()
+                }
+                override fun onLongClick(view: View?, position: Int) {
+                    wantToDelete(DAO.getAllRecord().get(position).uid)
+                }
+            }
+        )
+        //onClick
+        forecastList.addOnItemTouchListener(recyclertouchlistener)
+
+
 
 
     }
@@ -178,14 +199,20 @@ class MainActivity : AppCompatActivity() {
         val DAO = AppDatabase.instance.userDAO()
         var r = "收入"
         when (item.itemId) {
-            R.id.navigation_all -> true
+            R.id.navigation_all -> r = "全部"
             R.id.navigation_income -> r = "收入"
             R.id.navigation_outlay -> r = "支出"
             R.id.navigation_loan -> r = "借贷"
             R.id.navigation_transfer -> r = "转账"
             else -> super.onOptionsItemSelected(item)
         }
-        forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
+        if(r == "全部") {
+            forecastList.adapter = ForecastListAdapter(DAO.getAllRecord())
+        }
+        else{
+            forecastList.adapter = ForecastListAdapter(DAO.findRecordByType(r))
+        }
+
         return true
     }
 
@@ -244,12 +271,9 @@ class MainActivity : AppCompatActivity() {
     fun CreateNewItem(view: View) {
         val intent = Intent(this, CreateNewItem::class.java)
         startActivity(intent)
+        finish()
     }
 
-    fun ShowIncome(view: View) {
-        val forecastList = findViewById<RecyclerView>(R.id.forecast)
-        forecastList.adapter = ForecastListAdapter(AppDatabase.instance.userDAO().findRecordByType("收入"))
-    }
 
     fun wantToDelete(uid: Int){
         val DAO = AppDatabase.instance.userDAO()
@@ -259,6 +283,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("确定", DialogInterface.OnClickListener{ dialogInterface, i ->
                 DAO.delete( DAO.findRecordByUid(uid) )
                 findViewById<RecyclerView>(R.id.forecast).adapter = ForecastListAdapter(DAO.getAllRecord())
+                InitAccountSpinner()
             })
             .setNegativeButton("取消", null)
             .show()
@@ -279,13 +304,30 @@ class MainActivity : AppCompatActivity() {
         AccountNameText.text = "全部账户"
 
         var AccountInfo = findViewById<TextView>(R.id.AccountInfoText)
-        //todo : 使用真正余额
-        AccountInfo.text = "余额："
+
+        var remainAmount = 0.0F
+        var records = DAO.getAllRecord()
+        if(accountName != ALL_ACCOUNT){
+            records = DAO.findRecordByAccount(accountName)
+        }
+        for(record in records){
+            if(record.income){
+                remainAmount += record.amount
+            }
+            else{
+                remainAmount -= record.amount
+            }
+        }
+
+
+        val remainAmountString :String = String.format("%.2f",(remainAmount))
+        AccountInfo.text = "余额："+ remainAmountString
+
 
         var selectedSpinner = findViewById<Spinner>(R.id.AccountSpinner)
         var selectedSpinnerAdapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(this, android.R.layout.simple_spinner_item , accountStringList.toList())
-        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         selectedSpinner.setAdapter(selectedSpinnerAdapter)
 
         selectedSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -307,6 +349,23 @@ class MainActivity : AppCompatActivity() {
                     forecastList.adapter = myadapter
                     AccountNameText.text = "当前账户：" + accountName
                 }
+
+
+                var remainAmount = 0.0
+                var records = DAO.getAllRecord()
+                if(accountName != ALL_ACCOUNT){
+                    records = DAO.findRecordByAccount(accountName)
+                }
+                for(record in records){
+                    if(record.income){
+                        remainAmount += record.amount
+                    }
+                    else{
+                        remainAmount -= record.amount
+                    }
+                }
+                val remainAmountString :String = String.format("%.2f",(remainAmount))
+                AccountInfo.text = "余额：" + remainAmountString
 
             }
 

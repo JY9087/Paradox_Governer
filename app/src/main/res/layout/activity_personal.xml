@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:itemIconTint="@color/colorBottomNavigationText"
         app:itemTextColor="@color/colorBottomNavigationText"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,8 +50,8 @@
                 android:id="@+id/textView17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="48dp"
                 android:text="@string/personal_pwd_management_text"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,8 +61,8 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/personal_manage_customize"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,19 +72,24 @@
                 android:id="@+id/personal_custom_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
             <Spinner
                 android:id="@+id/personal_custom_spinner2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                app:layout_constraintEnd_toStartOf="@+id/personal_custom_button1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/personal_custom_spinner" />
 
@@ -92,21 +97,24 @@
                 android:id="@+id/personal_custom_button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:onClick="ChangeCustomizedItem"
                 android:text="@string/personal_manage_customize_change"
                 app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner2"
-                app:layout_constraintStart_toEndOf="@+id/personal_custom_button1"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner2" />
 
             <Spinner
                 android:id="@+id/personal_custom_spinner3"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginLeft="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/personal_custom_button3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/personal_custom_spinner2" />
 
@@ -114,12 +122,12 @@
                 android:id="@+id/personal_custom_button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:onClick="ChangeCustomizedSubcategory"
                 android:text="@string/personal_manage_customize_change"
                 app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner3"
-                app:layout_constraintStart_toEndOf="@+id/personal_custom_button3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner3"
                 app:layout_constraintVertical_bias="0.458" />
 
@@ -127,24 +135,24 @@
                 android:id="@+id/personal_custom_button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:onClick="NewCustomizedItem"
                 android:text="@string/personal_manage_customize_new"
                 app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner2"
-                app:layout_constraintStart_toEndOf="@+id/personal_custom_spinner2"
+                app:layout_constraintEnd_toStartOf="@+id/personal_custom_button2"
                 app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner2" />
 
             <Button
                 android:id="@+id/personal_custom_button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:onClick="NewCustomizedSubcategory"
                 android:text="@string/personal_manage_customize_new"
                 app:layout_constraintBottom_toBottomOf="@+id/personal_custom_spinner3"
-                app:layout_constraintStart_toEndOf="@+id/personal_custom_spinner3"
+                app:layout_constraintEnd_toStartOf="@+id/personal_custom_button4"
                 app:layout_constraintTop_toTopOf="@+id/personal_custom_spinner3" />
 
             <Button
@@ -158,6 +166,38 @@
                 app:layout_constraintBottom_toBottomOf="@+id/personal_rstpwd_text_button"
                 app:layout_constraintStart_toEndOf="@+id/personal_rstpwd_text_button"
                 app:layout_constraintTop_toTopOf="@+id/personal_rstpwd_text_button" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/personal_theme_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/logoutButton" />
+
+            <Spinner
+                android:id="@+id/theme_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView11"
+                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintTop_toTopOf="@+id/textView11" />
+
+            <Button
+                android:id="@+id/logoutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:onClick="logout"
+                android:text="退出登录"
+                app:layout_constraintEnd_toEndOf="@+id/personal_rstpwd_text_button"
+                app:layout_constraintStart_toStartOf="@+id/personal_rstpwd_text_button"
+                app:layout_constraintTop_toBottomOf="@+id/personal_rstpwd_text_button" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

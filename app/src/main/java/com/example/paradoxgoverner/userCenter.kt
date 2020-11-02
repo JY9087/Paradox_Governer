@@ -30,6 +30,11 @@ class userCenter : AppCompatActivity() {
         finish()
     }
     fun onClick2(){
+        val PatternStep = 0;
+        val settings: SharedPreferences = getSharedPreferences("info", 0)
+        val editor = settings.edit()
+        editor.putInt("PatternStep",0)
+        editor.commit()
         val intent = Intent()
         intent.setClass(this, com.example.paradoxgoverner.resetPwd::class.java)
         startActivity(intent)

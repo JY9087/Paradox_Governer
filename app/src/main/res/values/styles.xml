@@ -30,4 +30,46 @@
     </style>
 
 
+    <style name="CustomizedAppThemePurple" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#6200ee</item>
+        <item name="colorPrimaryDark">#3700b3</item>
+    </style>
+
+    <style name="CustomizedAppThemeRed" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#e53935</item>
+        <item name="colorPrimaryDark">#c62828</item>
+    </style>
+
+    <style name="CustomizedAppThemeOrange" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#f57c00</item>
+        <item name="colorPrimaryDark">#e65100</item>
+    </style>
+
+    <style name="CustomizedAppThemePink" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#ec407a</item>
+        <item name="colorPrimaryDark">#d81b60</item>
+    </style>
+
+    <style name="CustomizedAppThemeYellow" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#ffee58</item>
+        <item name="colorPrimaryDark">#fdd835</item>
+    </style>
+
+    <style name="CustomizedAppThemeBlue" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#1e88e5</item>
+        <item name="colorPrimaryDark">#1565c0</item>
+    </style>
+
+    <style name="CustomizedAppThemeGreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#4caf50</item>
+        <item name="colorPrimaryDark">#388e3c</item>
+    </style>
+
 </resources>
