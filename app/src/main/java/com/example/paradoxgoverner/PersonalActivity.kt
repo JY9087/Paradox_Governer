@@ -502,7 +502,9 @@ class PersonalActivity : AppCompatActivity() {
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
         val isSetPassword:Boolean = false
+        val PatternStep:Int = 0
         editor.putBoolean("isSetPassword",isSetPassword)
+        editor.putInt("PatternStep",PatternStep)
         editor.commit()
         val intent = Intent()
         intent.setClass(this, PatternPassword::class.java).putExtra(EXTRA_MESSAGE, RESET_PATTERN)

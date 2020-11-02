@@ -21,8 +21,9 @@ class userCenter : AppCompatActivity() {
         val settings: SharedPreferences = getSharedPreferences("info", 0)
         val editor = settings.edit()
         val isSetPassword:Boolean = false
+        val PatternStep:Int = 0
         editor.putBoolean("isSetPassword",isSetPassword)
-        editor.putInt("PatternStep",0)
+        editor.putInt("PatternStep",PatternStep)
         editor.commit()
         val intent = Intent()
         intent.setClass(this, PatternPassword::class.java)
@@ -30,11 +31,6 @@ class userCenter : AppCompatActivity() {
         finish()
     }
     fun onClick2(){
-        val PatternStep = 0;
-        val settings: SharedPreferences = getSharedPreferences("info", 0)
-        val editor = settings.edit()
-        editor.putInt("PatternStep",0)
-        editor.commit()
         val intent = Intent()
         intent.setClass(this, com.example.paradoxgoverner.resetPwd::class.java)
         startActivity(intent)
