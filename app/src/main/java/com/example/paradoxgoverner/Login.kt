@@ -16,7 +16,6 @@ class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(PersonalActivity.themeColor)
         setContentView(R.layout.activity_login)
         val passwordEdit = findViewById<EditText>(R.id.password)
         val settings: SharedPreferences = getSharedPreferences("info", 0)
@@ -105,4 +104,5 @@ class Login : AppCompatActivity() {
     fun isPwdLegal(pwd:String):Boolean{
         return pwd.length > 4
     }
+
 }
